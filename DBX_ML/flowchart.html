@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ML Learning Path Flowchart</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e0e0e0;
+    padding: 30px 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 36px;
+  }
+
+  /* Course Row */
+  .course-row {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  /* Each Course Column */
+  .course {
+    flex: 1;
+    min-width: 220px;
+    max-width: 280px;
+  }
+
+  .course-header {
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  /* Course colors */
+  .c1 .course-header { background: #1a3a5c; border: 2px solid #2d7dd2; color: #7ec8ff; }
+  .c2 .course-header { background: #1a3a2a; border: 2px solid #2d9e5f; color: #7effc0; }
+  .c3 .course-header { background: #3a2a1a; border: 2px solid #d27d2d; color: #ffc87e; }
+  .c4 .course-header { background: #2a1a3a; border: 2px solid #9e2db5; color: #d97eff; }
+
+  /* Module block */
+  .module {
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .module-header {
+    padding: 7px 12px;
+    font-weight: 700;
+    font-size: 0.72rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.3px;
+    user-select: none;
+  }
+
+  .c1 .module-header { background: #1d4b7a; color: #aed6ff; }
+  .c2 .module-header { background: #1d5c35; color: #a0ffcc; }
+  .c3 .module-header { background: #5c3a1d; color: #ffd0a0; }
+  .c4 .module-header { background: #3a1d5c; color: #e0a0ff; }
+
+  .module-body { padding: 6px 8px; background: #1a1d24; }
+
+  /* Notebook block */
+  .notebook {
+    margin-bottom: 6px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .notebook-header {
+    padding: 5px 10px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+  }
+
+  .c1 .notebook-header { background: #163054; color: #90c8ff; }
+  .c2 .notebook-header { background: #163826; color: #80f0b0; }
+  .c3 .notebook-header { background: #3d2510; color: #f5c080; }
+  .c4 .notebook-header { background: #261040; color: #cc90ff; }
+
+  .notebook-body { background: #12141a; padding: 4px 6px; }
+
+  /* Topic items */
+  .topic {
+    font-size: 0.62rem;
+    padding: 2px 8px 2px 16px;
+    color: #b0b8cc;
+    border-left: 2px solid #333;
+    margin: 2px 0;
+    position: relative;
+    line-height: 1.4;
+  }
+  .topic::before {
+    content: '▸';
+    position: absolute;
+    left: 4px;
+    color: #555;
+    font-size: 0.55rem;
+    top: 3px;
+  }
+
+  .subtopic {
+    font-size: 0.58rem;
+    padding: 1px 8px 1px 28px;
+    color: #7a8499;
+    border-left: 2px solid #2a2a2a;
+    margin: 1px 0;
+    position: relative;
+    line-height: 1.4;
+  }
+  .subtopic::before {
+    content: '–';
+    position: absolute;
+    left: 18px;
+    color: #444;
+  }
+
+  .arrow { color: #555; margin-right: 4px; font-size: 0.6rem; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: #888;
+  }
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+  }
+  .ld1 { background: #2d7dd2; }
+  .ld2 { background: #2d9e5f; }
+  .ld3 { background: #d27d2d; }
+  .ld4 { background: #9e2db5; }
+
+  /* Connector arrows between courses */
+  .connector-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 10px;
+  }
+  .connector-arrow {
+    flex: 1;
+    max-width: 280px;
+    display: flex;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #444;
+  }
+
+  @media (max-width: 900px) {
+    .course-row { flex-wrap: wrap; }
+    .course { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🧠 Databricks ML Learning Path</h1>
+<p class="subtitle">Complete Topic Flowchart — Data Preparation → Model Development → Deployment → MLOps</p>
+
+<div class="course-row">
+
+  <!-- COURSE 1: DATA PREPARATION -->
+  <div class="course c1">
+    <div class="course-header">📦 Data Preparation<br>for Machine Learning</div>
+
+    <!-- M01 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M01 — Managing & Exploring Data</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">1.1 Demo — Load & Explore Data</div>
+          <div class="notebook-body">
+            <div class="topic">Read Dataset</div>
+            <div class="topic">Explore Data with Summary Stats</div>
+            <div class="topic">Data Visualization with Genie Code</div>
+            <div class="subtopic">How to Access Genie Code</div>
+            <div class="subtopic">Best Practices for Prompts</div>
+            <div class="subtopic">What to Analyze</div>
+            <div class="topic">Write Data to Delta Table</div>
+            <div class="topic">Time Travel with Delta Lake</div>
+            <div class="subtopic">Simulate an Accidental Change</div>
+            <div class="subtopic">Reverting Changes by Version</div>
+            <div class="subtopic">Restore a Previous Version</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.2 Lab — Load & Explore Data</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Read Data from Delta Table</div>
+            <div class="topic">Task 2: Manage Data Permissions</div>
+            <div class="topic">Task 3: Show Summary Statistics</div>
+            <div class="topic">Task 4: Explore with Genie Code</div>
+            <div class="topic">Task 5: Drop the Column</div>
+            <div class="topic">Task 6: Time-Travel to First Version</div>
+            <div class="topic">Task 7: Read Previous Versions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M02 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M02 — Data Prep & Feature Engineering</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">2.1 Demo — Imputation & Transformation Pipeline</div>
+          <div class="notebook-body">
+            <div class="topic">Data Cleaning and Imputation</div>
+            <div class="subtopic">Coerce / Fix Data Types</div>
+            <div class="subtopic">Handle Invalid Values</div>
+            <div class="subtopic">Handling Missing Values</div>
+            <div class="subtopic">Impute Missing Data</div>
+            <div class="topic">Encoding Categorical Features</div>
+            <div class="subtopic">Ordered Indexing</div>
+            <div class="topic">Splitting Data</div>
+            <div class="subtopic">Standardize Features (Training Set)</div>
+            <div class="subtopic">Numeric Missing Value Imputation</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">2.2 Demo — Feature Engineering Pipeline</div>
+          <div class="notebook-body">
+            <div class="topic">Data Preparation</div>
+            <div class="subtopic">Loading the Dataset</div>
+            <div class="subtopic">Train/Test Split</div>
+            <div class="subtopic">Transforming the Dataset</div>
+            <div class="topic">Creating a Feature Engineering Pipeline</div>
+            <div class="subtopic">Step 1: StringIndexer + OneHotEncoder</div>
+            <div class="subtopic">Step 2: Impute Missing Numerical Values</div>
+            <div class="subtopic">Step 3: Assemble & Scale Numeric Features</div>
+            <div class="subtopic">Step 4: Assemble Final Feature Vector</div>
+            <div class="subtopic">Step 5: Build the Pipeline</div>
+            <div class="topic">Fit the Pipeline</div>
+            <div class="topic">Prepare the Target Column</div>
+            <div class="topic">Save and Reuse the Pipeline</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">2.3 Lab — Feature Engineering Pipeline</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Load Dataset & Data Preparation</div>
+            <div class="subtopic">1.1 Load the Dataset</div>
+            <div class="subtopic">1.2 Type Casting, Remove Missing Cols, Remove Outliers</div>
+            <div class="topic">Task 2: Train/Test Split</div>
+            <div class="topic">Task 3: Create Feature Engineering Pipeline</div>
+            <div class="subtopic">3.1 Analyze Data Types & Missing Values</div>
+            <div class="subtopic">3.2 Define Pipeline Stages</div>
+            <div class="topic">Task 4: Fit the Pipeline</div>
+            <div class="topic">Task 5: Transform & Prepare Target Column</div>
+            <div class="topic">Task 6: Save and Load the Pipeline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M03 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M03 — Feature Store</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">3.1 Demo — Feature Store for Feature Engineering</div>
+          <div class="notebook-body">
+            <div class="topic">Feature Engineering → Load Dataset</div>
+            <div class="topic">Save Features to Feature Table</div>
+            <div class="subtopic">Create Feature Table</div>
+            <div class="subtopic">Explore Feature Table (UI)</div>
+            <div class="subtopic">Load Feature Table</div>
+            <div class="topic">Update Feature Table</div>
+            <div class="subtopic">Add a New Feature</div>
+            <div class="subtopic">Delete Existing Feature</div>
+            <div class="topic">Read Feature Table by Version</div>
+            <div class="topic">Create Feature Table from Existing UC Table</div>
+            <div class="topic">[Optional] Migrate to Unity Catalog</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">3.2 Lab — Feature Engineering with Feature Store</div>
+          <div class="notebook-body">
+            <div class="topic">Data Preparation</div>
+            <div class="topic">Task 1: Feature Selection</div>
+            <div class="topic">Task 2: Create a Feature Table</div>
+            <div class="topic">Task 3: Explore Feature Table (UI)</div>
+            <div class="topic">Task 4: Retrieve Feature Table Details</div>
+            <div class="topic">Task 5: Create Feature Table from UC Table</div>
+            <div class="topic">Task 6: Add New Features to Existing Table</div>
+            <div class="topic">Task 7: Delete a Feature Table</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COURSE 2: MODEL DEVELOPMENT -->
+  <div class="course c2">
+    <div class="course-header">🧪 Machine Learning<br>Model Development</div>
+
+    <!-- M01 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M01 — Model Development Workflow</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">1.1a Demo — Supervised Learning</div>
+          <div class="notebook-body">
+            <div class="topic">Prepare Dataset</div>
+            <div class="subtopic">Load Dataset</div>
+            <div class="subtopic">Train / Test Split</div>
+            <div class="topic">Examine for Co-linearity</div>
+            <div class="topic">Fit a Regression Model</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.1b Demo — Unsupervised Learning</div>
+          <div class="notebook-body">
+            <div class="topic">Load Data & Generate Embeddings</div>
+            <div class="subtopic">Load the Dataset</div>
+            <div class="subtopic">Generate Text Embeddings (gte-large)</div>
+            <div class="topic">Standardization & Dimensionality Reduction</div>
+            <div class="topic">Vector Normalization</div>
+            <div class="topic">Clustering with Normalized Embeddings</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.2 Demo — Model Tracking with MLflow</div>
+          <div class="notebook-body">
+            <div class="topic">MLflow with Unity Catalog</div>
+            <div class="topic">Prepare Dataset</div>
+            <div class="subtopic">Load Dataset</div>
+            <div class="subtopic">Train / Test Split</div>
+            <div class="topic">Fit and Log the Model</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.3 Lab — Model Development & Tracking with MLflow</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Load Dataset from Feature Store</div>
+            <div class="subtopic">Load Data</div>
+            <div class="subtopic">Train / Test Split</div>
+            <div class="topic">Task 2: Define Model Hyperparameters</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M02 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M02 — Hyperparameter Tuning</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">2.1 Demo — Hyperparameter Tuning with Optuna</div>
+          <div class="notebook-body">
+            <div class="topic">Prepare Dataset</div>
+            <div class="subtopic">Load Dataset</div>
+            <div class="subtopic">Train/Test Split</div>
+            <div class="topic">Hyperparameter Tuning</div>
+            <div class="subtopic">Define the Objective Function</div>
+            <div class="subtopic">Optimize Scikit-Learn Model with Optuna</div>
+            <div class="subtopic">Log Results with MLflow</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">2.2 Lab — Hyperparameter Tuning with Optuna</div>
+          <div class="notebook-body">
+            <div class="topic">Prepare Dataset</div>
+            <div class="topic">Step 1: Define Search Space & Optimization Function</div>
+            <div class="topic">Step 2: Create Optuna Study & Log with MLflow</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M03 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M03 — Agentic Machine Learning</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">3.1 Demo — Model Development with Genie Code</div>
+          <div class="notebook-body">
+            <div class="topic">From Writing Code to Expressing Intent</div>
+            <div class="topic">A Note on Prompt Complexity</div>
+            <div class="topic">Section 1 — Setting Up Genie Code Agent Mode</div>
+            <div class="subtopic">How to Use Genie Code Agent Mode</div>
+            <div class="subtopic">Custom Instructions for This Session</div>
+            <div class="topic">Phase 1 — Explore: Data Loading & EDA</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">3.2 Lab — Agentic ML with Genie Code</div>
+          <div class="notebook-body">
+            <div class="topic">How to Use This Lab</div>
+            <div class="topic">Dataset Overview</div>
+            <div class="topic">How to Access Genie Code (Agent Mode)</div>
+            <div class="topic">Custom Instructions for This Lab</div>
+            <div class="topic">Task 1: Load Data & Perform EDA</div>
+            <div class="subtopic">Task 1 — EDA: Explore the Dataset</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COURSE 3: DEPLOYMENT -->
+  <div class="course c3">
+    <div class="course-header">🚀 ML Model<br>Deployment</div>
+
+    <!-- M02 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M02 — Batch Deployment</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">2.1 Demo — Batch Deployment</div>
+          <div class="notebook-body">
+            <div class="topic">Batch Deployment Overview</div>
+            <div class="topic">Data Preparation</div>
+            <div class="topic">Batch Deployment Without Feature Store</div>
+            <div class="topic">Setup Model Registry with UC</div>
+            <div class="topic">Fit and Register a Model with UC</div>
+            <div class="topic">Use the Model for Inference</div>
+            <div class="subtopic">Load the Model</div>
+            <div class="subtopic">Inference</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">2.2 Lab — Batch Deployment</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Load Dataset</div>
+            <div class="topic">Task 2: Inference with Feature Table</div>
+            <div class="subtopic">Step 1: Create Feature Table</div>
+            <div class="subtopic">Step 2: Setup Feature Lookups</div>
+            <div class="subtopic">Step 3: Fit & Register Model with UC</div>
+            <div class="subtopic">Step 4: Use the Model for Inference</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M03 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M03 — Pipeline Deployment</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">3.1a Demo — Pipeline Deployment</div>
+          <div class="notebook-body">
+            <div class="topic">Data Preparation</div>
+            <div class="topic">Model Preparation</div>
+            <div class="topic">Setup Model Registry with UC</div>
+            <div class="topic">Fit and Register a Model with UC</div>
+            <div class="topic">Configure Pipeline for Batch Inference</div>
+            <div class="subtopic">Config Variables</div>
+            <div class="subtopic">Create the ETL Pipeline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M04 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M04 — Real-time Deployment & Online Stores</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">4.1 Demo — Real-time Deployment with Model Serving</div>
+          <div class="notebook-body">
+            <div class="topic">Offline Feature Tables for Real-Time Inferencing</div>
+            <div class="topic">Real-time Deployment with Offline Feature Tables</div>
+            <div class="subtopic">Step 1: Inspect Offline Feature Table & Model Versions</div>
+            <div class="subtopic">Step 2: Read Features & Response from Feature Store</div>
+            <div class="subtopic">Step 3: Real-time A/B Testing with Model Serving</div>
+            <div class="topic">Option 1: Serve Model(s) Using UI</div>
+            <div class="topic">Option 2: Serve Model(s) Using Databricks Python SDK</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">4.2 Demo — Custom Model Deployment</div>
+          <div class="notebook-body">
+            <div class="topic">Data Preparation</div>
+            <div class="topic">Fit and Register a Custom Model</div>
+            <div class="subtopic">Define Wrapper Class</div>
+            <div class="subtopic">Train Base Model</div>
+            <div class="subtopic">Wrap and Log the Custom Model</div>
+            <div class="topic">Test Wrapped Model</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">4.3 Lab — Real-time Deployment with Model Serving</div>
+          <div class="notebook-body">
+            <div class="topic">Data and Model Preparation</div>
+            <div class="subtopic">Load Dataset</div>
+            <div class="subtopic">Setup Model Registry with UC</div>
+            <div class="subtopic">Helper Class for Model Creation</div>
+            <div class="subtopic">Fit and Register the Model</div>
+            <div class="topic">Simple Real-time Model Deployment</div>
+            <div class="topic">Task 1: Serve the Model Using the UI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COURSE 4: MLOps -->
+  <div class="course c4">
+    <div class="course-header">⚙️ Machine Learning<br>Operations (MLOps)</div>
+
+    <!-- M01 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M01 — Modern MLOps</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">1.1 Demo — LakeFlow Jobs using UI</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Create a LakeFlow Job in UI</div>
+            <div class="topic">Task 2: Add Tasks to the Job</div>
+            <div class="subtopic">2.1 Data Quality Assessment</div>
+            <div class="subtopic">2.2 Alert on Unusual Patterns</div>
+            <div class="subtopic">2.3 Conditional Path Setup</div>
+            <div class="subtopic">2.4 Investigate & Resolve Unusual Patterns</div>
+            <div class="subtopic">2.5 Feature Importance Analysis</div>
+            <div class="subtopic">2.6 Save Report</div>
+            <div class="subtopic">2.7 Enable Email Notifications</div>
+            <div class="topic">Task 3: Trigger the Job Manually</div>
+            <div class="topic">Task 4: Monitor the Job Execution</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.1a — Data Quality Assessment</div>
+          <div class="notebook-body">
+            <div class="topic">Step 1: Load the Loan Dataset</div>
+            <div class="topic">Step 2: Check for Missing Values</div>
+            <div class="topic">Step 3: Check for Duplicate Records</div>
+            <div class="topic">Step 4: Detect Potential Outliers</div>
+            <div class="topic">Step 5: Save Data Quality Report</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.1b — Alert on Unusual Patterns</div>
+          <div class="notebook-body">
+            <div class="topic">Step 1: Load Loan Data</div>
+            <div class="topic">Step 2: Check High Cardinality in Categorical Features</div>
+            <div class="topic">Step 3: Check Skewed Distributions</div>
+            <div class="topic">Step 4: Save Unusual Patterns Report</div>
+            <div class="topic">Step 5: Set Flag for Conditional Execution</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.1c — Investigate & Resolve Unusual Patterns</div>
+          <div class="notebook-body">
+            <div class="topic">Step 1: Load Unusual Patterns Report</div>
+            <div class="topic">Step 2: Investigate High Cardinality Columns</div>
+            <div class="topic">Step 3: Analyze Skewed Distributions</div>
+            <div class="topic">Step 4: Apply Transformations</div>
+            <div class="topic">Step 5: Document Findings</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.1d — Feature Importance Analysis</div>
+          <div class="notebook-body">
+            <div class="topic">Step 1: Load Loan Data</div>
+            <div class="topic">Step 2: Preprocess the Data</div>
+            <div class="topic">Step 3: Train Random Forest for Feature Importance</div>
+            <div class="topic">Step 4: Save Feature Importance Report</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.2 Lab — Creating & Managing LakeFlow Jobs</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Create a Databricks Job</div>
+            <div class="topic">Task 2: Add Tasks to the Job</div>
+            <div class="subtopic">2.1 Data Cleaning & Feature Engineering</div>
+            <div class="subtopic">2.2 Model Training</div>
+            <div class="topic">Task 3: Enable Email Notifications</div>
+            <div class="topic">Task 4: Manually Trigger the Job Run</div>
+            <div class="topic">Task 5: Monitor the Job Run</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.2a Lab — Data Cleaning & Feature Engineering</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Load & Explore Raw Dataset</div>
+            <div class="topic">Task 2: Define Data Cleaning Logic</div>
+            <div class="subtopic">Task 2.2: Clean the Data</div>
+            <div class="topic">Task 3: Save Cleaned Data</div>
+            <div class="topic">Task 4: Create and Load Feature Table</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">1.2b Lab — Model Training & Tracking with MLflow</div>
+          <div class="notebook-body">
+            <div class="topic">Task 1: Data Preparation</div>
+            <div class="subtopic">1.1 Load the Cleaned Data</div>
+            <div class="subtopic">1.2 Handle Missing Values</div>
+            <div class="subtopic">1.3 Split the Data</div>
+            <div class="topic">Task 2: Fit and Log the Model</div>
+            <div class="topic">Task 3: Visualize Model Performance</div>
+            <div class="subtopic">3.1 Confusion Matrix</div>
+            <div class="subtopic">3.2 Feature Importance Plots</div>
+            <div class="topic">Task 4: Search for the Best Run</div>
+            <div class="subtopic">4.1 Train & Log Multiple Trials with MLflow</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M02 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M02 — Architecting MLOps Solutions</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">2.1 Demo — ML Pipeline with Databricks API</div>
+          <div class="notebook-body">
+            <div class="topic">Authentication Setup</div>
+            <div class="topic">Pipeline Configuration</div>
+            <div class="topic">Executing the Pipeline</div>
+            <div class="subtopic">Retrieve Cluster ID</div>
+            <div class="subtopic">Define Notebook Paths for Pipeline Tasks</div>
+            <div class="subtopic">Pipeline Tasks Creation</div>
+            <div class="topic">Monitoring Task Progress</div>
+            <div class="topic">Running the Pipeline Job</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">2.2 Demo — Model Testing Job with Databricks CLI</div>
+          <div class="notebook-body">
+            <div class="topic">Install the Databricks CLI</div>
+            <div class="topic">Configure Authentication</div>
+            <div class="topic">Execute Help Command</div>
+            <div class="topic">Manage & Execute Job Commands</div>
+            <div class="subtopic">Configuration of a LakeFlow Job</div>
+            <div class="topic">Train & Deploy Model</div>
+            <div class="topic">Performance Testing on Deployed Models</div>
+            <div class="subtopic">Latency, Throughput & Accuracy Metrics</div>
+            <div class="subtopic">Concurrent Request Testing</div>
+            <div class="topic">Model Prediction Analysis</div>
+            <div class="subtopic">Batch Predictions via Model Endpoints</div>
+            <div class="subtopic">Confusion Matrix & Classification Report</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">2.3 Lab — Status Check & Deployment</div>
+          <div class="notebook-body">
+            <div class="topic">2.3a: Checking Model Status</div>
+            <div class="subtopic">Fetch Model Versions from MLflow Registry</div>
+            <div class="subtopic">Check Model Readiness for Production</div>
+            <div class="subtopic">Validate Champion Alias Assignments</div>
+            <div class="topic">2.3b: Model Deployment</div>
+            <div class="subtopic">Load Best Model from MLflow Registry</div>
+            <div class="subtopic">Configure Serving Endpoint Parameters</div>
+            <div class="subtopic">Create & Update Serving Endpoints</div>
+            <div class="topic">2.3c: Batch Inferencing</div>
+            <div class="subtopic">Load New Data for Inference</div>
+            <div class="subtopic">Batch Inference via Serving Endpoints</div>
+            <div class="topic">2.3d: Not Ready for Production</div>
+            <div class="subtopic">Error Handling & Fallback Workflows</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M03 -->
+    <div class="module">
+      <div class="module-header"><span class="arrow">▶</span> M03 — Implementation & Monitoring MLOps</div>
+      <div class="module-body">
+        <div class="notebook">
+          <div class="notebook-header">3.1 Demo — Lakehouse Monitoring Dashboard</div>
+          <div class="notebook-body">
+            <div class="topic">Model Training for Diabetes Classification</div>
+            <div class="topic">Training/Inference Data Splitting</div>
+            <div class="topic">DecisionTreeClassifier Implementation</div>
+            <div class="topic">Saving Training Data as Drift Reference</div>
+            <div class="topic">Processing Inference Table Data</div>
+            <div class="topic">Drift Detection and Monitoring</div>
+            <div class="topic">Databricks Lakehouse Monitoring Setup</div>
+            <div class="topic">Continuous Performance Tracking</div>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-header">3.2 Lab — Model Monitoring</div>
+          <div class="notebook-body">
+            <div class="topic">Saving Training Data for Drift Reference</div>
+            <div class="topic">Processing & Monitoring Inference Data</div>
+            <div class="topic">Analyzing Processed Requests</div>
+            <div class="topic">Persisting Processed Model Logs</div>
+            <div class="topic">Creating Inference Monitors (Lakehouse Monitoring)</div>
+            <div class="topic">Inspecting & Monitoring Metrics Tables</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot ld1"></div> Data Preparation for ML</div>
+  <div class="legend-item"><div class="legend-dot ld2"></div> ML Model Development</div>
+  <div class="legend-item"><div class="legend-dot ld3"></div> ML Model Deployment</div>
+  <div class="legend-item"><div class="legend-dot ld4"></div> ML Operations (MLOps)</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks Certified ML Associate — Practice Quiz</title>
+<style>
+  :root{
+    --bg:#0f1117; --panel:#1a1d24; --panel2:#12141a; --border:#2a2f3a;
+    --text:#e6e9ef; --muted:#9aa4b6; --accent:#ff6b3d;
+    --ok-bg:#13351f; --ok-bd:#2ea043; --ok-tx:#7ee29b;
+    --no-bg:#3a1416; --no-bd:#e5534b; --no-tx:#ff9b95;
+    --chip:#222734;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:80px}
+
+  header{position:sticky;top:0;z-index:50;background:rgba(15,17,23,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 16px}
+  h1{font-size:1.15rem;padding:14px 0 4px}
+  h1 .accent{color:var(--accent)}
+  .sub{color:var(--muted);font-size:.8rem;padding-bottom:10px}
+
+  /* score bar */
+  .scorebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 0 12px}
+  .stat{background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.82rem;font-weight:600}
+  .stat b{color:var(--accent)}
+  .stat.good b{color:var(--ok-tx)}
+  .progress{flex:1;min-width:140px;height:8px;background:var(--panel2);border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+  .progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#ffb37e);transition:width .3s}
+  .resetbtn{background:var(--no-bg);color:var(--no-tx);border:1px solid var(--no-bd);border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer}
+  .resetbtn:hover{filter:brightness(1.15)}
+
+  /* tabs */
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;padding:0 0 12px}
+  .tab{background:var(--panel);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:7px 14px;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap}
+  .tab .cnt{opacity:.7;font-weight:500}
+  .tab:hover{border-color:var(--accent)}
+  .tab.active{background:var(--accent);color:#1a0e08;border-color:var(--accent)}
+
+  main{max-width:920px;margin:18px auto 0;padding:0 16px}
+
+  .domain-title{font-size:1rem;font-weight:800;margin:26px 0 4px;padding-bottom:6px;border-bottom:2px solid var(--border);letter-spacing:.3px}
+  .domain-title .dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;vertical-align:middle}
+  .d-prep{color:#7ec8ff}.bg-prep{background:#2d7dd2}
+  .d-dev{color:#7effc0}.bg-dev{background:#2d9e5f}
+  .d-deploy{color:#ffc87e}.bg-deploy{background:#d27d2d}
+  .d-mlops{color:#d97eff}.bg-mlops{background:#9e2db5}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0}
+  .qhead{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:9px}
+  .qnum{font-size:.7rem;font-weight:800;color:var(--accent);background:var(--chip);border-radius:6px;padding:3px 8px;white-space:nowrap}
+  .domchip{font-size:.68rem;font-weight:800;border-radius:6px;padding:3px 9px;background:#0d0f14;border:1px solid var(--border);white-space:nowrap}
+  .subchip{font-size:.68rem;font-weight:600;border-radius:6px;padding:3px 9px;background:#0d0f14;border:1px dashed var(--border);color:var(--muted)}
+  .subchip .arr{opacity:.6;margin-right:3px}
+  .qflag{font-size:.66rem;font-weight:700;color:#ffd27e;background:#3a2c10;border:1px solid #6b5012;border-radius:6px;padding:3px 7px;white-space:nowrap}
+  .qtext{font-size:.95rem;font-weight:600}
+  pre.code{background:#0b0d12;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:10px 0;overflow-x:auto;font-family:'Cascadia Code',Consolas,Monaco,monospace;font-size:.78rem;color:#cdd6e6;white-space:pre}
+
+  .opts{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--panel2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.88rem;cursor:pointer;transition:border-color .15s,background .15s;font-family:inherit;line-height:1.45}
+  .opt:hover:not(.locked){border-color:var(--accent);background:#171b22}
+  .opt .lab{font-weight:800;flex:0 0 auto;width:20px;color:var(--muted)}
+  .opt .body{flex:1}
+  .opt .body.mono{font-family:'Cascadia Code',Consolas,Monaco,monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-word}
+  .opt .mark{flex:0 0 auto;font-weight:900;font-size:1rem;opacity:0;width:18px;text-align:center}
+  .opts.locked .opt{cursor:default}
+  .opt.correct{background:var(--ok-bg);border-color:var(--ok-bd)}
+  .opt.correct .lab{color:var(--ok-tx)}
+  .opt.correct .mark{opacity:1;color:var(--ok-tx)}
+  .opt.wrong{background:var(--no-bg);border-color:var(--no-bd)}
+  .opt.wrong .lab{color:var(--no-tx)}
+  .opt.wrong .mark{opacity:1;color:var(--no-tx)}
+
+  .checkbtn{align-self:flex-start;margin-top:4px;background:var(--accent);color:#1a0e08;border:none;border-radius:8px;padding:8px 16px;font-weight:800;font-size:.82rem;cursor:pointer}
+  .checkbtn:disabled{opacity:.45;cursor:not-allowed}
+  .multi-note{font-size:.74rem;color:var(--muted);margin-top:8px;font-style:italic}
+
+  .explain{margin-top:12px;border-radius:9px;padding:11px 13px;font-size:.85rem;display:none;border-left:4px solid var(--ok-bd);background:#101c14}
+  .explain.show{display:block}
+  .explain .et{font-weight:800;color:var(--ok-tx);margin-right:6px}
+  .explain .ans{font-weight:800;color:var(--ok-tx)}
+  .explain.flagwarn{border-left-color:#caa23a;background:#1d1809}
+  .explain.flagwarn .et{color:#ffd27e}
+  .explain .fnote{display:block;margin-top:6px;color:#ffd27e;font-size:.78rem}
+
+  .empty{color:var(--muted);text-align:center;padding:40px 0;font-size:.9rem}
+  footer{max-width:920px;margin:30px auto;padding:18px 16px;color:var(--muted);font-size:.76rem;border-top:1px solid var(--border)}
+  .totop{position:fixed;right:16px;bottom:18px;background:var(--accent);color:#1a0e08;border:none;width:44px;height:44px;border-radius:50%;font-size:1.2rem;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:60}
+
+  /* weightage panel */
+  .weightage{max-width:920px;margin:16px auto 0;padding:0 16px}
+  .wbox{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .whead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;font-weight:800;font-size:.9rem}
+  .whead .wsmall{color:var(--muted);font-weight:600;font-size:.78rem}
+  .whead .wtoggle{color:var(--accent);font-size:.78rem;font-weight:700;white-space:nowrap}
+  .wbody{padding:6px 16px 16px}
+  .wbody.collapsed{display:none}
+  .wrow{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.8rem}
+  .wrow .wlabel{flex:0 0 auto;width:160px;font-weight:700}
+  .wrow .wbar{flex:1;height:15px;background:var(--panel2);border-radius:7px;overflow:hidden;border:1px solid var(--border);min-width:60px}
+  .wrow .wbar>span{display:block;height:100%;border-radius:7px;transition:width .4s}
+  .wrow .wval{flex:0 0 auto;width:84px;text-align:right;color:var(--muted);font-weight:700}
+  .wsubtitle{font-size:.8rem;font-weight:800;margin:16px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+  .wsubgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:5px 18px}
+  .wsub{display:flex;justify-content:space-between;gap:8px;font-size:.76rem;padding:3px 2px;border-bottom:1px dashed #20242e}
+  .wsub .ws-n{color:var(--accent);font-weight:700;flex:0 0 auto}
+  @media(max-width:600px){ .wrow .wlabel{width:118px;font-size:.74rem} .wrow .wval{width:72px;font-size:.74rem} }
+
+  @media(max-width:600px){
+    h1{font-size:1.02rem}
+    .qtext{font-size:.9rem}
+    .opt{font-size:.86rem}
+    .stat{font-size:.76rem;padding:5px 9px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1><span class="accent">Databricks</span> Certified ML Associate — Practice Quiz</h1>
+    <div class="sub">Click an option to answer. Correct ✓ green · wrong ✗ red. Each question is tagged with its topic + subtopic. Questions lock once answered.</div>
+    <div class="scorebar">
+      <div class="stat">Answered <b id="s-ans">0</b>/<b id="s-tot">0</b></div>
+      <div class="stat good">Correct <b id="s-cor">0</b></div>
+      <div class="stat">Score <b id="s-pct">0%</b></div>
+      <div class="progress"><span id="s-bar"></span></div>
+      <button class="resetbtn" id="resetBtn">Reset all</button>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+</header>
+
+<section class="weightage">
+  <div class="wbox">
+    <div class="whead" id="whead">
+      <span>📊 Exam Weightage <span class="wsmall">(auto-calculated from <b id="wcount">0</b> questions — updates when you add questions)</span></span>
+      <span class="wtoggle" id="wtoggle">Hide ▲</span>
+    </div>
+    <div class="wbody" id="wbody"></div>
+  </div>
+</section>
+
+<main id="quiz"></main>
+
+<footer id="footer"></footer>
+<button class="totop" id="toTop" title="Back to top">↑</button>
+
+<script>
+/* ============================================================
+   DATA — 140 questions (numbered 1-140). Each:
+   n=number, d=domain, t=subtopic, q=text, code=optional code,
+   opts=[...], c=[correct idx], multi=true for choose-many,
+   e=explanation, f=low-confidence flag.
+   ============================================================ */
+const DOMAINS = {
+  prep:  {name:"Data Preparation",      cls:"d-prep",  bg:"bg-prep"},
+  dev:   {name:"Model Development",     cls:"d-dev",   bg:"bg-dev"},
+  deploy:{name:"Model Deployment",      cls:"d-deploy",bg:"bg-deploy"},
+  mlops: {name:"ML Operations (MLOps)", cls:"d-mlops", bg:"bg-mlops"}
+};
+
+const DATA = [
+{n:1,d:"prep",t:"Feature Store",q:"A machine learning engineer created a Feature Table new_table using Feature Store Client fs, specifying a metadata description. They now want to retrieve that metadata description programmatically. Which line of code will return the metadata description?",
+opts:[`There is no way to return the metadata description programmatically.`,`fs.create_training_set("new_table")`,`fs.get_table("new_table").description`,`fs.get_table("new_table").load_df()`,`fs.get_table("new_table")`],
+c:[2],e:`fs.get_table() returns the feature table metadata object, and its .description attribute holds the stored description.`},
+
+{n:2,d:"prep",t:"Spark DataFrame Operations",q:"A data scientist has a Spark DataFrame spark_df. They want only the rows where column price is greater than 0. Which code block accomplishes this?",
+opts:[`spark_df[spark_df["price"] > 0]`,`spark_df.filter(col("price") > 0)`,`SELECT * FROM spark_df WHERE price > 0`,`spark_df.loc[spark_df["price"] > 0,:]`,`spark_df.loc[:,spark_df["price"] > 0]`],
+c:[1],e:`Spark DataFrames use .filter() with a Column expression like col("price") > 0; .loc/.iloc are pandas-only.`},
+
+{n:3,d:"dev",t:"Evaluation Metrics",q:"A health organization is building a classification model to detect an infection, and leaders want to maximize the number of positive cases identified by the model. Which classification metric should be used?",
+opts:[`RMSE`,`Precision`,`Area under the residual operating curve`,`Accuracy`,`Recall`],
+c:[4],e:`Recall = TP/(TP+FN) measures the share of actual positives that are found, so maximizing positive cases caught means maximizing recall.`},
+
+{n:4,d:"prep",t:"Missing Value Imputation",q:"In which situation is it preferable to impute missing feature values with their median value over the mean value?",
+opts:[`When the features are of the categorical type`,`When the features are of the boolean type`,`When the features contain a lot of extreme outliers`,`When the features contain no outliers`,`When the features contain no missing values`],
+c:[2],e:`The median is robust to extreme outliers, whereas the mean is pulled toward them, making the median the safer central value with heavy outliers.`},
+
+{n:5,d:"prep",t:"Missing Value Imputation",q:"A data scientist replaced missing values with each feature's median. A colleague says this throws away valuable information. Which approach includes as much information as possible in the feature set?",
+opts:[`Impute the missing values using each feature's mean instead of the median`,`Refrain from imputing in favor of letting the algorithm decide`,`Remove all feature variables that originally contained missing values`,`Create a binary feature for each feature with missing values indicating whether each row's value was imputed`,`Create a constant feature indicating the percentage of rows originally missing`],
+c:[3],e:`Adding a binary "was-imputed" indicator column preserves the signal that a value was originally missing, which can itself be predictive.`},
+
+{n:6,d:"prep",t:"Summary Statistics & EDA",q:"A data scientist wants count, mean, standard deviation, min, max, and interquartile range (IQR) for each numeric feature of Spark DataFrame spark_df. Which line accomplishes this?",
+opts:[`spark_df.summary()`,`spark_df.stats()`,`spark_df.describe().head()`,`spark_df.printSchema()`,`spark_df.toPandas()`],
+c:[0],e:`summary() returns count, mean, stddev, min, max and the 25/50/75 percentiles (which give the IQR); describe() omits the quartiles.`},
+
+{n:7,d:"prep",t:"Categorical Encoding",q:"An organization building a feature repository elects to one-hot encode all categorical features. A data scientist suggests categoricals should NOT be one-hot encoded within the feature repository. Which explanation justifies this?",
+opts:[`One-hot encoding is not supported by most machine learning libraries.`,`One-hot encoding is dependent on the target variable's values which differ for each application.`,`One-hot encoding is computationally intensive and should only be performed on small samples.`,`One-hot encoding is not a common strategy for representing categoricals numerically.`,`One-hot encoding is a potentially problematic categorical variable strategy for some machine learning algorithms.`],
+c:[4],e:`Some algorithms (e.g. tree-based models) handle raw/indexed categories better, so baking OHE into a shared repository can hurt those downstream models.`},
+
+{n:8,d:"dev",t:"Evaluation Metrics",f:true,q:"A data scientist built two linear regression models: one uses price as the label, the other uses log(price). Comparing predictions to actual price, the RMSE of the second model is much larger. Which possible explanation for this difference is INVALID?",
+opts:[`The second model is much more accurate than the first model`,`The data scientist failed to exponentiate the predictions in the second model prior to computing RMSE`,`The data scientist failed to take the log of the predictions in the first model prior to computing RMSE`,`The first model is much more accurate than the second model`,`The RMSE is an invalid evaluation metric for regression problems`],
+c:[0],e:`A much larger RMSE cannot mean the second model is "much more accurate," so that explanation is invalid. (Several distractors are also weak; the single best invalid statement is A.)`},
+
+{n:9,d:"dev",t:"Cross-Validation",q:"A data scientist uses 3-fold cross-validation. The RMSE values on the three validation folds are 10.0, 12.0, and 17.0. Which value represents the overall cross-validation RMSE?",
+opts:[`13.0`,`17.0`,`12.0`,`39.0`,`10.0`],
+c:[0],e:`The overall CV metric is the average across folds: (10+12+17)/3 = 13.0.`},
+
+{n:10,d:"dev",t:"Cross-Validation",q:"A pipeline contains feature engineering stages and a model. A colleague suggests passing the model to CrossValidator's estimator and placing the cv object as the final stage of the pipeline (instead of the original model). What is a negative consequence of this approach?",
+opts:[`The model will take longer to train for each combination of hyperparameter values`,`The feature engineering stages will be computed using validation data`,`The cross-validation process will no longer be parallelizable`,`The cross-validation process will no longer be reproducible`,`The model will be refit one more time per cross-validation fold`],
+c:[1],e:`If CV sits inside the pipeline, the feature-engineering stages run on the full data before splitting, so validation-fold information leaks into the fitted transformers.`},
+
+{n:11,d:"prep",t:"Categorical Encoding",q:"What is the name of the method that transforms categorical features into a series of binary indicator feature variables?",
+opts:[`Leave-one-out encoding`,`Target encoding`,`One-hot encoding`,`Categorical embeddings`,`String indexing`],
+c:[2],e:`One-hot encoding creates one binary indicator column per category.`},
+
+{n:12,d:"dev",t:"Tree-Based Models & Ensembles",q:"A data scientist wants to parallelize the training of trees in a gradient boosted tree. A colleague says parallelizing a boosted tree algorithm can be difficult. Why?",
+opts:[`Gradient boosting is not a linear algebra-based algorithm which is required for parallelization.`,`Gradient boosting requires access to all data at once which cannot happen during parallelization.`,`Gradient boosting calculates gradients using all cores which prevents parallelization.`,`Gradient boosting is an iterative algorithm that requires information from the previous iteration to perform the next step.`,`Gradient boosting uses decision trees in each iteration which cannot be parallelized.`],
+c:[3],e:`Boosting is sequential: each tree is fit on the residuals/gradients of the prior trees, so iterations cannot be trained independently in parallel.`},
+
+{n:13,d:"dev",t:"Hyperparameter Tuning",q:"A data scientist uses Hyperopt's fmin to tune a scikit-learn RandomForestRegressor, but the final model is inaccurate. The objective_function builds the regressor and returns r2. Which change produces a more accurate model?",
+code:`def objective_function(params):
+    max_depth = params["max_depth"]
+    max_features = params["max_features"]
+    regressor = RandomForestRegressor(max_depth=max_depth, max_features=max_features)
+    # ... cross_val_score -> r2 ...
+    return r2`,
+opts:[`Add test set validation process`,`Add a random_state argument to the RandomForestRegressor operation`,`Remove the mean operation that is wrapping the cross_val_score operation`,`Replace the r2 return value with -r2`,`Replace the fmin operation with the fmax operation`],
+c:[3],e:`fmin minimizes the objective, so returning r2 minimizes accuracy; returning -r2 makes the minimizer maximize R².`},
+
+{n:14,d:"dev",t:"Hyperparameter Tuning",q:"A data scientist tuning a logistic regression model wants to specify a search space for two hyperparameters and let the process randomly select values. The current code does not do this:",
+code:`distributions = dict(C=uniform(loc=0, scale=4), penalty=['l2', 'l1'])
+clf = GridSearchCV(logistic, distributions, random_state=0)
+search = clf.fit(feature_data, target_data)`,
+opts:[`Replace the GridSearchCV operation with RandomizedSearchCV`,`Replace the GridSearchCV operation with cross_validate`,`Replace the GridSearchCV operation with ParameterGrid`,`Replace the random_state=0 argument with random_state=1`,`Replace the penalty=['l2','l1'] argument with penalty=uniform('l2','l1')`],
+c:[0],e:`RandomizedSearchCV samples random values from the distributions, which is what's wanted; GridSearchCV exhaustively tries fixed combinations.`},
+
+{n:15,d:"dev",t:"Hyperparameter Tuning",q:"Which tool can be used to parallelize the hyperparameter tuning process for single-node machine learning models using a Spark cluster?",
+opts:[`MLflow Experiment Tracking`,`Spark ML`,`Autoscaling clusters`,`Hyperopt`,`Delta Lake`],
+c:[3],e:`Hyperopt (with SparkTrials) distributes tuning trials of single-node models across the Spark cluster.`},
+
+{n:16,d:"prep",t:"pandas API on Spark",q:"Which statement describes the relationship between native Spark DataFrames and pandas API on Spark DataFrames?",
+opts:[`pandas API on Spark DataFrames are single-node versions of Spark DataFrames with additional metadata`,`pandas API on Spark DataFrames are more performant than Spark DataFrames`,`pandas API on Spark DataFrames are made up of Spark DataFrames and additional metadata`,`pandas API on Spark DataFrames are less mutable versions of Spark DataFrames`,`pandas API on Spark DataFrames are unrelated to Spark DataFrames`],
+c:[2],e:`pandas-on-Spark wraps a Spark DataFrame plus an InternalFrame of metadata to mimic the pandas interface while staying distributed.`},
+
+{n:17,d:"prep",t:"pandas API on Spark",q:"A data scientist wrote a data-cleaning notebook using pandas, but a colleague suggests refactoring it to scale with big data. Which approach takes the LEAST time to refactor?",
+opts:[`Refactor the notebook to process the data in parallel.`,`Refactor to use the PySpark DataFrame API.`,`Refactor to use the Scala Dataset API.`,`Refactor to use Spark SQL.`,`Refactor to utilize the pandas API on Spark.`],
+c:[4],e:`The pandas API on Spark keeps familiar pandas syntax while running distributed, so it requires the least rewriting.`},
+
+{n:18,d:"deploy",t:"Distributed Inference",q:"A Pandas UDF predict was defined to parallelize inference for a single-node model. Which line completes the code block to score each record of spark_df?",
+code:`@pandas_udf("double")
+def predict(iterator: Iterator[pd.DataFrame]) -> Iterator[pd.Series]:
+    model = mlflow.sklearn.load_model(model_path)
+    for features in iterator:
+        yield pd.Series(model.predict(features))
+
+prediction_df = spark_df.withColumn("prediction", ________ )`,
+opts:[`predict(*spark_df.columns)`,`mapInPandas(predict)`,`predict(iterator(spark_df))`,`mapInPandas(predict(spark_df.columns))`,`predict(spark_df.columns)`],
+c:[0],e:`A pandas_udf is called like a column function, passing the feature columns as separate arguments: predict(*spark_df.columns).`},
+
+{n:19,d:"prep",t:"Data Splitting",q:"Which Spark operation can be used to randomly split a Spark DataFrame into a training DataFrame and a test DataFrame for downstream use?",
+opts:[`TrainValidationSplit`,`DataFrame.where`,`CrossValidator`,`TrainValidationSplitModel`,`DataFrame.randomSplit`],
+c:[4],e:`DataFrame.randomSplit([0.8,0.2], seed=...) splits a DataFrame into random subsets such as train/test.`},
+
+{n:20,d:"prep",t:"Feature Scaling & Leakage",q:"A data scientist standardizes features then splits into train/test. A colleague is concerned the features are standardized BEFORE splitting. Which change addresses the concern?",
+code:`scaler = StandardScaler(withMean=True, inputCol="input_features", outputCol="output_features")
+scaler_model = scaler.fit(features_df)
+scaled_df = scaler_model.transform(features_df)
+train_df, test_df = scaled_df.randomSplit([.8, .2], seed=42)`,
+opts:[`Use MinMaxScaler to standardize the training data according to global min/max values`,`Use MinMaxScaler to standardize the test data according to global min/max values`,`Use a cross-validation process to remove the need for standardizing data`,`Use the Pipeline API to standardize the training data according to the test data's summary statistics`,`Use the Pipeline API to standardize the test data according to the training data's summary statistics`],
+c:[4],e:`To avoid leakage, fit the scaler on the training set only and apply those statistics to the test set — done cleanly by splitting first and putting the scaler in a Pipeline.`},
+
+{n:21,d:"prep",t:"Distributed Feature Engineering",q:"A machine learning engineer wants to distribute the feature engineering process. Which feature engineering task is the LEAST efficient to distribute?",
+opts:[`One-hot encoding categorical features`,`Target encoding categorical features`,`Imputing missing feature values with the mean`,`Imputing missing feature values with the true median`,`Creating binary indicator features for missing values`],
+c:[3],e:`Computing the true median requires a global sort/shuffle across partitions, which is far costlier to distribute than sums or per-row transforms.`},
+
+{n:22,d:"prep",t:"pandas UDFs",f:true,q:"Which is a benefit of using vectorized pandas UDFs instead of standard PySpark UDFs?",
+opts:[`The vectorized pandas UDFs allow for the use of type hints`,`The vectorized pandas UDFs process data in batches rather than one row at a time`,`The vectorized pandas UDFs allow for pandas API use inside of the function`,`The vectorized pandas UDFs work on distributed DataFrames`,`The vectorized pandas UDFs process data in memory rather than spilling to disk`],
+c:[1],e:`Vectorized (pandas) UDFs use Apache Arrow to process data in batches instead of row-by-row, which is the core performance benefit. (Some discussions argue C, but the defining benefit is batching.)`},
+
+{n:23,d:"dev",t:"Hyperparameter Tuning",f:true,q:"A data scientist wrapped a Spark ML model in objective_function and uses the code below. Which change is needed to accomplish the tuning task?",
+code:`num_evals = 100
+trials = SparkTrials()
+best_hyperparam = fmin(fn=objective_function, space=search_space,
+    algo=tpe.suggest, max_evals=num_evals, trials=trials)`,
+opts:[`Change SparkTrials() to Trials()`,`Reduce num_evals to be less than 10`,`Change fmin() to fmax()`,`Remove the trials=trials argument`,`Remove the algo=tpe.suggest argument`],
+c:[0],e:`SparkTrials is for distributing single-node models; a Spark ML model is already distributed, so it should use the default Trials() instead.`},
+
+{n:24,d:"dev",t:"Spark ML Estimators & Transformers",q:"An engineer trains a Spark ML LinearRegression on train_df with schema hotel_room_id STRING, price DOUBLE, features UDT. The code is lr = LinearRegression(featuresCol='features', labelCol='price'); lr_model = lr.fit(train_df). Which change is needed?",
+opts:[`They need to call the transform method on train_df`,`They need to convert the features column to be a vector`,`They do not need to make any changes`,`They need to utilize a Pipeline to fit the model`,`They need to split the features column out into one column for each feature`],
+c:[2],e:`The features column is already a vector type (UDT/VectorUDT), exactly what LinearRegression expects, so no changes are required.`},
+
+{n:25,d:"prep",t:"Distributed Feature Engineering",q:"Which tool can be used to distribute large-scale feature engineering WITHOUT using a UDF or pandas Function API for ML pipelines?",
+opts:[`Keras`,`pandas`,`PyTorch`,`Spark ML`,`Scikit-learn`],
+c:[3],e:`Spark ML transformers run natively distributed on Spark DataFrames, so no UDF is needed to scale feature engineering.`},
+
+{n:26,d:"dev",t:"Evaluation Metrics",q:"A Spark ML linear regression produced preds_df (prediction DOUBLE, actual DOUBLE). Which code block computes RMSE and assigns it to rmse?",
+opts:[`rmse = BinaryClassificationEvaluator(predictionCol="prediction", labelCol="actual", metricName="rmse")`,`rmse = RegressionEvaluator(predictionCol="prediction", labelCol="actual", metricName="rmse")`,`rmse = Summarizer(predictionCol="prediction", labelCol="actual", metricName="rmse")`,`classification_evaluator = BinaryClassificationEvaluator(...); rmse = classification_evaluator.evaluate(preds_df)`,`regression_evaluator = RegressionEvaluator(predictionCol="prediction", labelCol="actual", metricName="rmse"); rmse = regression_evaluator.evaluate(preds_df)`],
+c:[4],e:`Regression needs RegressionEvaluator, and you must call .evaluate(preds_df) to actually compute the metric; the other options use the wrong evaluator or never call evaluate.`},
+
+{n:27,d:"dev",t:"Pandas Function API",q:"An engineer wants to parallelize the training of group-specific models with the Pandas Function API, applying train_model to each group of df. Which code fills the blank?",
+code:`model_directories_df = (df
+    .withColumn("run_id", f.lit(run_id))
+    .groupby("device_id")
+    ._____(train_model, schema=train_return_schema))`,
+opts:[`applyInPandas`,`mapInPandas`,`predict`,`train_model`,`groupedApplyIn`],
+c:[0],e:`groupBy(...).applyInPandas(fn, schema) applies a pandas function to each group, the standard Pandas Function API for grouped (per-group) training.`},
+
+{n:28,d:"dev",t:"Spark ML Estimators & Transformers",q:"Which statement describes a Spark ML estimator?",
+opts:[`An estimator is a hyperparameter grid that can be used to train a model`,`An estimator chains multiple algorithms together to specify an ML workflow`,`An estimator is a trained ML model which turns a DataFrame with features into a DataFrame with predictions`,`An estimator is an algorithm which can be fit on a DataFrame to produce a Transformer`,`An estimator is an evaluation tool to assess the quality of a model`],
+c:[3],e:`In Spark ML an Estimator implements .fit() on a DataFrame and returns a Transformer (the fitted model).`},
+
+{n:29,d:"prep",t:"pandas API on Spark",q:"A data scientist needs to perform feature engineering on a Spark DataFrame spark_df but has not learned the PySpark DataFrame API. Which code lets them use the pandas API on Spark?",
+opts:[`import pyspark.pandas as ps\ndf = ps.DataFrame(spark_df)`,`import pyspark.pandas as ps\ndf = ps.to_pandas(spark_df)`,`spark_df.to_sql()`,`import pandas as pd\ndf = pd.DataFrame(spark_df)`,`spark_df.to_pandas()`],
+c:[0],e:`ps.DataFrame(spark_df) wraps the Spark DataFrame in a pandas-on-Spark DataFrame, keeping it distributed while exposing pandas syntax.`},
+
+{n:30,d:"dev",t:"Ensemble Learning",f:true,q:"One model performs well when a feature < 5 and another when the feature ≥ 5; the data scientist combines them into one solution. Which term describes this combination of models?",
+opts:[`Bootstrap aggregation`,`Support vector machines`,`Bucketing`,`Ensemble learning`,`Stacking`],
+c:[3],e:`Combining multiple models into a single predictive solution is ensemble learning. (If a meta-model learned the weighting it would be stacking, but plain routing is a general ensemble.)`},
+
+{n:31,d:"dev",t:"Tree-Based Models & Ensembles",q:"Which machine learning algorithm typically uses bagging?",
+opts:[`Gradient boosted trees`,`K-means`,`Random forest`,`Linear regression`,`Decision tree`],
+c:[2],e:`Random forests are built with bagging (bootstrap aggregation) of many decision trees trained on resampled data.`},
+
+{n:32,d:"dev",t:"Distributed Linear Regression",q:"Spark ML first tries matrix decomposition for linear regression, but it doesn't scale to many variables. Which approach does Spark ML use to distribute linear regression training on large data?",
+opts:[`Logistic regression`,`Spark ML cannot distribute linear regression training`,`Iterative optimization`,`Least-squares method`,`Singular value decomposition`],
+c:[2],e:`For large/wide data Spark ML falls back to iterative optimization (e.g. L-BFGS / gradient methods), which distributes well.`},
+
+{n:33,d:"dev",t:"Spark ML Decision Trees",q:"A machine learning engineer is converting a decision tree from sklearn to Spark ML. They notice different results despite all data and manually specified hyperparameter values being identical. Which describes a reason the single-node sklearn decision tree and the Spark ML decision tree can differ?",
+opts:[`Spark ML decision trees test every feature variable in the splitting algorithm`,`Spark ML decision trees automatically prune overfit trees`,`Spark ML decision trees test more split candidates in the splitting algorithm`,`Spark ML decision trees test a random sample of feature variables in the splitting algorithm`,`Spark ML decision trees test binned feature values as representative split candidates`],
+c:[4],e:`To scale, Spark ML discretizes continuous features into bins (maxBins) and only tests those binned values as candidate splits, so its split points can differ from sklearn's exhaustive search even with identical data and hyperparameters.`},
+
+{n:34,d:"dev",t:"MLflow Experiment Tracking",q:"A data scientist tracking experiments with MLflow wants one parent run for tuning with a child run per hyperparameter combination, all started manually with mlflow.start_run. Which approach organizes the runs this way?",
+opts:[`They can turn on Databricks Autologging`,`They can specify nested=True when starting the child run for each combination`,`They can start each child run inside the parent run's indented code block using mlflow.start_run()`,`They can start each child run with the same experiment ID as the parent run`,`They can specify nested=True when starting the parent run`],
+c:[1],e:`Passing nested=True to the child mlflow.start_run() calls nests them under the active parent run.`},
+
+{n:35,d:"dev",t:"MLflow Experiment Tracking",q:"Which approach can be used to view the notebook that was run to create an MLflow run?",
+opts:[`Open the MLmodel artifact in the MLflow run page`,`Click the "Models" link in the row corresponding to the run`,`Click the "Source" link in the row corresponding to the run in the MLflow experiment page`,`Click the "Start Time" link in the row corresponding to the run`],
+c:[2],e:`The "Source" link in the experiment table opens the notebook (and revision) that generated the run.`},
+
+{n:36,d:"dev",t:"AutoML",q:"A data scientist building a pipeline with AutoML on Databricks ML — which step will they need to perform OUTSIDE of their AutoML experiment?",
+opts:[`Model tuning`,`Model evaluation`,`Model deployment`,`Exploratory data analysis`],
+c:[2],e:`AutoML handles EDA, tuning, and evaluation automatically, but deploying the chosen model is done outside the AutoML experiment.`},
+
+{n:37,d:"mlops",t:"Databricks Runtime ML",q:"An engineer wants notebooks to load the MLflow library without installing it each time, using Databricks Runtime for Machine Learning. How do they begin using Databricks Runtime ML?",
+opts:[`Add a line enabling Databricks Runtime ML in the init script when creating clusters.`,`Check the Databricks Runtime ML box when creating clusters.`,`Select a Databricks Runtime ML version from the Databricks Runtime Version dropdown when creating clusters.`,`Set the runtime-version variable in their Spark session to "ml".`],
+c:[2],e:`You enable Runtime ML by picking an "ML" runtime from the Databricks Runtime Version dropdown at cluster creation; it preinstalls MLflow and common ML libraries.`},
+
+{n:38,d:"dev",t:"MLflow Experiment Tracking",q:"Using MLflow Autologging, a data scientist wants the run_id of the run with the best (lowest) RMSE in experiment_id. Which line identifies it?",
+opts:[`mlflow.search_runs(experiment_id, order_by=["metrics.rmse DESC"])["run_id"][0]`,`mlflow.best_run(experiment_id, order_by=["metrics.rmse"])`,`mlflow.search_runs(experiment_id, order_by=["metrics.rmse"])["run_id"][0]`,`mlflow.best_run(experiment_id, order_by=["metrics.rmse DESC"])`],
+c:[2],e:`search_runs returns a DataFrame; ordering by metrics.rmse ascending (default) puts the lowest RMSE first, so [run_id][0] is the best. (mlflow.best_run does not exist.)`},
+
+{n:39,d:"mlops",t:"Model Registry & Versioning",q:"A new Staging model version passed all tests. From which page in Databricks ML can the engineer transition it to the Production stage in the Model Registry?",
+opts:[`The home page of the MLflow Model Registry`,`The experiment page in the Experiments observatory`,`The model version page in the MLflow Model Registry`,`The model page in the MLflow Model Registry`],
+c:[2],e:`Stage transitions are performed on the specific model version page, which shows the current stage and the transition controls.`},
+
+{n:40,d:"mlops",t:"Model Registry & Versioning",q:"An engineer has run_id and the logged model name 'model', and wants to register it as 'best_model'. Which line registers the model?",
+opts:[`mlflow.register_model(run_id, "best_model")`,`mlflow.register_model(f"runs:/{run_id}/model", "best_model")`,`mlflow.register_model(f"runs:/{run_id}/model")`,`mlflow.register_model(f"runs:/{run_id}/best_model", "model")`],
+c:[1],e:`register_model takes a model URI (runs:/<run_id>/<artifact_path>) plus the registered name, so runs:/{run_id}/model with "best_model" is correct.`},
+
+{n:41,d:"mlops",t:"Repos & Git Integration",q:"A scheduled daily-retraining Job lives in a Databricks Repo. A new data scientist must improve the preprocessing feature engineering without changing what runs each day. Which approach should they take?",
+opts:[`Create a new branch in Databricks, commit their changes, and push those changes to the Git provider.`,`Clone the notebooks into a Databricks Workspace folder and make the changes.`,`Create a new Git repository, import it into Databricks, and copy/paste the existing code before making changes.`,`Clone the notebooks into a new Databricks Repo and make the changes.`],
+c:[0],e:`Working on a new branch lets them develop and push changes through Git without altering the branch the daily Job runs, enabling clean review/merge later.`},
+
+{n:42,d:"mlops",t:"Jobs & Orchestration",q:"A Job has three successive notebook tasks and its latest run failed. Which approach identifies which task caused the failure?",
+opts:[`Run each notebook interactively`,`Review the matrix view in the Job's runs`,`Migrate the Job to a Delta Live Tables pipeline`,`Change each Task's setting to use a dedicated cluster`],
+c:[1],e:`The Job runs' matrix view shows each task's status, so you can immediately see which task failed.`},
+
+{n:43,d:"mlops",t:"Compute & Clusters",q:"A data scientist uses Spark SQL to import data and Spark ML for modeling. Which compute tool is best suited for this use case?",
+opts:[`Single Node cluster`,`Standard cluster`,`SQL Warehouse`,`None of these compute tools support this task`],
+c:[1],e:`A Standard (multi-node) cluster supports both Spark SQL and distributed Spark ML; SQL Warehouses run SQL only and a single-node cluster doesn't distribute.`},
+
+{n:44,d:"deploy",t:"Batch Inference with Feature Store",q:"An engineer runs predictions = fs.score_batch(model_uri, batch_df) where batch_df only has customer_id STRING. In which situation will this perform the desired inference?",
+opts:[`When the Feature Store feature set was logged with the model at model_uri`,`When all features used by the model are in a Spark DataFrame in PySpark`,`When the model at model_uri only uses customer_id as a feature`,`This code block will not perform the desired inference in any situation.`,`When all features used by the model are in a single Feature Store table`],
+c:[0],e:`fs.score_batch can look up features automatically only because the model was logged with its Feature Store feature spec, so it can join features by the keys in batch_df.`},
+
+{n:45,d:"dev",t:"Evaluation Metrics",q:"Which evaluation metric is NOT suitable to evaluate runs in AutoML experiments for regression problems?",
+opts:[`F1`,`R-squared`,`MAE`,`MSE`],
+c:[0],e:`F1 is a classification metric; R², MAE, and MSE are regression metrics.`},
+
+{n:46,d:"prep",t:"Missing Value Imputation",q:"A data scientist wants Spark ML to impute missing numeric values in features_df with each column's median. The code below isn't working. Why?",
+code:`imputer = Imputer(strategy="median", inputCols=input_columns, outputCols=output_columns)
+imputed_features_df = imputer.transform(features_df)`,
+opts:[`It does not impute both the training and test data sets.`,`The inputCols and outputCols need to be exactly the same.`,`The fit method needs to be called instead of transform.`,`It does not fit the imputer on the data to create an ImputerModel.`],
+c:[3],e:`Imputer is an Estimator: you must call .fit(features_df) to create an ImputerModel, then .transform(); calling transform directly on the unfit Imputer fails.`},
+
+{n:47,d:"prep",t:"Categorical Encoding",q:"A data scientist wants to one-hot encode string columns of features_df. The code errors. Which adjustment is needed?",
+code:`ohe = OneHotEncoder(inputCols=input_columns, outputCols=output_columns)
+ohe_model = ohe.fit(features_df)
+ohe_features_df = ohe_model.transform(features_df)`,
+opts:[`They need to specify the method parameter to the OneHotEncoder.`,`They need to remove the line with the fit operation.`,`They need to use StringIndexer prior to one-hot encoding the features.`,`They need to use VectorAssembler prior to one-hot encoding the features.`],
+c:[2],e:`Spark ML's OneHotEncoder requires numeric indices, so string columns must first be converted with StringIndexer.`},
+
+{n:48,d:"prep",t:"Summary Statistics & EDA",q:"A data scientist wants visual histograms of the numeric features' distributions while exploring spark_df. Which line accomplishes this?",
+opts:[`spark_df.describe()`,`dbutils.data(spark_df).summarize()`,`This task cannot be accomplished in a single line of code.`,`spark_df.summary()`,`dbutils.data.summarize(spark_df)`],
+c:[4],e:`dbutils.data.summarize(spark_df) renders a data profile including histograms for the columns.`},
+
+{n:49,d:"dev",t:"Hyperparameter Tuning",q:"A data scientist wants to tune scikit-learn hyperparameters in parallel using Hyperopt. Which Hyperopt tool provides the ability to optimize hyperparameters in parallel?",
+opts:[`fmin`,`SparkTrials`,`quniform`,`search_space`,`objective_function`],
+c:[1],e:`SparkTrials distributes Hyperopt trials across the Spark cluster so single-node model evaluations run in parallel.`},
+
+{n:50,d:"dev",t:"Cross-Validation",f:true,q:"Using 3-fold cross-validation with grid search and Hyperparameter 1: [2,5,10] and Hyperparameter 2: [50,100], which value represents the number of models that can be trained in parallel during this process?",
+opts:[`3`,`5`,`6`,`18`],
+c:[3],e:`There are 3×2 = 6 hyperparameter combinations × 3 folds = 18 independent model fits, all trainable in parallel. (Some interpret "in parallel" as the 6 combinations.)`},
+
+{n:51,d:"prep",t:"Categorical Encoding",q:"An organization elects to one-hot encode all categorical features in a feature repository, but a data scientist disagrees. Which explanation justifies NOT one-hot encoding within the repository?",
+opts:[`One-hot encoding is a potentially problematic categorical variable strategy for some machine learning algorithms.`,`One-hot encoding is dependent on the target variable's values which differ for each application.`,`One-hot encoding is computationally intensive and should only be performed on small samples.`,`One-hot encoding is not a common strategy for representing categoricals numerically.`],
+c:[0],e:`Because some algorithms (e.g. trees) work better with raw/indexed categories, hard-coding OHE into a shared repository can hurt those downstream models.`},
+
+{n:52,d:"dev",t:"Evaluation Metrics",q:"A model uses log(price) as its label; preds_df holds predictions and actuals. The code is regression_evaluator.setMetricName('rmse').evaluate(preds_df). Which change makes the RMSE comparable with price?",
+opts:[`They should exponentiate the computed RMSE value`,`They should take the log of the predictions before computing the RMSE`,`They should evaluate the MSE of the log predictions to compute the RMSE`,`They should exponentiate the predictions before computing the RMSE`],
+c:[3],e:`The predictions are on the log scale, so exponentiate them (and the actuals if needed) back to the price scale before computing RMSE.`},
+
+{n:53,d:"prep",t:"Missing Value Imputation",q:"A feature set has customer_id STRING (primary key), spend DOUBLE, units INTEGER, loyalty_tier STRING — all with missing values. Which columns should be imputed using the MOST COMMON (mode) value?",
+opts:[`customer_id, loyalty_tier`,`loyalty_tier`,`units`,`spend`,`customer_id`],
+c:[1],e:`Mode imputation suits categorical columns; only loyalty_tier qualifies (customer_id is the key and shouldn't be imputed; spend/units are numeric → mean/median).`},
+
+{n:54,d:"prep",t:"Spark DataFrame Operations",q:"A data scientist wants only rows where column discount is less than or equal to 0. Which code block accomplishes this?",
+opts:[`spark_df.loc[:,spark_df["discount"] <= 0]`,`spark_df[spark_df["discount"] <= 0]`,`spark_df.filter(col("discount") <= 0)`,`spark_df.loc[spark_df["discount"] <= 0, :]`],
+c:[2],e:`Spark uses .filter() with a Column expression; .loc and boolean-index bracket syntax are pandas-only.`},
+
+{n:55,d:"dev",t:"Hyperparameter Tuning",q:"A data scientist runs 8 evaluations of an iterative optimization tuner across 8 nodes (one per node) but sees no improvement trend in accuracy, suspecting over-parallelization. Which change could improve accuracy over the tuning process?",
+opts:[`Change the number of compute nodes to be half or less than half of the number of evaluations.`,`Change the number of compute nodes and evaluations to be much larger but equal.`,`Change the iterative optimization algorithm used.`,`Change the number of compute nodes to be double or more than double the number of evaluations.`],
+c:[0],e:`Informed (sequential) optimizers learn from prior trials; if every trial runs in parallel none can learn, so reducing parallelism (nodes ≤ ½ of evaluations) restores that feedback.`},
+
+{n:56,d:"dev",t:"Cross-Validation",q:"A colleague says a train-validation split can be preferred over k-fold cross-validation (k>2) in some cases. What is a potential benefit of a train-validation split here?",
+opts:[`A holdout set is not necessary when using a train-validation split`,`Reproducibility is achievable when using a train-validation split`,`Fewer hyperparameter values need to be tested when using a train-validation split`,`Bias is avoidable when using a train-validation split`,`Fewer models need to be trained when using a train-validation split`],
+c:[4],e:`A single train-validation split fits one model per configuration, whereas k-fold fits k models, so the split trains far fewer models.`},
+
+{n:57,d:"dev",t:"Hyperparameter Tuning",q:"Which hyperparameter optimization method automatically makes informed selections of hyperparameter values based on previous trials for each iterative evaluation?",
+opts:[`Random Search`,`Halving Random Search`,`Tree of Parzen Estimators`,`Grid Search`],
+c:[2],e:`Tree of Parzen Estimators (TPE) is a Bayesian method that uses past trial results to choose promising next values; grid/random search ignore prior results.`},
+
+{n:58,d:"dev",t:"Evaluation Metrics",q:"A team writes guidelines on when to use the F1 score over accuracy. Which suggestion should they include?",
+opts:[`Use F1 over accuracy when the number of positive cases equals the number of negative cases.`,`Use F1 over accuracy when there are more than two classes in the target.`,`Use F1 over accuracy when there is significant imbalance between positive and negative classes and avoiding false negatives is a priority.`,`Use F1 over accuracy when true positives and true negatives are equally important.`],
+c:[2],e:`F1 (harmonic mean of precision and recall) is preferred over accuracy on imbalanced data where catching positives (limiting false negatives) matters.`},
+
+{n:59,d:"dev",t:"Cross-Validation",q:"A random forest regressor rfr is the final stage of a pipeline used as the CV estimator. What is a negative consequence of using pipeline (rather than rfr) as the CV estimator?",
+code:`pipeline = [string_indexer, vector_assembler, rfr]
+cv = CrossValidator(estimator=pipeline, evaluator=evaluator,
+    estimatorParamMaps=param_grid, numFolds=3, seed=42)
+cv_model = cv.fit(train_df)`,
+opts:[`The process will have a longer runtime because all stages of pipeline need to be refit/retransformed with each model`,`The process will leak data from the training set to the test set during the evaluation phase`,`The process will be unable to parallelize tuning due to the distributed nature of pipeline`,`The process will leak data prep information from the validation sets to the training sets for each model`],
+c:[0],e:`With the whole pipeline as estimator, the deterministic indexer/assembler stages are needlessly refit for every fold and param combo, increasing runtime (correctness is fine).`},
+
+{n:60,d:"prep",t:"pandas API on Spark",q:"A pandas feature-engineering notebook is slowing drastically as data grows. Which tool lets the data scientist spend the LEAST time refactoring to scale with big data?",
+opts:[`PySpark DataFrame API`,`pandas API on Spark`,`Spark SQL`,`Feature Store`],
+c:[1],e:`The pandas API on Spark keeps pandas syntax but runs distributed, so it needs the least refactoring of an existing pandas notebook.`},
+
+{n:61,d:"dev",t:"Evaluation Metrics",q:"A Spark ML linear regression produced preds_df (prediction DOUBLE, actual DOUBLE). Which code block computes RMSE and assigns it to rmse?",
+opts:[`rmse = RegressionEvaluator(predictionCol="prediction", labelCol="actual", metricName="rmse")`,`rmse = BinaryClassificationEvaluator(predictionCol="prediction", labelCol="actual", metricName="rmse")`,`regression_evaluator = RegressionEvaluator(predictionCol="prediction", labelCol="actual", metricName="rmse"); rmse = regression_evaluator.evaluate(preds_df)`,`classification_evaluator = BinaryClassificationEvaluator(...); rmse = classification_evaluator.evaluate(preds_df)`],
+c:[2],e:`Use RegressionEvaluator and call .evaluate(preds_df) to actually compute the RMSE value; merely constructing the evaluator (options A/B) returns the object, not the metric.`},
+
+{n:62,d:"prep",t:"Distributed Feature Engineering",q:"Which tool can be used to distribute large-scale feature engineering WITHOUT a UDF or pandas Function API for ML pipelines?",
+opts:[`Keras`,`Scikit-learn`,`PyTorch`,`Spark ML`],
+c:[3],e:`Spark ML transformers operate natively on distributed Spark DataFrames, requiring no UDF to scale feature engineering.`},
+
+{n:63,d:"deploy",t:"Distributed Inference",q:"An engineer scales inference of a single-node model over a million records using the Pandas UDF below. Assuming default Spark config, what is a benefit of using an iterator?",
+code:`@pandas_udf("double")
+def predict(iterator: Iterator[pd.DataFrame]) -> Iterator[pd.Series]:
+    model = mlflow.sklearn.load_model(model_path)
+    for features in iterator:
+        yield pd.Series(model.predict(features))`,
+opts:[`The data will be limited to a single executor preventing the model from being loaded multiple times`,`The model will be limited to a single executor preventing the data from being distributed`,`The model only needs to be loaded once per executor rather than once per batch during the inference process`,`The data will be distributed across multiple executors during the inference process`],
+c:[2],e:`With the iterator-of-batches pattern the model is loaded once before the loop (per executor) and reused for all batches, avoiding reloading it for every batch.`},
+
+{n:64,d:"dev",t:"Spark ML Estimators & Transformers",q:"Which statement describes a Spark ML transformer?",
+opts:[`A transformer is an algorithm which can transform one DataFrame into another DataFrame`,`A transformer is a hyperparameter grid that can be used to train a model`,`A transformer chains multiple algorithms together to transform an ML workflow`,`A transformer is a learning algorithm that can use a DataFrame to train a model`],
+c:[0],e:`A Transformer implements .transform() to convert one DataFrame into another (e.g. adding a predictions or features column).`},
+
+{n:65,d:"prep",t:"pandas API on Spark",q:"Which statement describes the relationship between native Spark DataFrames and pandas API on Spark DataFrames?",
+opts:[`pandas API on Spark DataFrames are single-node versions of Spark DataFrames with additional metadata`,`pandas API on Spark DataFrames are more performant than Spark DataFrames`,`pandas API on Spark DataFrames are made up of Spark DataFrames and additional metadata`,`pandas API on Spark DataFrames are less mutable versions of Spark DataFrames`],
+c:[2],e:`pandas-on-Spark is built on top of a Spark DataFrame plus metadata (an InternalFrame) to emulate pandas while staying distributed.`},
+
+{n:66,d:"dev",t:"Hyperparameter Tuning",q:"A data scientist tunes hyperparameters with the code below. Which change improves the likelihood of a more accurate model?",
+code:`num_evals = 4
+trials = SparkTrials()
+best_hyperparam = fmin(fn=objective_function, space=search_space,
+    algo=tpe.suggest, max_evals=num_evals, trials=trials)`,
+opts:[`Increase num_evals to 100`,`Change fmin() to fmax()`,`Change SparkTrials() to Trials()`,`Change tpe.suggest to random.suggest`],
+c:[0],e:`Only 4 evaluations barely explores the search space; increasing max_evals (e.g. to 100) lets the optimizer find better hyperparameters.`},
+
+{n:67,d:"prep",t:"pandas API on Spark",q:"A data scientist must feature-engineer a Spark DataFrame spark_df but hasn't learned the PySpark DataFrame API. Which code lets them use the pandas API on Spark?",
+opts:[`import pyspark.pandas as ps\ndf = ps.DataFrame(spark_df)`,`import pyspark.pandas as ps\ndf = ps.to_pandas(spark_df)`,`spark_df.to_pandas()`,`import pandas as pd\ndf = pd.DataFrame(spark_df)`],
+c:[0],e:`ps.DataFrame(spark_df) creates a distributed pandas-on-Spark DataFrame with pandas-style syntax.`},
+
+{n:68,d:"deploy",t:"Distributed Inference",q:"An engineer wants to parallelize inference of group-specific models with the Pandas Function API, applying apply_model to each group of df. Which code fills the blank?",
+code:`prediction_df = (df
+    .groupby("device_id")
+    ._____(apply_model, schema=apply_return_schema))`,
+opts:[`applyInPandas`,`groupedApplyInPandas`,`mapInPandas`,`predict`],
+c:[0],e:`groupBy(...).applyInPandas(fn, schema) runs a pandas function per group — the API for per-group model lookup and inference.`},
+
+{n:69,d:"dev",t:"Scaling Model Tuning",f:true,q:"After broadcasting the full training data to each core, each core trains one model at a time. The engineer wants to raise parallelism from 4 to 8 cores, but total cluster memory cannot increase. In which scenario will going 4→8 speed up tuning?",
+opts:[`When the tuning process is randomized`,`When the entire data can fit on each core`,`When the model is unable to be parallelized`,`When the data is particularly long in shape`,`When the data is particularly wide in shape`],
+c:[1],e:`Doubling cores splits the same memory more ways, so it only helps if the broadcast dataset still fits in each core's reduced memory share.`},
+
+{n:70,d:"dev",t:"Scaling Model Tuning",q:"A single-node model has many configurations to test and tuning takes too long. Which approach speeds up the tuning process?",
+opts:[`Implement MLflow Experiment Tracking`,`Scale up with Spark ML`,`Enable autoscaling clusters`,`Parallelize with Hyperopt`],
+c:[3],e:`Hyperopt with SparkTrials distributes the single-node model's tuning trials across the cluster, accelerating the search.`},
+
+{n:71,d:"prep",t:"Data Splitting",q:"A Spark ML pipeline's training-set row count changes after adding workers to the cluster. Which approach guarantees a reproducible training and test set for each model?",
+opts:[`Manually configure the cluster`,`Write out the split data sets to persistent storage`,`Set a seed in the data splitting operation`,`Manually partition the input data`],
+c:[1],e:`randomSplit depends on partitioning, which changes with cluster size even with a seed; persisting the split datasets guarantees identical train/test sets across runs.`},
+
+{n:72,d:"deploy",t:"Inference Efficiency",q:"A solution now uses three new models instead of one; all four models have nearly identical prediction latency, yet an engineer says the new solution will be less time-efficient at inference. In which situation is the engineer correct?",
+opts:[`When the new solution requires if-else logic determining which model to use for each prediction`,`When the new models have an average latency larger than the size of the original model`,`When the new solution requires fewer feature variables than the original model`,`When the new solution requires that each model computes a prediction for every record`],
+c:[3],e:`If every record must be scored by all three models, total inference work roughly triples, making it less time-efficient despite similar per-model latency.`},
+
+{n:73,d:"dev",t:"Distributed Linear Regression",q:"Spark ML first tries matrix decomposition for linear regression but it doesn't scale to many variables. Which approach does Spark ML use to distribute linear regression training for large data?",
+opts:[`Logistic regression`,`Singular value decomposition`,`Iterative optimization`,`Least-squares method`],
+c:[2],e:`For large/wide datasets Spark ML uses iterative optimization (gradient-based / L-BFGS), which parallelizes across the cluster.`},
+
+{n:74,d:"dev",t:"Tree-Based Models & Ensembles",q:"Which machine learning algorithm typically uses bagging?",
+opts:[`Gradient boosted trees`,`K-means`,`Random forest`,`Decision tree`],
+c:[2],e:`Random forest uses bagging — many trees trained on bootstrap samples whose predictions are aggregated.`},
+
+{n:75,d:"dev",t:"MLflow Experiment Tracking",q:"Feature importance values are in a pandas DataFrame and written as a CSV to the DBFS location importance_path. Which line logs these values with the active MLflow run?",
+opts:[`mlflow.log_metric(importance_df, "importance_df")`,`mlflow.log_artifact(importance_df)`,`mlflow.log_artifact(importance_path, "importance.csv")`,`mlflow.log_artifact(importance_df, "importance_df")`],
+c:[2],e:`log_artifact logs a file from a path, so you pass the CSV's path (importance_path), not the in-memory DataFrame.`},
+
+{n:76,d:"dev",t:"MLflow Experiment Tracking",q:"Using Autologging, a data scientist wants the run with the best RMSE. Which code fills the blank?",
+code:`mlflow._____(experiment_id, order_by=["metrics.rmse"])["run_id"][0]`,
+opts:[`show_runs`,`search_runs`,`experiment`,`client`],
+c:[1],e:`mlflow.search_runs returns a pandas DataFrame of runs that can be ordered by a metric and indexed for the best run_id.`},
+
+{n:77,d:"mlops",t:"Compute & Clusters",f:true,q:"Which approach makes the Python library gensim available to ALL notebooks run on a cluster?",
+opts:[`Set the runtime-version variable in their Spark session to "ml"`,`Adding /databricks/python/bin/pip install gensim to the cluster's bash init script`,`Running %pip install gensim once on any notebook attached to the cluster`,`Edit the cluster to use the Databricks Runtime for Machine Learning`],
+c:[1],e:`A cluster-scoped init script installs the library for every notebook on the cluster; %pip is notebook-session scoped only.`},
+
+{n:78,d:"dev",t:"MLflow Experiment Tracking",q:"Which approach can be used to determine the exact date and time that an MLflow run was executed?",
+opts:[`Viewing the "Start Time" value in the MLflow experiment page`,`Viewing the "Duration" value in the MLflow experiment page`,`Viewing the "Duration" value in the MLflow run page`,`Viewing the "Date" value in the MLflow run page`],
+c:[0],e:`The "Start Time" column/value records the exact timestamp the run began; Duration only gives elapsed time.`},
+
+{n:79,d:"mlops",t:"Repos & Git Integration",q:"An engineer wants to save new Databricks notebooks (developed in Repos) to a remote Git provider. Which approach completes this?",
+opts:[`They can commit and push the changes from the Repos dialog box.`,`They can commit from the notebook's Revision History and push from the Repos dialog box.`,`They can commit from the Repos dialog box and push from the notebook's Revision History.`,`They can commit and push the changes from the notebook's Revision History.`],
+c:[0],e:`In Databricks Repos, both commit and push are performed from the Git/Repos dialog box.`},
+
+{n:80,d:"dev",t:"AutoML",q:"After AutoML identifies the best model, a data scientist wants to view the source code that generated the best run. Which approach views that code?",
+opts:[`Click "View notebook for best model" on the AutoML Experiment page`,`Click the link in the "Model" field for the appropriate row`,`Click the link in the "Start Time" field for the appropriate row`,`Click the "Share" button on the AutoML Experiment page`],
+c:[0],e:`AutoML generates a notebook per trial; the "View notebook for best model" button opens the code for the best run.`},
+
+{n:81,d:"mlops",t:"Model Registry & Versioning",q:"An engineer has tested a Staging model that passed all tests and wants to request it be transitioned to Production. From which page in Databricks ML can they do this?",
+opts:[`The model page in the MLflow Model Registry`,`The model version page in the MLflow Model Registry`,`The run page in the Experiments observatory`,`The experiment page in the Experiments observatory`],
+c:[1],e:`Stage-transition requests/actions are made on the specific model version page.`},
+
+{n:82,d:"mlops",t:"Model Registry & Versioning",q:"An engineer logs a model with registered_model_name=model_name, where model_name already exists in the Model Registry. What is the impact of that parameter?",
+code:`mlflow.sklearn.log_model(sk_model=model, artifact_path="model",
+    registered_model_name=model_name)`,
+opts:[`It identifies the name of the logged model in the MLflow Experiment.`,`It registers a new model called model_name in the MLflow Model Registry.`,`It avoids the need to specify the model name in a subsequent call to mlflow.register_model.`,`It registers the new version of the model_name model in the MLflow Model Registry.`],
+c:[3],e:`When the registered name already exists, logging with registered_model_name adds a new version under that existing registered model.`},
+
+{n:83,d:"dev",t:"Spark ML Estimators & Transformers",q:"An engineer trains Spark ML LinearRegression with featuresCol=['stars','year_updated','beds'] and labelCol='price' on train_df. Which change is needed to complete the task?",
+opts:[`They need to use the lr object as a stage in a Pipeline to fit the model`,`They need to call the transform method from lr_model on train_df`,`They do not need to make any changes`,`They need to convert the stars, year_updated, and beds columns into a single vector column`],
+c:[3],e:`Spark ML expects one vector-valued features column, so the three numeric columns must be combined with VectorAssembler first; featuresCol can't take a list of columns.`},
+
+{n:84,d:"prep",t:"pandas API on Spark",q:"Which causes the performance of the pandas API on Spark to be slower than native Spark DataFrames for large datasets?",
+opts:[`The usage of an InternalFrame to track metadata`,`The increased amount of required code`,`The lack of data distribution`,`The eager evaluation of all processing`],
+c:[0],e:`pandas-on-Spark maintains an InternalFrame (extra ordering/metadata to mimic pandas semantics), adding overhead versus a plain Spark DataFrame.`},
+
+{n:85,d:"deploy",t:"Distributed Inference",f:true,q:"A team organizes projects by modeling library to find which need a UDF to distribute inference. Which modeling library will need a UDF to distribute model inference?",
+opts:[`Spark MLlib`,`Spark ML`,`scikit-learn`,`spacy`],
+c:[2],e:`scikit-learn is single-node, so distributing its inference on Spark requires a (pandas) UDF; Spark ML/MLlib are already distributed. (spacy is also single-node, but scikit-learn is the intended answer.)`},
+
+{n:86,d:"prep",t:"pandas UDFs",q:"Which describes WHY pandas API syntax works inside a Pandas UDF function applied on a Spark DataFrame?",
+opts:[`The Pandas UDF uses Apache Arrow to transfer data between Spark and pandas formats`,`The Pandas UDF is calling the Pandas Function APIs inside of the function`,`The Pandas UDF automatically rewrites the function to Spark DataFrame syntax`,`The Pandas UDF is utilizing the pandas API on Spark inside of the function`],
+c:[0],e:`Apache Arrow converts each partition into actual pandas Series/DataFrames passed into the function, so genuine pandas syntax works on real pandas objects.`},
+
+{n:87,d:"dev",t:"Hyperparameter Tuning",q:"Which tool can facilitate a Bayesian hyperparameter tuning process for distributed Spark ML models?",
+opts:[`AutoML`,`Hyperopt`,`MLflow Experiment Tracking`,`Autoscaling clusters`],
+c:[1],e:`Hyperopt's TPE provides Bayesian optimization; for already-distributed Spark ML models you use it with the default Trials().`},
+
+{n:88,d:"prep",t:"pandas API on Spark",q:"A data scientist refactors pandas code to the pandas API on Spark. Which line fills the blank to do this?",
+code:`______
+df = ps.read_parquet(path)
+df["category"].value_counts()`,
+opts:[`import pandas as ps`,`import databricks.pandas as ps`,`import pyspark.pandas as ps`,`import pandas.spark as ps`],
+c:[2],e:`The pandas API on Spark is imported as import pyspark.pandas as ps.`},
+
+{n:89,d:"dev",t:"Tree-Based Models & Ensembles",q:"Converting a decision tree from sklearn to Spark ML raises an error that maxBins must be at least as large as the number of values in a categorical feature (515). Why does Spark ML need this?",
+opts:[`Spark ML tests a limit of 32 split candidates for categorical features`,`Spark ML needs more split candidates than single-node implementations`,`Spark ML needs at least one bin for each category in each categorical feature`,`Spark ML tests only categorical features in the splitting algorithm`],
+c:[2],e:`Spark ML bins features for distributed split-finding and needs at least one bin per category, so maxBins must be ≥ the highest categorical cardinality.`},
+
+{n:90,d:"dev",t:"Tree-Based Models & Ensembles",q:"Which describes boosting for machine learning models?",
+opts:[`Boosting trains models sequentially with each model learning from the previously trained models.`,`Boosting trains models sequentially with each model trained on a unique subset of the data.`,`Boosting trains a model for each bootstrapped sample, then appends estimates as a feature to train another model.`,`Boosting trains a model for each bootstrapped sample and aggregates the predictions for a final estimate.`],
+c:[0],e:`Boosting is sequential ensembling where each new model focuses on the errors/residuals of the prior models (bagging is the bootstrap-and-aggregate option D).`},
+
+{n:91,d:"prep",t:"Feature Store",q:"compute_features returns a Spark DataFrame (customer_id, spend, units, loyal, region) assigned to features_df. Which code creates and populates a Feature Store table with the Feature Store Client fs?",
+opts:[`fs.create_table(name="new_table", primary_keys="customer_id", df=features_df, schema=features_df.schema, description="Customer features")`,`fs.create_table(name="new_table", primary_keys="customer_id", schema=features_df.schema, description="Customer features")`,`fs.create_table(name="new_table", primary_keys="customer_id", function=compute_features, schema=features_df.schema, description="Customer features")`,`features_df.write.mode("feature").path("new_table")`],
+c:[0],e:`create_table with name, primary_keys, the df, schema and description both creates the table and populates it with the DataFrame's data.`},
+
+{n:92,d:"dev",t:"Evaluation Metrics",q:"A three-class decision tree produced preds_df (prediction DOUBLE, actual DOUBLE). Which code computes the accuracy and assigns it to accuracy?",
+opts:[`accuracy = Summarizer(predictionCol="prediction", labelCol="actual", metricName="accuracy")`,`classification_evaluator = MulticlassClassificationEvaluator(predictionCol="prediction", labelCol="actual", metricName="accuracy"); accuracy = classification_evaluator.evaluate(preds_df)`,`accuracy = MulticlassClassificationEvaluator(predictionCol="prediction", labelCol="actual", metricName="accuracy")`,`classification_evaluator = BinaryClassificationEvaluator(predictionCol="prediction", labelCol="actual", metricName="accuracy"); accuracy = classification_evaluator.evaluate(preds_df)`],
+c:[1],e:`Three classes require MulticlassClassificationEvaluator, and you must call .evaluate(preds_df) to compute accuracy; BinaryClassificationEvaluator can't handle 3 classes.`},
+
+{n:93,d:"prep",t:"Summary Statistics & EDA",q:"An engineer wants count, mean, stddev, min, max, and IQR using SparkML, and wants the code portable to Spark not running on Databricks. Which approach does this?",
+opts:[`Use the SparkML API function .describe()`,`Use the built-in Data Profile functionality in Databricks Notebooks`,`Use dbutils.data.summarize`,`Use the SparkML API function .summary()`],
+c:[3],e:`.summary() returns the quartiles (so IQR) and is pure Spark, hence portable; describe() omits percentiles and dbutils/Data Profile are Databricks-only.`},
+
+{n:94,d:"prep",t:"Feature Store",q:"Using the Databricks Feature Store with an instantiated FeatureEngineeringClient, what are the MINIMUM parameters required for the write_table function (parameters available: name, df, mode, primary key)?",
+opts:[`name, df, primary key`,`name, df`,`df`,`name, df, mode`],
+c:[1],e:`write_table needs only the target table name and the df; mode defaults (merge) and the primary key was set at create_table time.`},
+
+{n:95,d:"prep",t:"Feature Relationships & EDA",q:"An engineer must check whether two categorical variables (gender and highest education level) are confounding/dependent. What action does this?",
+opts:[`Use Random Forest feature importance to isolate non-independent features`,`Perform a Pearson Correlation Coefficient test to evaluate independence`,`Calculate IQR and compare the 25th vs 75th percentile to determine independence`,`Perform a Chi-Squared Test to evaluate for independence`],
+c:[3],e:`The Chi-Squared test of independence is the standard test for association between two categorical variables; Pearson correlation is for numeric variables.`},
+
+{n:96,d:"dev",t:"MLflow Experiment Tracking",q:"A data scientist logged trials under MLflow experiment churn_prediction and wants the best-performing run per certain model metrics. How can they do this?",
+opts:[`Use mlflow.get_best_run() with the necessary filter`,`Use mlflow.client.MlflowClient.search_runs() with search_all_experiments=True and filter the returned DataFrame`,`Use mlflow.get_experiment() and filter on the runs property`,`Use mlflow.search_runs() with the experiment name and filter on the returned pandas DataFrame`],
+c:[3],e:`mlflow.search_runs(experiment_names=[...]) returns a pandas DataFrame you can sort/filter by metric to find the best run; there is no mlflow.get_best_run().`},
+
+{n:97,d:"prep",t:"Missing Value Imputation",f:true,q:"For turbine sensors — Sensor Type (categorical), Temperature (skewed, some missing), Vibration (normally distributed but extreme out-of-range outliers, some missing), DateTime — which imputation strategy is most likely to improve quality and predictive performance?",
+opts:[`For sensor type use mode; for temperature and vibration use mean (per day).`,`Just remove all out-of-range and missing values from the training set.`,`For sensor type use mode; for temperature use median (per day); for vibration use mean (per day).`,`For sensor type use mode; for temperature use mean (per day); for vibration use median (per day).`],
+c:[2],e:`Categorical → mode; the skewed temperature → median; vibration is described as normally distributed → mean (its out-of-range outliers are handled separately).`},
+
+{n:98,d:"mlops",t:"Databricks Runtime ML",q:"What is a key advantage of using Databricks ML runtimes over standard runtimes?",
+opts:[`They automatically generate and optimize ML models without human intervention.`,`They eliminate the need for data preprocessing and feature engineering.`,`They protect against model bias and drift by continuously retraining on new data.`,`They provide an optimized environment for model development and deployment, ensuring reproducibility and easier dependency management.`],
+c:[3],e:`Databricks Runtime ML preinstalls and version-pins common ML libraries (MLflow, scikit-learn, etc.), giving a reproducible, easier-to-manage environment.`},
+
+{n:99,d:"dev",t:"Loss Functions",q:"A data scientist chose a loss function that heavily penalizes large errors; the model fails to converge and gives unstable predictions. Why is selecting the right loss function crucial here?",
+opts:[`The loss function ensures that the data is balanced.`,`The loss function directly influences how the model's parameters are updated during training.`,`The loss function controls the size of the training set.`,`The loss function determines the computational efficiency of the model.`],
+c:[1],e:`The loss defines the gradients used to update parameters, so a poorly chosen loss (over-penalizing large errors) can cause unstable updates and convergence problems.`},
+
+{n:100,d:"dev",t:"AutoML",q:"Which task is typically automated by AutoML in Databricks?",
+opts:[`Monitoring model performance for inference.`,`Training and optimizing different models.`,`Deploying the model on a serving endpoint.`,`Creating a feature engineering set for model development.`],
+c:[1],e:`AutoML automatically trains and tunes multiple models/algorithms and ranks them by the chosen metric.`},
+
+{n:101,d:"prep",t:"Feature Store",q:"A data scientist wants to use an existing, constantly-updated Delta table (customer_id is the unique id) as a feature table in a Unity Catalog workspace, without duplicating data. Which SQL statement enables using it as a feature table?",
+opts:[`CREATE FEATURE TABLE store.rfv_analysis.customer_features USING PRIMARY KEY (customer_id);`,`CREATE OR REPLACE TABLE customer_feature_table (customer_id NOT NULL PRIMARY KEY, ...) AS SELECT * FROM store.rfv_analysis.customer_features;`,`ALTER TABLE store.rfv_analysis.customer_features ADD CONSTRAINT customer_features_pk PRIMARY KEY(customer_id);`,`ALTER TABLE store.rfv_analysis.customer_features ALTER COLUMN customer_id SET NOT NULL;\nALTER TABLE store.rfv_analysis.customer_features ADD CONSTRAINT customer_features_pk PRIMARY KEY (customer_id);`],
+c:[3],e:`A UC feature table needs a primary key, and a PK column must be NOT NULL — so set NOT NULL first, then add the PRIMARY KEY constraint on the existing table (no data copy).`},
+
+{n:102,d:"deploy",t:"Distributed Inference",q:"A scikit-learn model must run batch inference on 100 GB using a 10-node Spark cluster in the shortest time. Which steps do this?",
+opts:[`Because a Spark cluster is used, it will automatically distribute the inference across all nodes.`,`Convert the sklearn model to SparkML with .convert_model so it uses all nodes natively.`,`Serialize the model with a Python UDF, convert inference data to a Pandas DataFrame, and run inference via the Python UDF.`,`Serialize the model with a Pandas UDF, convert inference data to a Spark DataFrame, and run inference via the Pandas UDF.`],
+c:[3],e:`Wrapping the sklearn model in a Pandas (vectorized) UDF over a distributed Spark DataFrame parallelizes inference across all executors efficiently.`},
+
+{n:103,d:"dev",t:"Bias-Variance & Model Fit",q:"Models: A (high train acc, low test acc), B (low train, low test), C (moderate/moderate), D (low train, high test). Which is most likely to suffer from high variance?",
+opts:[`Model A`,`Model B`,`Model C`,`Model D`],
+c:[0],e:`High variance = overfitting: strong training performance but poor test performance, which is Model A.`},
+
+{n:104,d:"mlops",t:"Deployment Patterns",q:"Considering 'deploy model' (promote the model artifact) vs 'deploy code' (promote the training code), which scenario is INAPPROPRIATE for the deploy-model approach?",
+opts:[`The data scientist is not working with external repos or a CI/CD process.`,`Model training is very expensive or hard to reproduce.`,`Production data is not accessible from the development environment.`,`All work is done in a single Databricks workspace.`],
+c:[2],e:`Deploy-model trains in dev and promotes the artifact; if production data isn't accessible from dev you can't train a valid model there, so deploy-code (train in prod) is needed instead.`},
+
+{n:105,d:"dev",t:"Hyperparameter Tuning",f:true,q:"A data scientist tunes an sklearn model with Hyperopt using the code below. Which statement explains the problem with it?",
+code:`def train_with_hyperopt(params):
+    regParam = float(params['regParam'])
+    penalty = params['penalty']
+    model, f1_score = train_tree(regParam, penalty)
+    loss = -f1_score
+    return {'loss': loss, 'status': STATUS_OK}
+
+with mlflow.start_run():
+    best_params = fmin(fn=train_with_hyperopt, space=search_space,
+        algo=hyperopt.tpe.suggest, max_evals=100, trials=Trials())`,
+opts:[`Values of max_evals greater than 64 require SparkTrials() instead of Trials().`,`Hyperopt fmin optimizes the minimum, so taking the negative of F1 returns the worst-performing model.`,`Trials() does not distribute trials to Spark workers, so the trials argument must be SparkTrials().`,`The hyperopt.tpe.suggest algorithm does not work with sklearn, so it needs hyperopt.rand.suggest.`],
+c:[2],e:`Trials() runs all trials on the driver; to distribute single-node sklearn tuning across Spark workers you must use SparkTrials(). (Negating F1 is actually correct, so B is false.)`},
+
+{n:106,d:"dev",t:"Regression Diagnostics",q:"A practitioner wants a visualization to test the linearity assumption between independent and dependent variables. Which technique shows linearity?",
+opts:[`Plot each independent variable against other independent variables.`,`Plot the independent variable against the dependent variable and inspect for linearity.`,`Plot the average of the dependent variable vs the residual of the predicted value.`,`Plot the residuals of the predicted variable vs the actual dependent variable.`],
+c:[1],e:`A scatter plot of an independent variable against the dependent variable directly reveals whether their relationship is linear.`},
+
+{n:107,d:"dev",t:"Cross-Validation",q:"Random splits give poor performance on a time-series model. Which adjustment better suits time-series data?",
+opts:[`Increase the number of time-series features and apply cross-validation.`,`Preserve the temporal order of observations and use rolling cross-validation.`,`Use larger random splits.`,`Use a different forecasting algorithm.`],
+c:[1],e:`Time-series evaluation must respect chronology; rolling (time-based) cross-validation trains on past and validates on future, avoiding leakage from random shuffling.`},
+
+{n:108,d:"mlops",t:"Unity Catalog Governance",q:"What is a key advantage of creating feature store tables at the account level in Unity Catalog versus the workspace level?",
+opts:[`Improved isolation and security through strict data segregation`,`Reduced storage costs`,`Simplified data discovery across workspaces`,`Automatic data encryption`],
+c:[2],e:`Account-level UC governance makes feature tables discoverable and shareable across all workspaces, rather than being siloed per workspace.`},
+
+{n:109,d:"prep",t:"Outlier Handling",q:"Which approach correctly removes outliers from the salary column using the IQR method, assigning the result to cleaned_df?",
+opts:[`quantiles = df.approxQuantile("salary", [0.25, 0.75], 0.01); IQR = quantiles[1]-quantiles[0]; lower=quantiles[0]-1.5*IQR; upper=quantiles[1]+1.5*IQR; cleaned_df = df.filter((df.salary>=lower) & (df.salary<=upper))`,`quantiles = df.approxQuantile("salary", [0.25, 0.75], 0.01); cleaned_df = df.filter((df.salary>=quantiles[0]) & (df.salary<=quantiles[1]))`,`stats = df.summary("mean","stddev").collect(); mean,stddev=...; cleaned_df = df.filter((df.salary>=mean-2*stddev) & (df.salary<=mean+2*stddev))`,`stats = df.select(mean("salary"), stddev("salary")).collect()[0]; cleaned_df = df.filter(abs(df.salary-stats[0]) <= 3*stats[1])`],
+c:[0],e:`The IQR method computes Q1/Q3, then keeps values within [Q1 − 1.5·IQR, Q3 + 1.5·IQR]; the other options use std-dev rules or just clip to the quartiles.`},
+
+{n:110,d:"dev",t:"MLflow Experiment Tracking",f:true,q:"A data scientist wants a cleaner MLflow run view by choosing exactly which params, metrics, and models are logged. What is the correct way to achieve this?",
+opts:[`Use log_param, log_metric and log_model from the MLflow client within a with mlflow.start_run() block`,`Set Autologging to mlflow.autolog(exclusive=False), then also log manually`,`Use log_param, log_metric and log_model anywhere in the notebook without additional code`,`Call mlflow.autolog() before starting model training`],
+c:[0],e:`Manually logging only the chosen items inside a with mlflow.start_run() block gives full control over what is recorded; autolog records everything automatically.`},
+
+{n:111,d:"dev",t:"Hyperparameter Tuning",q:"Hyperopt/Optuna tuning of an sklearn Random Forest runs only on the driver and is slow. What action distributes the trials across multiple machines on the Databricks cluster?",
+opts:[`Use the MLflow implementation of those libraries to automatically distribute tuning.`,`Use GridSearchCV from Spark ML, which uses parallel execution.`,`If using Optuna, use the Joblib Apache Spark Backend; if using Hyperopt, use SparkTrials.`,`Use distributed=True in Optuna or parallel=True in Hyperopt.`],
+c:[2],e:`Optuna distributes via the Joblib Spark backend and Hyperopt distributes via SparkTrials, sending trials to cluster workers.`},
+
+{n:112,d:"deploy",t:"Streaming Inference (DLT)",q:"A SparkML pipeline model in MLflow must do streaming inference on a Delta table using Delta Live Tables (DLT). Which approach implements this?",
+opts:[`Load the MLflow model with mlflow.pyfunc.load_model() and apply it to each row of streaming data with a Pandas UDF inside a DLT function.`,`Use mlflow.sklearn.load_model() and apply with df.apply() on each batch, writing back with spark.writeStream().`,`Create a Spark UDF from the model with mlflow.pyfunc.spark_udf(), then within a streaming DLT function use dlt.read_stream() and apply the UDF for predictions.`,`Download the model artifacts to DBFS and define a Spark ML Pipeline within the DLT function to transform dlt.read_stream() data.`],
+c:[2],e:`mlflow.pyfunc.spark_udf() turns the logged model into a distributed Spark UDF that can be applied to a dlt.read_stream() source for scalable streaming inference.`},
+
+{n:113,d:"deploy",t:"Data Processing Patterns",q:"Requirements: daily financial reports (large end-of-day batches), fraud detection (stop transactions as they occur), customer behavior analysis (near real-time recommendations), with cost in mind. Which combination meets all requirements effectively?",
+opts:[`Real-time for reports, batch for fraud, stream for behavior.`,`Batch for reports, stream for fraud, real-time for behavior.`,`Stream for reports, batch for fraud, real-time for behavior.`,`Batch for daily reports, real-time for fraud detection, stream for customer behavior analysis.`],
+c:[3],e:`End-of-day reports = batch (cheap, scheduled), stopping fraud as it happens = real-time, near-real-time behavior analysis = stream processing.`},
+
+{n:114,d:"dev",t:"Evaluation Metrics",q:"An engineer built a classification model to predict gym-membership renewal and is unsure if it's accurate enough for production. Which evaluation metric should they use?",
+opts:[`Root Mean Squared Error (RMSE)`,`Mean Absolute Error (MAE)`,`R-Squared (R2)`,`ROC-AUC`],
+c:[3],e:`Renewal is a classification problem, so ROC-AUC is appropriate; RMSE/MAE/R² are regression metrics.`},
+
+{n:115,d:"dev",t:"Hyperparameter Tuning",q:"Tuning a deep-learning model (continuous and discrete hyperparameters); each training run takes ~2 hours and the budget is 24 hours. Which hyperparameter tuning method is correct?",
+opts:[`Grid Search`,`Tree-structured Parzen Estimator (TPE)`,`Exhaustive Search`,`Random Search`],
+c:[1],e:`With expensive training and a tight budget (only ~12 trials), the Bayesian TPE uses prior results to pick promising values, maximizing value from few evaluations.`},
+
+{n:116,d:"deploy",t:"A/B Testing & Model Serving",q:"An FM model is served via Databricks Model Serving. Two new models (TensorFlow, PyTorch) must be A/B tested: 70% to FM, 15% to TensorFlow, 15% to PyTorch. Which architecture implements this?",
+opts:[`Update the existing Model Serving endpoint to add the TensorFlow and PyTorch models and configure traffic splitting to 70/15/15.`,`As new models can't be added to an existing endpoint, create a new endpoint with the 3 models and set 70/15/15.`,`Create two new endpoints for TensorFlow and PyTorch and configure traffic splitting in the calling application to 70/15/15.`,`Create a new endpoint with the two new models split 50/50 and set the app traffic split to 70/30.`],
+c:[0],e:`A single Model Serving endpoint can host multiple model versions and natively split traffic, so add the two models and set the 70/15/15 split on the endpoint.`},
+
+{n:117,d:"deploy",t:"Online vs Offline Feature Tables",q:"Features will be used primarily for real-time inference, and the data scientist chooses an online feature table over an offline one. Which aspect of online feature tables enabled this decision?",
+opts:[`They prioritize low-latency access and are optimized for point lookups, typically backed by key-value or column-oriented stores.`,`They only support real-time inference so they are the only option.`,`They support batch and real-time inference equally in cost and performance.`,`They prioritize batch inference using data warehouses/lakes, making them more cost-effective.`],
+c:[0],e:`Online stores are optimized for low-latency single-row (point) lookups, which is exactly what real-time inference needs.`},
+
+{n:118,d:"deploy",t:"Custom Model Deployment",q:"A custom MLflow pyfunc model with private Python dependencies throws dependency errors during Databricks Model Serving deployment. What is the correct fix?",
+opts:[`Add the dependencies to the model using the add_libraries_to_model method`,`Log the dependencies separately using a log_dependencies method`,`Log the dependencies together with the model via log_model using the pip_requirements or extra_pip_requirements parameter`,`Use an MLflow native flavor model instead of the custom pyfunc model`],
+c:[2],e:`Specifying pip_requirements/extra_pip_requirements when logging the model bakes the needed dependencies into the model environment used by the serving endpoint.`},
+
+{n:119,d:"dev",t:"Evaluation Metrics",q:"A real-estate model both forecasts prices and explains variability; the team wants to assess how well the model fits the training data and measure model errors. Which TWO evaluation metrics do this?",
+opts:[`RMSE and R-Squared (R2)`,`RMSE and MSE`,`Accuracy and F1 Score`,`Precision and Recall`],
+c:[0],e:`R² measures goodness of fit (variance explained) and RMSE measures the magnitude of prediction errors — together covering both goals.`},
+
+{n:120,d:"prep",t:"Categorical Encoding",q:"A categorical feature color has values red, blue, green. Which approach correctly implements one-hot encoding for color using PySpark?",
+opts:[`Apply pd.get_dummies after converting the Spark DataFrame to pandas`,`Use Spark's built-in functions to one-hot encode the color column directly`,`Use StringIndexer, then OneHotEncoder, then VectorAssembler to create the final feature vector`,`Apply a categorical_column function, then use OneHotEncodingEstimator`],
+c:[2],e:`The standard Spark ML pattern is StringIndexer → OneHotEncoder → VectorAssembler to turn a string column into model-ready encoded features.`},
+
+{n:121,d:"dev",t:"Regression Diagnostics",q:"House prices are heavily skewed and the residuals show a clear pattern (homoscedasticity violated). Which action accounts for these problems?",
+opts:[`Use a polynomial regression model to capture non-linear relationships.`,`Apply a log transformation to the dependent variable (house prices) to reduce skewness and improve model assumptions.`,`Remove the outliers from the dataset for a more normal distribution.`,`Apply a square root transformation to the independent variables to achieve linearity.`],
+c:[1],e:`Log-transforming the skewed target compresses large values, reducing skewness and stabilizing variance (helping the homoscedasticity assumption).`},
+
+{n:122,d:"dev",t:"Cross-Validation",q:"Which statement correctly describes the benefits and downsides of cross-validation versus a simple train-validation split?",
+opts:[`Cross-validation always results in higher accuracy because it uses the entire dataset for training.`,`Cross-validation provides a more reliable estimate of model performance but is computationally more expensive than a train-validation split.`,`Cross-validation uses only a single validation subset which can overfit, whereas a split uses multiple subsets.`,`Cross-validation is faster and less computationally intensive but gives a less reliable estimate.`],
+c:[1],e:`k-fold CV averages performance over k folds for a more reliable estimate, at the cost of training k times as many models.`},
+
+{n:123,d:"prep",t:"Feature Engineering Pipelines",q:"A logistic regression sklearn pipeline currently only handles numeric features. Which code block updates it to handle BOTH numeric and categorical features?",
+opts:[`Pipeline([('imputer', SimpleImputer(strategy='mean')), ('scaler', StandardScaler()), ('encoder', OneHotEncoder(sparse=False, handle_unknown='ignore')), ('classifier', LogisticRegression())])`,`Pipeline([('imputer', SimpleImputer(strategy=['mean','most_frequent'])), ('scaler', StandardScaler()), ('encoder', OneHotEncoder(drop='first')), ('classifier', LogisticRegression())])`,`Separate numeric_pipeline and categorical_pipeline defined but never combined`,`ColumnTransformer with a numeric sub-pipeline (impute mean + scale) on numeric_features and a categorical sub-pipeline (impute most_frequent + OHE) on categorical_features, wrapped in a Pipeline with LogisticRegression`],
+c:[3],e:`A ColumnTransformer routes numeric and categorical columns to their own sub-pipelines, the correct sklearn pattern for mixed feature types; the other options apply one transform to all columns or never combine the branches.`},
+
+{n:124,d:"mlops",t:"MLOps Strategy",q:"The team is discussing how to achieve ModelOps tasks in Databricks. Which approach is a correct use of Databricks features?",
+opts:[`Use Delta Live Tables for no-code model development.`,`Use AutoML to monitor model performance.`,`Use MLflow to track model development.`,`Use Unity Catalog to version control model code.`],
+c:[2],e:`MLflow is the Databricks tool for tracking experiments and model development; DLT is for data pipelines, AutoML is for training, and Git/Repos (not UC) version-controls code.`},
+
+{n:125,d:"dev",t:"Hyperparameter Tuning",q:"GridSearchCV with cross-validation=5 and param_grid max_depth:[5,10,15,20], max_features:['auto','sqrt','log2'], n_estimators:[200,500]. How many models will be trained in total?",
+opts:[`14`,`24`,`45`,`120`],
+c:[3],e:`Combinations = 4×3×2 = 24, times 5 folds = 120 model fits.`},
+
+{n:126,d:"prep",t:"Feature Store",multi:true,q:"An engineer considers FeatureEngineeringClient.create_training_set with features from multiple Unity Catalog feature store tables. Which TWO statements are TRUE? (Choose two.)",
+opts:[`It requires the engineer to manually specify the schema of the training set.`,`It can be used to create a training set with features from multiple feature store tables.`,`It allows the engineer to create a training set using the same feature multiple times.`,`It automatically handles feature engineering tasks such as normalization and feature scaling.`,`It can only be used with a single feature store table.`],
+c:[1,2],e:`create_training_set joins feature lookups from multiple tables (B) and the same feature can be looked up more than once (C); it neither requires a manual schema nor performs scaling.`},
+
+{n:127,d:"dev",t:"AutoML",q:"After an AutoML experiment (metric = F1), an engineer is unconvinced the selected model is best. What action helps them analyze the results?",
+opts:[`Review the best run notebook from the AutoML experiment to see if further refinements can improve the F1 score`,`Review the training dataset data types in Unity Catalog`,`Run the experiment again using AUC-ROC and compare`,`Run the experiment again with a different ML problem type`],
+c:[0],e:`AutoML generates a notebook for the best run; reviewing it lets them understand and refine the model and its F1 performance.`},
+
+{n:128,d:"dev",t:"Evaluation Metrics",q:"Two regression models are compared with RMSE: model A applied a log transform to the dependent variable, model B left it unchanged. What is the correct way to compare them?",
+opts:[`The model with higher RMSE is better.`,`Exponentiate model A's predictions before calculating RMSE; the model with lower RMSE is better.`,`Exponentiate model A's predictions before calculating RMSE; the model with higher RMSE is better.`,`The model with lower RMSE is better.`],
+c:[1],e:`RMSE must be compared on the same scale, so back-transform (exponentiate) model A's predictions to the original units first; then lower RMSE is better.`},
+
+{n:129,d:"dev",t:"Evaluation Metrics",q:"A scientist wants a metric indicating the proportion of variance in growth rate explained by the independent variables (goodness of fit). Which metric does this?",
+opts:[`R-Squared (R2)`,`Mean Squared Error (MSE)`,`Mean Absolute Error (MAE)`,`Root Mean Squared Error (RMSE)`],
+c:[0],e:`R² is defined as the proportion of variance in the dependent variable explained by the model's predictors.`},
+
+{n:130,d:"deploy",t:"Endpoint Cost Optimization",q:"A real-time Model Serving endpoint in dev only needs to be tested during business hours; the engineer wants the least effort to reduce hosting cost. Which approach does this?",
+opts:[`Delete the endpoint at end of business hours and recreate it each morning.`,`Set the Compute scale-out to Small.`,`Set Scale to zero in the endpoint's configuration.`,`Turn the endpoint off at end of business hours and on each morning.`],
+c:[2],e:`Enabling "scale to zero" automatically removes compute when the endpoint is idle and spins it back up on demand — cost savings with no manual effort.`},
+
+{n:131,d:"deploy",t:"Online vs Offline Feature Tables",q:"Predictions must be generated in real time to support immediate offers. What is the main reason for using features from an ONLINE feature store here?",
+opts:[`Update the model's weights and biases using online learning.`,`Make predictions on new incoming data in real time.`,`Train a new model using historical online data for that customer.`,`Monitor the performance of the model in real time.`],
+c:[1],e:`Online feature stores serve features with low latency so the model can score new incoming data in real time.`},
+
+{n:132,d:"mlops",t:"Model Aliases & Tags",q:"To tag PII-approved models registered in Unity Catalog using set_registered_model_tag, which set of parameters must be provided?",
+opts:[`name, version, value`,`name, key, value`,`name, value`,`name, version, key, value`],
+c:[1],e:`set_registered_model_tag tags the registered model (not a version) with a key/value, so it needs name, key, and value.`},
+
+{n:133,d:"mlops",t:"Unity Catalog Governance",q:"Leadership worries it's hard to know which data trained each model; all training data is in Unity Catalog tables. Which feature of the Unity Catalog model registry solves this?",
+opts:[`Model auditing`,`Data lineage`,`Centralized access control`,`Chronological model lineage`],
+c:[1],e:`Unity Catalog data lineage links models to the upstream tables/data used, making it clear what trained each model.`},
+
+{n:134,d:"dev",t:"MLflow Experiment Tracking",q:"A data scientist comparing performance metrics of multiple runs in the managed MLflow UI on Databricks should use which feature?",
+opts:[`Experiment Notes`,`Run Comparison`,`Model Registry`,`Artifact Logging`],
+c:[1],e:`The MLflow Run Comparison view places selected runs side by side to compare their parameters and metrics.`},
+
+{n:135,d:"mlops",t:"CI/CD & Champion-Challenger",q:"A champion/challenger framework should evaluate each new version and support automated CI/CD updates. Which approach is a best practice for implementing this?",
+opts:[`Update the model aliases to the appropriate versions in the Databricks UI.`,`Use MLflow client.set_registered_model_alias() to define the Champion alias used in the deployment code.`,`Update the Challenger model version to the maximum model version number available.`,`Use MLflow client.set_registered_model_tag() to define the Champion tag used in the deployment code.`],
+c:[1],e:`Programmatic aliases (set_registered_model_alias) let CI/CD reassign "Champion"/"Challenger" automatically, and deployment code references the alias rather than a fixed version.`},
+
+{n:136,d:"prep",t:"Categorical Encoding",q:"Building a linear regression to predict PurchaseAmount from CustomerID, Age, Gender (Male/Female), ZipCode, PurchaseAmount — to which column should one-hot encoding be applied, and why?",
+opts:[`CustomerID, to ensure each customer is uniquely represented.`,`Age, to handle the numerical values appropriately.`,`Gender, as it has a small number of categories and no ordinal relationship.`,`ZipCode, to capture all possible zip code values.`],
+c:[2],e:`Gender is a low-cardinality nominal category, ideal for one-hot encoding; CustomerID/ZipCode are high-cardinality identifiers and Age is already numeric.`},
+
+{n:137,d:"dev",t:"AutoML",q:"Using Databricks AutoML, many key numeric columns have a high percentage of nulls. Which approach requires the LEAST amount of code to impute the missing values?",
+opts:[`Let AutoML select and perform the best imputation approach`,`Before AutoML, impute using PySpark MLlib's Imputer class`,`Select the imputation approach and let AutoML perform the imputation`,`Before AutoML, impute using SimpleImputer`],
+c:[0],e:`AutoML can detect and impute missing values automatically, so letting it choose and apply imputation needs essentially no extra code.`},
+
+{n:138,d:"mlops",t:"Model Registry & Versioning",q:"An engineer wants to register a model from a previously-logged MLflow run into a project-specific catalog in a Unity Catalog-enabled workspace. How can they achieve this?",
+opts:[`Use mlflow.log_model and specify the three-level name via registered_model_name.`,`Call mlflow.register_model with the desired name on a UC-enabled workspace and it auto-registers in UC.`,`Ensure the model is logged with a signature, set the MLflow registry to Unity Catalog, then call mlflow.register_model with the three-level (catalog.schema.model) name.`,`Use mlflow.log_model with an input_example to auto-generate the signature and registered_model_name.`],
+c:[2],e:`Registering into UC requires setting the registry URI to Unity Catalog and passing the fully-qualified three-level name; UC also requires the model to have a signature.`},
+
+{n:139,d:"dev",t:"Class Imbalance",q:"A highly imbalanced healthcare dataset (1% positive) causes the model to predict the majority class almost always. Which strategy effectively mitigates the class imbalance in training data?",
+opts:[`Apply an oversampling technique to increase the number of minority-class samples.`,`Perform dimensionality reduction to decrease the number of features.`,`Increase the number of epochs during training.`,`Implement cross-validation to ensure generalization.`],
+c:[0],e:`Oversampling the minority class (or similar resampling such as SMOTE) rebalances the training distribution so the model can learn the rare class.`},
+
+{n:140,d:"dev",t:"Spark ML Estimators & Transformers",q:"Consider the code below. Which statement is true about it?",
+code:`assembler = VectorAssembler(inputCols=["feature1","feature2"], outputCol="features")
+scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures")
+lr = LogisticRegression(maxIter=10, regParam=0.01)`,
+opts:[`VectorAssembler is an Estimator, StandardScaler is an Estimator, and LogisticRegression is a Transformer.`,`VectorAssembler is a Transformer, StandardScaler is a Transformer, and LogisticRegression is an Estimator.`,`VectorAssembler is a Transformer, StandardScaler is an Estimator, and LogisticRegression is an Estimator.`,`VectorAssembler is an Estimator, StandardScaler is a Transformer, and LogisticRegression is a Transformer.`],
+c:[2],e:`VectorAssembler just transforms (no fitting) → Transformer; StandardScaler must fit to learn mean/std → Estimator; LogisticRegression fits to learn weights → Estimator.`}
+];
+</script>
+
+<script>
+/* ============================================================
+   RENDER + INTERACTION  (all state in memory, no storage)
+   ============================================================ */
+const LETTERS = ["A","B","C","D","E","F"];
+let currentFilter = "all";
+const state = {}; // n -> {answered:bool, correct:bool, picks:[idx]}
+
+const elQuiz = document.getElementById("quiz");
+const elTabs = document.getElementById("tabs");
+const elFooter = document.getElementById("footer");
+
+function domainCounts(){
+  const c = {all:DATA.length, prep:0, dev:0, deploy:0, mlops:0};
+  DATA.forEach(q=>c[q.d]++);
+  return c;
+}
+
+function buildTabs(){
+  const c = domainCounts();
+  const tabs = [["all","All Topics"],["prep",DOMAINS.prep.name],["dev",DOMAINS.dev.name],["deploy",DOMAINS.deploy.name],["mlops",DOMAINS.mlops.name]];
+  elTabs.innerHTML = "";
+  tabs.forEach(([key,label])=>{
+    const b = document.createElement("button");
+    b.className = "tab"+(key===currentFilter?" active":"");
+    b.innerHTML = label+' <span class="cnt">('+c[key]+')</span>';
+    b.onclick = ()=>{ currentFilter = key; buildTabs(); render(); window.scrollTo({top:0,behavior:"smooth"}); };
+    elTabs.appendChild(b);
+  });
+}
+
+function isCodey(s){ return s.indexOf("\n")>=0 || (/[=(){}\[\]]/.test(s) && s.length>26 && /(spark|df\.|mlflow|fs\.|=|\()/.test(s)); }
+
+function makeCard(q){
+  const card = document.createElement("section");
+  card.className = "card";
+  card.id = "q"+q.n;
+
+  const head = document.createElement("div");
+  head.className = "qhead";
+  const dom = DOMAINS[q.d];
+  head.innerHTML = '<span class="qnum">Q'+q.n+'</span>'+
+    '<span class="domchip '+dom.cls+'">'+dom.name+'</span>'+
+    '<span class="subchip '+dom.cls+'"><span class="arr">↳</span>'+escapeHtml(q.t||"")+'</span>'+
+    (q.f?'<span class="qflag" title="Answer not fully certain — verify">⚠ verify</span>':'');
+  card.appendChild(head);
+
+  const qt = document.createElement("div");
+  qt.className = "qtext";
+  qt.textContent = q.q;
+  card.appendChild(qt);
+
+  if(q.code){
+    const pre = document.createElement("pre");
+    pre.className = "code";
+    pre.textContent = q.code;
+    card.appendChild(pre);
+  }
+
+  if(q.multi){
+    const mn = document.createElement("div");
+    mn.className="multi-note";
+    mn.textContent = "Select "+q.c.length+" answers, then press Check.";
+    card.appendChild(mn);
+  }
+
+  const opts = document.createElement("div");
+  opts.className = "opts";
+  const st = state[q.n] || {answered:false, correct:false, picks:[]};
+
+  q.opts.forEach((text,idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.setAttribute("data-idx",idx);
+    const bodyCls = isCodey(text) ? "body mono" : "body";
+    btn.innerHTML = '<span class="lab">'+LETTERS[idx]+'</span>'+
+                    '<span class="'+bodyCls+'"></span>'+
+                    '<span class="mark"></span>';
+    btn.querySelector(".body").textContent = text;
+    if(!q.multi){
+      btn.onclick = ()=>answerSingle(q,idx,opts);
+    } else {
+      btn.onclick = ()=>toggleMulti(q,idx,opts,btn);
+    }
+    opts.appendChild(btn);
+  });
+  card.appendChild(opts);
+
+  let checkBtn=null;
+  if(q.multi){
+    checkBtn = document.createElement("button");
+    checkBtn.className="checkbtn";
+    checkBtn.textContent="Check answer";
+    checkBtn.disabled=true;
+    checkBtn.onclick=()=>answerMulti(q,opts,checkBtn);
+    card.appendChild(checkBtn);
+    opts._checkBtn = checkBtn;
+  }
+
+  const exp = document.createElement("div");
+  exp.className = "explain"+(q.f?" flagwarn":"");
+  exp.innerHTML='<span class="et">Why:</span><span class="etext"></span>';
+  card.appendChild(exp);
+  card._exp = exp;
+
+  // restore prior state
+  if(st.answered){
+    if(q.multi) lockMulti(q,opts,st); else lockSingle(q,opts,st);
+    showExplain(q,exp);
+    if(checkBtn){checkBtn.disabled=true; checkBtn.textContent="Answered";}
+  }
+  return card;
+}
+
+function answerSingle(q,idx,opts){
+  if(state[q.n] && state[q.n].answered) return;
+  const correct = q.c[0]===idx;
+  state[q.n] = {answered:true, correct, picks:[idx]};
+  lockSingle(q,opts,state[q.n]);
+  showExplain(q, opts.parentNode._exp);
+  updateScore();
+}
+function lockSingle(q,opts,st){
+  opts.classList.add("locked");
+  [...opts.children].forEach(btn=>{
+    const i=+btn.getAttribute("data-idx");
+    btn.classList.add("locked");
+    if(q.c.includes(i)){ btn.classList.add("correct"); btn.querySelector(".mark").textContent="✓"; }
+    if(st.picks.includes(i) && !q.c.includes(i)){ btn.classList.add("wrong"); btn.querySelector(".mark").textContent="✗"; }
+  });
+}
+
+function toggleMulti(q,idx,opts,btn){
+  if(state[q.n] && state[q.n].answered) return;
+  btn._sel = !btn._sel;
+  btn.style.borderColor = btn._sel ? "var(--accent)" : "";
+  btn.style.background = btn._sel ? "#171b22" : "";
+  const sel=[...opts.children].filter(b=>b._sel).length;
+  opts._checkBtn.disabled = (sel!==q.c.length);
+}
+function answerMulti(q,opts,checkBtn){
+  if(state[q.n] && state[q.n].answered) return;
+  const picks=[...opts.children].filter(b=>b._sel).map(b=>+b.getAttribute("data-idx"));
+  const correct = picks.length===q.c.length && picks.every(i=>q.c.includes(i));
+  state[q.n]={answered:true, correct, picks};
+  lockMulti(q,opts,state[q.n]);
+  showExplain(q, opts.parentNode._exp);
+  checkBtn.disabled=true; checkBtn.textContent="Answered";
+  updateScore();
+}
+function lockMulti(q,opts,st){
+  opts.classList.add("locked");
+  [...opts.children].forEach(btn=>{
+    const i=+btn.getAttribute("data-idx");
+    btn.classList.add("locked");
+    btn.style.borderColor=""; btn.style.background="";
+    if(q.c.includes(i)){ btn.classList.add("correct"); btn.querySelector(".mark").textContent="✓"; }
+    if(st.picks.includes(i) && !q.c.includes(i)){ btn.classList.add("wrong"); btn.querySelector(".mark").textContent="✗"; }
+  });
+}
+
+function showExplain(q,exp){
+  const ans = q.c.map(i=>LETTERS[i]).join(" & ");
+  let html = '<span class="et">Why:</span> <span class="ans">Correct: '+ans+'.</span> '+escapeHtml(q.e);
+  if(q.f) html += '<span class="fnote">⚠ This answer is inferred and not fully certain — double-check against official Databricks material.</span>';
+  exp.innerHTML = html;
+  exp.classList.add("show");
+}
+function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function render(){
+  elQuiz.innerHTML="";
+  const list = DATA.filter(q=>currentFilter==="all"||q.d===currentFilter);
+  if(currentFilter==="all"){
+    ["prep","dev","deploy","mlops"].forEach(dk=>{
+      const qs=DATA.filter(q=>q.d===dk);
+      if(!qs.length) return;
+      elQuiz.appendChild(domainTitle(dk,qs.length));
+      qs.forEach(q=>elQuiz.appendChild(makeCard(q)));
+    });
+  } else {
+    elQuiz.appendChild(domainTitle(currentFilter,list.length));
+    list.forEach(q=>elQuiz.appendChild(makeCard(q)));
+  }
+  if(!list.length){ const d=document.createElement("div"); d.className="empty"; d.textContent="No questions in this topic."; elQuiz.appendChild(d); }
+  updateScore();
+}
+function domainTitle(dk,n){
+  const d=DOMAINS[dk];
+  const h=document.createElement("div");
+  h.className="domain-title "+d.cls;
+  h.innerHTML='<span class="dot '+d.bg+'"></span>'+d.name+' — '+n+' questions';
+  return h;
+}
+
+function updateScore(){
+  const total=DATA.length;
+  let answered=0,correct=0;
+  DATA.forEach(q=>{const s=state[q.n]; if(s&&s.answered){answered++; if(s.correct)correct++;}});
+  document.getElementById("s-tot").textContent=total;
+  document.getElementById("s-ans").textContent=answered;
+  document.getElementById("s-cor").textContent=correct;
+  const pct=answered?Math.round(correct/answered*100):0;
+  document.getElementById("s-pct").textContent=pct+"%";
+  document.getElementById("s-bar").style.width=(answered/total*100)+"%";
+}
+
+document.getElementById("resetBtn").onclick=()=>{
+  if(!confirm("Reset all answers and start over?")) return;
+  for(const k in state) delete state[k];
+  render(); window.scrollTo({top:0,behavior:"smooth"});
+};
+document.getElementById("toTop").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
+
+elFooter.innerHTML="140 questions loaded (question #33 was added from the original exam source). "+
+  "Each question shows its <b>topic</b> (domain) and a <b>subtopic</b> chip. "+
+  "Answers marked <b style='color:#ffd27e'>⚠ verify</b> are best-effort inferences — confirm them against official Databricks documentation before relying on them.";
+
+/* Weightage panel — recomputed from DATA on every load, so adding
+   questions to the DATA array automatically updates these numbers. */
+function buildWeightage(){
+  const total = DATA.length;
+  const domCount = {};
+  DATA.forEach(q=>{ domCount[q.d]=(domCount[q.d]||0)+1; });
+  const known = Object.keys(DOMAINS);
+  const extras = Object.keys(domCount).filter(k=>!known.includes(k));
+  const domKeys = known.concat(extras).filter(k=>domCount[k]);
+
+  let html = '';
+  // topic (domain) bars, sorted by count desc
+  domKeys.slice().sort((a,b)=>domCount[b]-domCount[a]).forEach(dk=>{
+    const dom = DOMAINS[dk] || {name:dk, cls:"", bg:""};
+    const n = domCount[dk], pct = total ? n/total*100 : 0;
+    html += '<div class="wrow">'+
+      '<span class="wlabel '+dom.cls+'">'+escapeHtml(dom.name)+'</span>'+
+      '<span class="wbar"><span class="'+dom.bg+'" style="width:'+pct.toFixed(1)+'%"></span></span>'+
+      '<span class="wval">'+n+' &middot; '+pct.toFixed(1)+'%</span>'+
+      '</div>';
+  });
+
+  // subtopic breakdown per domain
+  domKeys.forEach(dk=>{
+    const dom = DOMAINS[dk] || {name:dk, cls:""};
+    const subs = {};
+    DATA.filter(q=>q.d===dk).forEach(q=>{ const t=q.t||"(untagged)"; subs[t]=(subs[t]||0)+1; });
+    const entries = Object.entries(subs).sort((a,b)=> b[1]-a[1] || a[0].localeCompare(b[0]));
+    html += '<div class="wsubtitle '+dom.cls+'">'+escapeHtml(dom.name)+' &mdash; '+domCount[dk]+' Q ('+(total?(domCount[dk]/total*100).toFixed(1):0)+'%)</div>';
+    html += '<div class="wsubgrid">';
+    entries.forEach(([t,n])=>{ html += '<div class="wsub"><span>'+escapeHtml(t)+'</span><span class="ws-n">'+n+'</span></div>'; });
+    html += '</div>';
+  });
+
+  document.getElementById("wbody").innerHTML = html;
+  document.getElementById("wcount").textContent = total;
+}
+document.getElementById("whead").onclick=()=>{
+  const b=document.getElementById("wbody"), t=document.getElementById("wtoggle");
+  b.classList.toggle("collapsed");
+  t.textContent = b.classList.contains("collapsed") ? "Show ▼" : "Hide ▲";
+};
+
+buildTabs();
+buildWeightage();
+render();
+</script>
+</body>
+</html>

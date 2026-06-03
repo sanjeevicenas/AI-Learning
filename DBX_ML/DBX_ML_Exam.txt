@@ -1,0 +1,3491 @@
+Topic 1 - Exam A
+Question #1Topic 1
+A machine learning engineer has created a Feature Table new_table using Feature Store Client fs. When creating the table, they specified a metadata description with key information about the Feature Table. They now want to retrieve that metadata programmatically.
+Which of the following lines of code will return the metadata description?
+
+A. There is no way to return the metadata description programmatically.
+B. fs.create_training_set("new_table")
+C. fs.get_table("new_table").description
+D. fs.get_table("new_table").load_df()
+E. fs.get_table("new_table")
+ 
+Question #2Topic 1
+A data scientist has a Spark DataFrame spark_df. They want to create a new Spark DataFrame that contains only the rows from spark_df where the value in column price is greater than 0.
+Which of the following code blocks will accomplish this task?
+
+A. spark_df[spark_df["price"] > 0]
+B. spark_df.filter(col("price") > 0)
+C. SELECT * FROM spark_df WHERE price > 0
+D. spark_df.loc[spark_df["price"] > 0,:]
+E. spark_df.loc[:,spark_df["price"] > 0]
+ 
+Question #3Topic 1
+A health organization is developing a classification model to determine whether or not a patient currently has a specific type of infection. The organization's leaders want to maximize the number of positive cases identified by the model.
+Which of the following classification metrics should be used to evaluate the model?
+
+A. RMSE
+B. Precision
+C. Area under the residual operating curve
+D. Accuracy
+E. Recall
+ 
+Question #4Topic 1
+In which of the following situations is it preferable to impute missing feature values with their median value over the mean value?
+
+A. When the features are of the categorical type
+B. When the features are of the boolean type
+C. When the features contain a lot of extreme outliers
+D. When the features contain no outliers
+E. When the features contain no missing values
+
+
+Question #5Topic 1
+A data scientist has replaced missing values in their feature set with each respective feature variable’s median value. A colleague suggests that the data scientist is throwing away valuable information by doing this.
+Which of the following approaches can they take to include as much information as possible in the feature set?
+
+A. Impute the missing values using each respective feature variable’s mean value instead of the median value
+B. Refrain from imputing the missing values in favor of letting the machine learning algorithm determine how to handle them
+C. Remove all feature variables that originally contained missing values from the feature set
+D. Create a binary feature variable for each feature that contained missing values indicating whether each row’s value has been imputed
+E. Create a constant feature variable for each feature that contained missing values indicating the percentage of rows from the feature that was originally missing
+ 
+Question #6Topic 1
+A data scientist is wanting to explore summary statistics for Spark DataFrame spark_df. The data scientist wants to see the count, mean, standard deviation, minimum, maximum, and interquartile range (IQR) for each numerical feature.
+Which of the following lines of code can the data scientist run to accomplish the task?
+
+A. spark_df.summary ()
+B. spark_df.stats()
+C. spark_df.describe().head()
+D. spark_df.printSchema()
+E. spark_df.toPandas()
+ 
+Question #7Topic 1
+An organization is developing a feature repository and is electing to one-hot encode all categorical feature variables. A data scientist suggests that the categorical feature variables should not be one-hot encoded within the feature repository.
+Which of the following explanations justifies this suggestion?
+
+A. One-hot encoding is not supported by most machine learning libraries.
+B. One-hot encoding is dependent on the target variable’s values which differ for each application.
+C. One-hot encoding is computationally intensive and should only be performed on small samples of training sets for individual machine learning problems.
+D. One-hot encoding is not a common strategy for representing categorical feature variables numerically.
+E. One-hot encoding is a potentially problematic categorical variable strategy for some machine learning algorithms.
+ 
+Question #8Topic 1
+A data scientist has created two linear regression models. The first model uses price as a label variable and the second model uses log(price) as a label variable. When evaluating the RMSE of each model by comparing the label predictions to the actual price values, the data scientist notices that the RMSE for the second model is much larger than the RMSE of the first model.
+Which of the following possible explanations for this difference is invalid?
+
+A. The second model is much more accurate than the first model
+B. The data scientist failed to exponentiate the predictions in the second model prior to computing the RMSE
+C. The data scientist failed to take the log of the predictions in the first model prior to computing the RMSE
+D. The first model is much more accurate than the second model
+E. The RMSE is an invalid evaluation metric for regression problems
+
+Question #9Topic 1
+A data scientist uses 3-fold cross-validation when optimizing model hyperparameters for a regression problem. The following root-mean-squared-error values are calculated on each of the validation folds:
+• 10.0
+• 12.0
+• 17.0
+Which of the following values represents the overall cross-validation root-mean-squared error?
+
+A. 13.0
+B. 17.0
+C. 12.0
+D. 39.0
+E. 10.0
+ 
+Question #10Topic 1
+A machine learning engineer is trying to scale a machine learning pipeline pipeline that contains multiple feature engineering stages and a modeling stage. As part of the cross-validation process, they are using the following code block:
+cv = crossValidator (
+estimator=pipeline,
+evaluator=evaluator,
+estimatorParamMaps=param_grid,
+numFolds=3 ,
+parallelism=2,
+seed=42
+)
+A colleague suggests that the code block can be changed to speed up the tuning process by passing the model object to the estimator parameter and then placing the updated cv object as the final stage of the pipeline in place of the original model.
+Which of the following is a negative consequence of the approach suggested by the colleague?
+
+A. The model will take longer to train for each unique combination of hyperparameter values
+B. The feature engineering stages will be computed using validation data
+C. The cross-validation process will no longer be parallelizable
+D. The cross-validation process will no longer be reproducible
+E. The model will be refit one more per cross-validation fold
+ 
+Question #11Topic 1
+What is the name of the method that transforms categorical features into a series of binary indicator feature variables?
+
+A. Leave-one-out encoding
+B. Target encoding
+C. One-hot encoding
+D. Categorical embeddings
+E. String indexing
+ 
+Question #12Topic 1
+A data scientist wants to parallelize the training of trees in a gradient boosted tree to speed up the training process. A colleague suggests that parallelizing a boosted tree algorithm can be difficult.
+Which of the following describes why?
+
+A. Gradient boosting is not a linear algebra-based algorithm which is required for parallelization.
+B. Gradient boosting requires access to all data at once which cannot happen during parallelization.
+C. Gradient boosting calculates gradients in evaluation metrics using all cores which prevents parallelization.
+D. Gradient boosting is an iterative algorithm that requires information from the previous iteration to perform the next step.
+E. Gradient boosting uses decision trees in each iteration which cannot be parallelized.
+
+Question #13 Topic 1
+A data scientist wants to efficiently tune the hyperparameters of a scikit-learn model. They elect to use the Hyperopt library's fmin operation to facilitate this process. Unfortunately, the final model is not very accurate. The data scientist suspects that there is an issue with the objective_function being passed as an argument to fmin. They use the following code block to create the objective_function:
+
+```python
+def objective_function(params):
+    max_depth = params["max_depth"]
+    max_features = params["max_features"]
+    regressor = RandomForestRegressor(
+        max_depth=max_depth,
+        max_features=max_features
+    )
+
+```
+
+Which of the following changes does the data scientist need to make to their objective_function in order to produce a more accurate model?
+
+* A. Add test set validation process
+* B. Add a random_state argument to the RandomForestRegressor operation
+* C. Remove the mean operation that is wrapping the cross_val_score operation
+* D. Replace the r2 return value with -r2
+* E. Replace the fmin operation with the fmax operation
+
+
+**Question:14**
+
+A data scientist is attempting to tune a logistic regression model logistic using scikit-learn. They want to specify a search space for two hyperparameters and let the tuning process randomly select values for each evaluation. They attempt to run the following code block, but it does not accomplish the desired task:
+
+```python
+distributions = dict(C=uniform(loc=0, scale=4), penalty=['l2', 'l1'])
+clf = GridSearchCV(logistic, distributions, random_state=0)
+search = clf.fit(feature_data, target_data)
+
+```
+
+Which of the following changes can the data scientist make to accomplish the task?
+
+* **A.** Replace the `GridSearchCV` operation with `RandomizedSearchCV`
+* **B.** Replace the `GridSearchCV` operation with `cross_validate`
+* **C.** Replace the `GridSearchCV` operation with `ParameterGrid`
+* **D.** Replace the `random_state=0` argument with `random_state=1`
+* **E.** Replace the `penalty=['l2', 'l1']` argument with `penalty=uniform('l2', 'l1')`
+
+
+Question 15:
+
+Which of the following tools can be used to parallelize the hyperparameter tuning process for single-node machine learning models using a Spark cluster?
+
+* **A.** MLflow Experiment Tracking
+* **B.** Spark ML
+* **C.** Autoscaling clusters
+* **D.** Hyperopt
+* **E.** Delta Lake
+
+Based on the provided page, here is Question 16:
+
+Which of the following describes the relationship between native Spark DataFrames and pandas API on Spark DataFrames?
+
+* **A.** pandas API on Spark DataFrames are single-node versions of Spark DataFrames with additional metadata
+* **B.** pandas API on Spark DataFrames are more performant than Spark DataFrames
+* **C.** pandas API on Spark DataFrames are made up of Spark DataFrames and additional metadata
+* **D.** pandas API on Spark DataFrames are less mutable versions of Spark DataFrames
+* **E.** pandas API on Spark DataFrames are unrelated to Spark DataFrames
+
+Based on the webpage content provided, here is the question number, its context, and the associated options:
+
+**Question:** Question 16 (Topic 1)
+
+**Context / Question Text:**
+Which of the following describes the relationship between native Spark DataFrames and pandas API on Spark DataFrames?
+
+---
+
+### Options:
+
+* **A.** pandas API on Spark DataFrames are single-node versions of Spark DataFrames with additional metadata
+* **B.** pandas API on Spark DataFrames are more performant than Spark DataFrames
+* **C.** pandas API on Spark DataFrames are made up of Spark DataFrames and additional metadata
+* **D.** pandas API on Spark DataFrames are less mutable versions of Spark DataFrames
+* **E.** pandas API on Spark DataFrames are unrelated to Spark DataFrames
+
+---
+
+### Suggested Answer from the Discussion:
+
+> **Selected Answer: C** > **Explanation:** The pandas API on Spark (pandas-on-Spark) provides a pandas-like interface for distributed data processing in Apache Spark. Internally, a pandas API on Spark DataFrame is built on top of a Spark DataFrame with additional metadata that allows it to mimic the pandas DataFrame interface. This design enables users to use familiar pandas syntax while leveraging Spark’s distributed computing capabilities.
+
+Based on the provided webpage content, here is the extracted question details:
+
+### **Question Details**
+
+* **Exam:** Certified Machine Learning Associate
+* **Question No:** 17
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has written a data cleaning notebook that utilizes the pandas library, but their colleague has suggested that they refactor their notebook to scale with big data. Which of the following approaches can the data scientist take to spend the least amount of time refactoring their notebook to scale with big data?
+
+---
+
+### **Options**
+
+* **A.** They can refactor their notebook to process the data in parallel.
+* **B.** They can refactor their notebook to use the PySpark DataFrame API.
+* **C.** They can refactor their notebook to use the Scala Dataset API.
+* **D.** They can refactor their notebook to use Spark SQL.
+* **E.** They can refactor their notebook to utilize the pandas API on Spark.
+
+---
+
+### **Suggested Answer**
+
+* **Selected Answer:** E
+* **Explanation (by user oliver29):** The pandas API on Spark (`pyspark.pandas`) is the most efficient path for minimal disruption, scalability, and productivity for a data scientist familiar with pandas.
+
+
+I'll extract the two exam questions from the screenshots for you:
+
+---
+
+## **Question #18** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist has defined a Pandas UDF function `predict` to parallelize the inference process for a single-node model:
+
+```python
+@pandas_udf("double")
+def predict(iterator: Iterator[pd.DataFrame]) -> Iterator[pd.Series]:
+    model_path = "runs:/run.info.run_id}/model"
+    model = mlflow.sklearn.load_model(model_path)
+    for features in iterator:
+        pdf = pd.concat([features, axis=1])
+        yield pd.Series(model.predict(pdf))
+```
+
+They have written an incomplete code block to use `predict` to score each record of Spark DataFrame `spark_df`:
+
+```python
+prediction_df = spark_df.withColumn(
+    "prediction",
+    ________
+)
+```
+
+**Which of the following lines of code can be used to complete the code block to successfully complete the task?**
+
+- A. `predict(*spark_df.columns)`
+- B. `mapInPandas(predict)`
+- C. `predict(iterator(spark_df))`
+- D. `mapInPandas(predict(spark_df.columns))`
+- E. `predict(spark_df.columns)`
+
+---
+
+Based on the webpage content provided, here are the details extracted for the question:
+
+### **Question Context**
+
+* **Exam:** [Databricks Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/142718-exam-certified-machine-learning-associate-topic-1-question/)
+* **Topic #:** 1
+* **Question #:** 19
+
+### **Question Text**
+
+Which of the Spark operations can be used to randomly split a Spark DataFrame into a training DataFrame and a test DataFrame for downstream use?
+
+### **Options**
+
+* **A.** TrainValidationSplit
+* **B.** DataFrame.where
+* **C.** CrossValidator
+* **D.** TrainValidationSplitModel
+* **E.** DataFrame.randomSplit
+
+## **Question #20** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is using Spark ML to engineer features for an exploratory machine learning project. They decide they want to standardize their features using the following code block:
+
+```python
+scaler = StandardScaler(
+    withMean=True,
+    inputCol="input_features",
+    outputCol="output_features"
+)
+scaler_model = scaler.fit(features_df)
+scaled_df = scaler_model.transform(features_df)
+train_df, test_df = scaled_df.randomSplit([.8, .2], seed=42)
+```
+
+Upon code review, a colleague expressed concern with the features being standardized prior to splitting the data into a training set and a test set.
+
+**Which of the following changes can the data scientist make to address the concern?**
+
+- A. Utilize the MinMaxScaler object to standardize the training data according to global minimum and maximum values
+- B. Utilize the MinMaxScaler object to standardize the test data according to global minimum and maximum values
+- C. Utilize a cross-validation process (rather than a train-test split process) to remove the need for standardizing data
+- D. Utilize the Pipeline API to standardize the training data according to the test data's summary statistics
+- E. Utilize the Pipeline API to standardize the test data according to the training data's summary statistics
+
+---
+
+Based on the provided webpage content, here is the extracted question details:
+
+### **Question Details**
+
+* **Exam:** [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/142552-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 21
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer is trying to scale a machine learning pipeline by distributing its feature engineering process. Which of the following feature engineering tasks will be the least efficient to distribute?
+
+---
+
+### **Options**
+
+* **A.** One-hot encoding categorical features
+* **B.** Target encoding categorical features
+* **C.** Imputing missing feature values with the mean
+* **D.** Imputing missing feature values with the true median
+* **E.** Creating binary indicator features for missing values
+
+---
+
+### **Suggested Answer & Discussion**
+
+* **Selected Answer:** D
+* **Explanation:** Calculating the median is computationally expensive in a distributed system because it requires sorting, which is a global operation involving heavy data shuffling and node coordination. In contrast, operations like calculating the mean or creating binary indicators only require summing and basic aggregations across partitions, making them highly efficient to distribute.
+
+
+Based on the provided webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 22
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following is a benefit of using vectorized pandas UDFs instead of standard PySpark UDFs?
+
+---
+
+### **Options**
+
+* **A.** The vectorized pandas UDFs allow for the use of type hints
+* **B.** The vectorized pandas UDFs process data in batches rather than one row at a time
+* **C.** The vectorized pandas UDFs allow for pandas API use inside of the function
+* **D.** The vectorized pandas UDFs work on distributed DataFrames
+* **E.** The vectorized pandas UDFs process data in memory rather than spilling to disk
+
+---
+
+### **Discussion Insights**
+
+* **Community Feedback:** A user commented that they believe the answer should be **C**.
+* *(Note: In Apache Spark, vectorized pandas UDFs are primarily executed using Apache Arrow to transfer data efficiently in **batches** rather than row-by-row, which significantly improves performance over standard PySpark UDFs).*
+
+
+## **Question #23** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist wants to tune a set of hyperparameters for a machine learning model. They have wrapped a Spark ML model in the objective function `objective_function` and they have defined the search space `search_space`.
+
+As a result, they have the following code block:
+
+```python
+num_evals = 100
+trials = SparkTrials()
+best_hyperparam = fmin(
+    fn=objective_function,
+    space=search_space,
+    algo=tpe.suggest,
+    max_evals=num_evals,
+    trials=trials
+)
+```
+
+**Which of the following changes do they need to make to the above code block in order to accomplish the task?**
+
+- A. Change `SparkTrials()` to `Trials()`
+- B. Reduce `num_evals` to be less than 10
+- C. Change `fmin()` to `fmax()`
+- D. Remove the `trials=trials` argument
+- E. Remove the `algo=tpe.suggest` argument
+
+---
+
+**Answer: A** - Change `SparkTrials()` to `Trials()`
+
+**Explanation:** The code uses `fmin()` with `SparkTrials()`, but `fmin()` is designed to work with the standard `Trials()` object for single-machine hyperparameter tuning. For distributed hyperparameter tuning on Spark, you would use `SparkTrials()` with the `sparkTrials` parameter (different API), or use standard `Trials()` with `fmin()` for single-node optimization.
+
+## **Question #24** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer would like to develop a linear regression model with Spark ML to predict the price of a hotel room. They are using the Spark DataFrame `train_df` to train the model.
+
+The Spark DataFrame `train_df` has the following schema:
+
+```
+hotel_room_id STRING,
+price DOUBLE,
+features UDT
+```
+
+The machine learning engineer shares the following code block:
+
+```python
+lr = LinearRegression(featuresCo1="features", labelCol="price")
+lr_model = lr.fit(train_df)
+```
+
+**Which of the following changes does the machine learning engineer need to make to complete the task?**
+
+- A. They need to call the `transform` method on `train_df`
+- B. They need to convert the features column to be a vector
+- C. They do not need to make any changes
+- D. They need to utilize a Pipeline to fit the model
+- E. They need to split the features column out into one column for each feature
+
+---
+
+**Answer: C** - They do not need to make any changes
+
+**Explanation:** The `features` column is already of type `UDT` (User Defined Type), which in Spark ML typically represents a `Vector` or `VectorUDT`. Since `LinearRegression` expects a `Vector` type for the features column and the schema already has `features UDT`, the code is correct as written. The model can be fit directly without any additional transformations.
+
+Based on the provided webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 25
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following tools can be used to distribute large-scale feature engineering without the use of a UDF or pandas Function API for machine learning pipelines?
+
+---
+
+### **Options**
+
+* **A.** Keras
+* **B.** pandas
+* **C.** PyTorch
+* **D.** Spark ML
+* **E.** Scikit-learn
+
+
+## **Question #26** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist has developed a linear regression model using Spark ML and computed the predictions in a Spark DataFrame `preds_df` with the following schema:
+
+```
+prediction DOUBLE
+actual DOUBLE
+```
+
+**Which of the following code blocks can be used to compute the root mean-squared-error of the model according to the data in `preds_df` and assign it to the `rmse` variable?**
+
+**Option A:**
+```python
+rmse = BinaryClassificationEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+```
+
+**Option B:**
+```python
+rmse = RegressionEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+```
+
+**Option C:**
+```python
+rmse = Summarizer(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+```
+
+**Option D:**
+```python
+classification_evaluator = BinaryClassificationEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+rmse = classification_evaluator.evaluate(preds_df)
+```
+
+**Option E:**
+```python
+regression_evaluator = RegressionEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+rmse = regression_evaluator.evaluate(preds_df)
+```
+
+---
+
+**Answer: E**
+
+**Explanation:** 
+- For regression models, you must use `RegressionEvaluator` (not `BinaryClassificationEvaluator` which is for classification tasks)
+- You must call the `.evaluate(preds_df)` method on the evaluator to actually compute the metric and assign the result to `rmse`
+- Options A–C only instantiate evaluators without calling `.evaluate()`, so they wouldn't compute the actual RMSE value
+- Option D uses the wrong evaluator type (`BinaryClassificationEvaluator`)
+- Option E is correct: it uses the proper evaluator type and calls `.evaluate()` to compute and assign the RMSE value
+
+## **Question #27** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer wants to parallelize the training of group-specific models using the Pandas Function API. They have developed the `train_model` function, and they want to apply it to each group of DataFrame `df`.
+
+They have written the following incomplete code block:
+
+```python
+model_directories_df = (df
+    .withColumn("run_id", f.lit(run_id))
+    .groupby("device_id")
+    ._____(train_model, schema=train_return_schema)
+)
+```
+
+**Which of the following pieces of code can be used to fill in the above blank to complete the task?**
+
+- A. `applyInPandas`
+- B. `mapInPandas`
+- C. `predict`
+- D. `train_model`
+- E. `groupedApplyIn`
+
+Based on the provided webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 28
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following statements describes a Spark ML estimator?
+
+---
+
+### **Options**
+
+* **A.** An estimator is a hyperparameter grid that can be used to train a model
+* **B.** An estimator chains multiple algorithms together to specify an ML workflow
+* **C.** An estimator is a trained ML model which turns a DataFrame with features into a DataFrame with predictions
+* **D.** An estimator is an algorithm which can be fit on a DataFrame to produce a Transformer
+* **E.** An estimator is an evaluation tool to assess to the quality of a model
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 29
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has been given an incomplete notebook from the data engineering team. The notebook uses a Spark DataFrame `spark_df` on which the data scientist needs to perform further feature engineering. Unfortunately, the data scientist has not yet learned the PySpark DataFrame API. Which of the following blocks of code can the data scientist run to be able to use the pandas API on Spark?
+
+---
+
+### **Options**
+
+* **A.** ```python
+import pyspark.pandas as ps
+df = ps.DataFrame(spark_df)
+```
+
+```
+
+
+* **B.** ```python
+import pyspark.pandas as ps
+df = ps.to_pandas(spark_df)
+```
+
+```
+
+
+* **C.** ```python
+spark_df.to_sql()
+```
+
+```
+
+
+* **D.** ```python
+import pandas as pd
+df = pd.DataFrame(spark_df)
+```
+
+```
+
+
+* **E.** ```python
+spark_df.to_pandas()
+```
+
+```
+
+
+Based on the provided webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 30
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has produced two models for a single machine learning problem. One of the models performs well when one of the features has a value of less than 5, and the other model performs well when the value of that feature is greater than or equal to 5. The data scientist decides to combine the two models into a single machine learning solution. Which of the following terms is used to describe this combination of models?
+
+---
+
+### **Options**
+
+* **A.** Bootstrap aggregation
+* **B.** Support vector machines
+* **C.** Bucketing
+* **D.** Ensemble learning
+* **E.** Stacking
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 31
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following machine learning algorithms typically uses bagging?
+
+---
+
+### **Options**
+
+* **A.** Gradient boosted trees
+* **B.** K-means
+* **C.** Random forest
+* **D.** Linear regression
+* **E.** Decision tree
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 32
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+The implementation of linear regression in Spark ML first attempts to solve the linear regression problem using matrix decomposition, but this method does not scale well to large datasets with a large number of variables. Which of the following approaches does Spark ML use to distribute the training of a linear regression model for large data?
+
+---
+
+### **Options**
+
+* **A.** Logistic regression
+* **B.** Spark ML cannot distribute linear regression training
+* **C.** Iterative optimization
+* **D.** Least-squares method
+* **E.** Singular value decomposition
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 34
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is using MLflow to track their machine learning experiment. As a part of each of their MLflow runs, they are performing hyperparameter tuning. The data scientist would like to have one parent run for the tuning process with a child run for each unique combination of hyperparameter values. All parent and child runs are being manually started with mlflow.start_run. Which of the following approaches can the data scientist use to accomplish this MLflow run organization?
+
+---
+
+### **Options**
+
+* **A.** They can turn on Databricks Autologging
+* **B.** They can specify nested=True when starting the child run for each unique combination of hyperparameter values
+* **C.** They can start each child run inside the parent run's indented code block using mlflow.start_run()
+* **D.** They can start each child run with the same experiment ID as the parent run
+* **E.** They can specify nested=True when starting the parent run for the tuning process
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 35
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following approaches can be used to view the notebook that was run to create an MLflow run?
+
+---
+
+### **Options**
+
+* **A.** Open the MLmodel artifact in the MLflow run page
+* **B.** Click the “Models” link in the row corresponding to the run in the MLflow experiment page
+* **C.** Click the “Source” link in the row corresponding to the run in the MLflow experiment page
+* **D.** Click the “Start Time” link in the row corresponding to the run in the MLflow experiment page
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 36
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is developing a machine learning pipeline using AutoML on Databricks Machine Learning. Which of the following steps will the data scientist need to perform outside of their AutoML experiment?
+
+---
+
+### **Options**
+
+* **A.** Model tuning
+* **B.** Model evaluation
+* **C.** Model deployment
+* **D.** Exploratory data analysis
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 37
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer has grown tired of needing to install the MLflow Python library on each of their clusters. They ask a senior machine learning engineer how their notebooks can load the MLflow library without installing it each time. The senior machine learning engineer suggests that they use Databricks Runtime for Machine Learning. Which of the following approaches describes how the machine learning engineer can begin using Databricks Runtime for Machine Learning?
+
+---
+
+### **Options**
+
+* **A.** They can add a line enabling Databricks Runtime ML in their init script when creating their clusters.
+* **B.** They can check the Databricks Runtime ML box when creating their clusters.
+* **C.** They can select a Databricks Runtime ML version from the Databricks Runtime Version dropdown when creating their clusters.
+* **D.** They can set the runtime-version variable in their Spark session to “ml”.
+
+## **Question #38** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is utilizing MLflow Autologging to automatically track their machine learning experiments. After completing a series of runs for the experiment `experiment_id`, the data scientist wants to identify the `run_id` of the run with the best root-mean-square error (RMSE).
+
+**Which of the following lines of code can be used to identify the `run_id` of the run with the best RMSE in `experiment_id`?**
+
+**Option A:**
+```python
+mlflow.search_runs(
+    experiment_id,
+    order_by = ["metrics.rmse DESC"]
+)["run_id"][0]
+```
+
+**Option B:**
+```python
+mlflow.best_run(
+    experiment_id,
+    order_by = ["metrics.rmse"]
+)
+```
+
+**Option C:**
+```python
+mlflow.search_runs(
+    experiment_id,
+    order_by = ["metrics.rmse"]
+)["run_id"][0]
+```
+
+**Option D:**
+```python
+mlflow.best_run(
+    experiment_id,
+    order_by = ["metrics.rmse DESC"]
+)
+```
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/272794-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 39
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer has been notified that a new Staging version of a model registered to the MLflow Model Registry has passed all tests. As a result, the machine learning engineer wants to put this model into production by transitioning it to the Production stage in the Model Registry. From which of the following pages in Databricks Machine Learning can the machine learning engineer accomplish this task?
+
+---
+
+### **Options**
+
+* **A.** The home page of the MLflow Model Registry
+* **B.** The experiment page in the Experiments observatory
+* **C.** The model version page in the MLflow Model Registry
+* **D.** The model page in the MLflow Model Registry
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 40
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer has identified the best run from an MLflow Experiment. They have stored the run ID in the `run_id` variable and identified the logged model name as "model". They now want to register that model in the MLflow Model Registry with the name "best_model". Which lines of code can they use to register the model associated with `run_id` to the MLflow Model Registry?
+
+---
+
+### **Options**
+
+* **A.** `mlflow.register_model(run_id, "best_model")`
+* **B.** `mlflow.register_model(f"runs:/{run_id}/model”, "best_model”)`
+* **C.** `millow.register_model(f"runs:/{run_id)/model")`
+* **D.** `mlflow.register_model(f"runs:/{run_id}/best_model", "model")`
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 41
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A new data scientist has started working on an existing machine learning project. The project is a scheduled Job that retrains every day. The project currently exists in a Repo in Databricks. The data scientist has been tasked with improving the feature engineering of the pipeline’s preprocessing stage. The data scientist wants to make necessary updates to the code that can be easily adopted into the project without changing what is being run each day. Which approach should the data scientist take to complete this task?
+
+---
+
+### **Options**
+
+* **A.** They can create a new branch in Databricks, commit their changes, and push those changes to the Git provider.
+* **B.** They can clone the notebooks in the repository into a Databricks Workspace folder and make the necessary changes.
+* **C.** They can create a new Git repository, import it into Databricks, and copy and paste the existing code from the original repository before making changes.
+* **D.** They can clone the notebooks in the repository into a new Databricks Repo and make the necessary changes.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 42
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineering team has a Job with three successive tasks. Each task runs a single notebook. The team has been alerted that the Job has failed in its latest run. Which of the following approaches can the team use to identify which task is the cause of the failure?
+
+---
+
+### **Options**
+
+* **A.** Run each notebook interactively
+* **B.** Review the matrix view in the Job’s runs
+* **C.** Migrate the Job to a Delta Live Tables pipeline
+* **D.** Change each Task’s setting to use a dedicated cluster
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 43
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is using Spark SQL to import their data into a machine learning pipeline. Once the data is imported, the data scientist performs machine learning tasks using Spark ML. Which of the following compute tools is best suited for this use case?
+
+---
+
+### **Options**
+
+* **A.** Single Node cluster
+* **B.** Standard cluster
+* **C.** SQL Warehouse
+* **D.** None of these compute tools support this task
+
+
+## **Question #44** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer is trying to perform batch model inference. They want to get predictions using the linear regression model saved at the path `model_uri` for the DataFrame `batch_df`. `batch_df` has the following schema: `customer_id STRING`
+
+The machine learning engineer runs the following code block to perform inference on `batch_df` using the linear regression model at `model_uri`:
+
+```python
+predictions = fs.score_batch(
+    model_uri,
+    batch_df
+)
+```
+
+**In which situation will the machine learning engineer's code block perform the desired inference?**
+
+- A. When the Feature Store feature set was logged with the model at `model_uri`
+- B. When all of the features used by the model at `model_uri` are in a Spark DataFrame in the PySpark
+- C. When the model at `model_uri` only uses `customer_id` as a feature
+- D. This code block will not perform the desired inference in any situation.
+- E. When all of the features used by the model at `model_uri` are in a single Feature Store table
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 45
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following evaluation metrics is not suitable to evaluate runs in AutoML experiments for regression problems?
+
+---
+
+### **Options**
+
+* **A.** F1
+* **B.** R-squared
+* **C.** MAE
+* **D.** MSE
+
+## **Question #46** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist wants to use Spark ML to impute missing values in their PySpark DataFrame `features_df`. They want to replace missing values in all numeric columns in `features_df` with each respective numeric column's median value.
+
+They have developed the following code block to accomplish this task:
+
+```python
+imputer = Imputer(
+    strategy="median",
+    inputCols=input_columns,
+    outputCols=output_columns
+)
+imputed_features_df = imputer.transform(features_df)
+```
+
+The code block is not accomplishing the task.
+
+**Which reasons describes why the code block is not accomplishing the imputation task?**
+
+- A. It does not impute both the training and test data sets.
+- B. The `inputCols` and `outputCols` need to be exactly the same.
+- C. The `fit` method needs to be called instead of `transform`.
+- D. It does not fit the imputer on the data to create an `ImputerModel`.
+
+## **Question #47** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist wants to use Spark ML to one-hot encode the categorical features in their PySpark DataFrame `features_df`. A list of the names of the string columns is assigned to the `input_columns` variable.
+
+They have developed this code block to accomplish this task:
+
+```python
+ohe = OneHotEncoder(
+    inputCols=input_columns,
+    outputCols=output_columns
+)
+ohe_model = ohe.fit(features_df)
+ohe_features_df = ohe_model.transform(features_df)
+```
+
+The code block is returning an error.
+
+**Which of the following adjustments does the data scientist need to make to accomplish this task?**
+
+- A. They need to specify the method parameter to the `OneHotEncoder`.
+- B. They need to remove the line with the fit operation.
+- C. They need to use `StringIndexer` prior to one-hot encoding the features.
+- D. They need to use `VectorAssembler` prior to one-hot encoding the features.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 48
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is wanting to explore the Spark DataFrame spark_df. The data scientist wants visual histograms displaying the distribution of numeric features to be included in the exploration. Which of the following lines of code can the data scientist run to accomplish the task?
+
+---
+
+### **Options**
+
+* **A.** spark_df.describe()
+* **B.** dbutils.data(spark_df).summarize()
+* **C.** This task cannot be accomplished in a single line of code.
+* **D.** spark_df.summary()
+* **E.** dbutils.data.summarize (spark_df)
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 49
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist wants to efficiently tune the hyperparameters of a scikit-learn model in parallel. They elect to use the Hyperopt library to facilitate this process. Which of the following Hyperopt tools provides the ability to optimize hyperparameters in parallel?
+
+---
+
+### **Options**
+
+* **A.** fmin
+* **B.** SparkTrials
+* **C.** quniform
+* **D.** search_space
+* **E.** objective_function
+
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 50
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist uses 3-fold cross-validation and the following hyperparameter grid when optimizing model hyperparameters via grid search for a classification problem:
+
+Hyperparameter 1: [2, 5, 10]
+Hyperparameter 2: [50, 100]
+
+Which of the following represents the number of machine learning models that can be trained in parallel during this process?
+
+---
+
+### **Options**
+
+* **A.** 3
+* **B.** 5
+* **C.** 6
+* **D.** 18
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 51
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+An organization is developing a feature repository and is electing to one-hot encode all categorical feature variables. A data scientist suggests that the categorical feature variables should not be one-hot encoded within the feature repository. Which of the following explanations justifies this suggestion?
+
+---
+
+### **Options**
+
+* **A.** One-hot encoding is a potentially problematic categorical variable strategy for some machine learning algorithms.
+* **B.** One-hot encoding is dependent on the target variable’s values which differ for each application.
+* **C.** One-hot encoding is computationally intensive and should only be performed on small samples of training sets for individual machine learning problems.
+* **D.** One-hot encoding is not a common strategy for representing categorical feature variables numerically.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 52
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has created a linear regression model that uses log(price) as a label variable. Using this model, they have performed inference and the predictions and actual label values are in Spark DataFrame preds_df. They are using the following code block to evaluate the model:
+
+```python
+regression_evaluator.setMetricName("rmse").evaluate(preds_df)
+
+```
+
+Which of the following changes should the data scientist make to evaluate the RMSE in a way that is comparable with price?
+
+---
+
+### **Options**
+
+* **A.** They should exponentiate the computed RMSE value
+* **B.** They should take the log of the predictions before computing the RMSE
+* **C.** They should evaluate the MSE of the log predictions to compute the RMSE
+* **D.** They should exponentiate the predictions before computing the RMSE
+
+## **Question #53** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is working with a feature set with the following schema:
+
+```
+customer_id STRING,
+spend DOUBLE,
+units INTEGER,
+loyalty_tier STRING
+```
+
+The `customer_id` column is the primary key in the feature set. Each of the columns in the feature set has missing values. They want to replace the missing values by imputing a common value for each feature.
+
+**Which of the following lists all of the columns in the feature set that need to be imputed using the most common value of the column?**
+
+- A. `customer_id`, `loyalty_tier`
+- B. `loyalty_tier`
+- C. `units`
+- D. `spend`
+- E. `customer_id`
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 54
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has a Spark DataFrame `spark_df`. They want to create a new Spark DataFrame that contains only the rows from `spark_df` where the value in column `discount` is less than or equal 0. Which of the following code blocks will accomplish this task?
+
+---
+
+### **Options**
+
+* **A.** `spark_df.loc[:,spark_df["discount"] <= 0]`
+* **B.** `spark_df[spark_df["discount"] <= 0]`
+* **C.** `spark_df.filter (col("discount") <= 0)`
+* **D.** `spark_df.loc(spark_df["discount"] <= 0, :]`
+
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 55
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is performing hyperparameter tuning using an iterative optimization algorithm. Each evaluation of unique hyperparameter values is being trained on a single compute node. They are performing eight total evaluations across eight total compute nodes. While the accuracy of the model does vary over the eight evaluations, they notice there is no trend of improvement in the accuracy. The data scientist believes this is due to the parallelization of the tuning process. Which change could the data scientist make to improve their model accuracy over the course of their tuning process?
+
+---
+
+### **Options**
+
+* **A.** Change the number of compute nodes to be half or less than half of the number of evaluations.
+* **B.** Change the number of compute nodes and the number of evaluations to be much larger but equal.
+* **C.** Change the iterative optimization algorithm used to facilitate the tuning process.
+* **D.** Change the number of compute nodes to be double or more than double the number of evaluations.
+
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 56
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist learned during their training to always use 5-fold cross-validation in their model development workflow. A colleague suggests that there are cases where a train-validation split could be preferred over k-fold cross-validation when k > 2. Which of the following describes a potential benefit of using a train-validation split over k-fold cross-validation in this scenario?
+
+---
+
+### **Options**
+
+* **A.** A holdout set is not necessary when using a train-validation split
+* **B.** Reproducibility is achievable when using a train-validation split
+* **C.** Fewer hyperparameter values need to be tested when using a train-validation split
+* **D.** Bias is avoidable when using a train-validation split
+* **E.** Fewer models need to be trained when using a train-validation split
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 57
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following hyperparameter optimization methods automatically makes informed selections of hyperparameter values based on previous trials for each iterative model evaluation?
+
+---
+
+### **Options**
+
+* **A.** Random Search
+* **B.** Halving Random Search
+* **C.** Tree of Parzen Estimators
+* **D.** Grid Search
+
+## **Question #58** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A team is developing guidelines on when to use various evaluation metrics for classification problems. The team needs to provide input on when to use the F1 score over accuracy.
+
+The formula shown is:
+
+```
+F1 = 2 × (precision × recall)
+     ___________________
+     (precision + recall)
+```
+
+**Which of the following suggestions should the team include in their guidelines?**
+
+- A. The F1 score should be utilized over accuracy when the number of actual positive cases is identical to the number of actual negative cases.
+- B. The F1 score should be utilized over accuracy when there are greater than two classes in the target variable.
+- C. The F1 score should be utilized over accuracy when there is significant imbalance between positive and negative classes and avoiding false negatives is a priority.
+- D. The F1 score should be utilized over accuracy when identifying true positives and true negatives are equally important to the business problem.
+
+## **Question #59** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist has developed a random forest regressor `rfr` and included it as the final stage in a Spark MLPipeline `pipeline`. They then set up a cross-validation process with `pipeline` as the estimator in the following code block:
+
+```python
+pipeline = [string_indexer, vector_assembler, rfr]
+cv = CrossValidator(
+    estimator=pipeline,
+    evaluator=evaluator,
+    estimatorParamMaps=param_grid,
+    numFolds=3,
+    seed=42
+)
+cv_model = cv.fit(train_df)
+```
+
+**Which of the following is a negative consequence of including pipeline as the estimator in the cross-validation process rather than rfr as the estimator?**
+
+- A. The process will have a longer runtime because all stages of pipeline need to be refit or retransformed with each model
+- B. The process will leak data from the training set to the test set during the evaluation phase
+- C. The process will be unable to parallelize tuning due to the distributed nature of pipeline
+- D. The process will leak data prep information from the validation sets to the training sets for each model
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 60
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has written a feature engineering notebook that utilizes the pandas library. As the size of the data processed by the notebook increases, the notebook's runtime is drastically increasing, but it is processing slowly as the size of the data included in the process increases. Which of the following tools can the data scientist use to spend the least amount of time refactoring their notebook to scale with big data?
+
+---
+
+### **Options**
+
+* **A.** PySpark DataFrame API
+* **B.** pandas API on Spark
+* **C.** Spark SQL
+* **D.** Feature Store
+
+## **Question #61** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist has developed a linear regression model using Spark ML and computed the predictions in a Spark DataFrame `preds_df` with the following schema:
+
+```
+prediction DOUBLE
+actual DOUBLE
+```
+
+**Which of the following code blocks can be used to compute the root mean-squared-error of the model according to the data in `preds_df` and assign it to the `rmse` variable?**
+
+**Option A:**
+```python
+rmse = RegressionEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+```
+
+**Option B:**
+```python
+rmse = BinaryClassificationEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+```
+
+**Option C:**
+```python
+regression_evaluator = RegressionEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+rmse = regression_evaluator.evaluate(preds_df)
+```
+
+**Option D:**
+```python
+classification_evaluator = BinaryClassificationEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="rmse"
+)
+rmse = classification_evaluator.evaluate(preds_df)
+```
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 62
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following tools can be used to distribute large-scale feature engineering without the use of a UDF or pandas Function API for machine learning pipelines?
+
+---
+
+### **Options**
+
+* **A.** Keras
+* **B.** Scikit-learn
+* **C.** PyTorch
+* **D.** Spark ML
+
+## **Question #63** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer is using the following code block to scale the inference of a single-node model on a Spark DataFrame with one million records:
+
+```python
+@pandas_udf("double")
+def predict(iterator: Iterator[pd.DataFrame]) -> Iterator[pd.Series]:
+    model_path = f"runs:/{run.info.run_id}/model"
+    model = mlflow.sklearn.load_model(model_path)
+    for features in iterator:
+        pdf = pd.concat([features, axis=1])
+        yield pd.Series(model.predict(pdf))
+```
+
+**Assuming the default Spark configuration is in place, which of the following is a benefit of using an iterator?**
+
+- A. The data will be limited to a single executor preventing the model from being loaded multiple times
+- B. The model will be limited to a single executor preventing the data from being distributed
+- C. The model only needs to be loaded once per executor rather than once per batch during the inference process
+- D. The data will be distributed across multiple executors during the inference process
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 64
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which statement describes a Spark ML transformer?
+
+---
+
+### **Options**
+
+* **A.** A transformer is an algorithm which can transform one DataFrame into another DataFrame
+* **B.** A transformer is a hyperparameter grid that can be used to train a model
+* **C.** A transformer chains multiple algorithms together to transform an ML workflow
+* **D.** A transformer is a learning algorithm that can use a DataFrame to train a model
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 65
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following describes the relationship between native Spark DataFrames and pandas API on Spark DataFrames?
+
+---
+
+### **Options**
+
+* **A.** pandas API on Spark DataFrames are single-node versions of Spark DataFrames with additional metadata
+* **B.** pandas API on Spark DataFrames are more performant than Spark DataFrames
+* **C.** pandas API on Spark DataFrames are made up of Spark DataFrames and additional metadata
+* **D.** pandas API on Spark DataFrames are less mutable versions of Spark DataFrames
+
+## **Question #66** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is using the following code block to tune hyperparameters for a machine learning model:
+
+```python
+num_evals = 4
+trials = SparkTrials()
+best_hyperparam = fmin(
+    fn=objective_function,
+    space=search_space,
+    algo=tpe.suggest,
+    max_evals=num_evals,
+    trials=trials
+)
+```
+
+**Which change can they make to the above code block to improve the likelihood of a more accurate model?**
+
+- A. Increase `num_evals` to 100
+- B. Change `fmin()` to `fmax()`
+- C. Change `SparkTrials()` to `Trials()`
+- D. Change `tpe.suggest` to `random.suggest`
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 67
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has been given an incomplete notebook from the data engineering team. The notebook uses a Spark DataFrame `spark_df` on which the data scientist needs to perform further feature engineering. Unfortunately, the data scientist has not yet learned the PySpark DataFrame API. Which of the following blocks of code can the data scientist run to be able to use the pandas API on Spark?
+
+---
+
+### **Options**
+
+* **A.** ```python
+import pyspark.pandas as ps
+df = ps.DataFrame(spark_df)
+```
+
+```
+
+
+* **B.** ```python
+import pyspark.pandas as ps
+df = ps.to_pandas(spark_df)
+```
+
+```
+
+
+* **C.** ```python
+spark_df.to_pandas()
+```
+
+```
+
+
+* **D.** ```python
+import pandas as pd
+df = pd.DataFrame(spark_df)
+```
+
+```
+
+## **Question #68** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer wants to parallelize the inference of group-specific models using the Pandas Function API. They have developed the `apply_model` function that will look up and load the correct model for each group, and they want to apply it to each group of DataFrame `df`.
+
+They have written the following incomplete code block:
+
+```python
+prediction_df = (df
+    .groupby("device_id")
+    ._____(apply_model, schema=apply_return_schema)
+)
+```
+
+**Which piece of code can be used to fill in the above blank to complete the task?**
+
+- A. `applyInPandas`
+- B. `groupedApplyInPandas`
+- C. `mapInPandas`
+- D. `predict`
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/272892-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 69
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer is trying to scale a machine learning pipeline by distributing its single-node model tuning process. After broadcasting the entire training data onto each core, each core in the cluster can train one model at a time. Because the tuning process is still running slowly, the engineer wants to increase the level of parallelism from 4 cores to 8 cores to speed up the tuning process. Unfortunately, the total memory in the cluster cannot be increased. In which of the following scenarios will increasing the level of parallelism from 4 to 8 speed up the tuning process?
+
+---
+
+### **Options**
+
+* **A.** When the tuning process in randomized
+* **B.** When the entire data can fit on each core
+* **C.** When the model is unable to be parallelized
+* **D.** When the data is particularly long in shape
+* **E.** When the data is particularly wide in shape
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 70
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is developing a single-node machine learning model. They have a large number of model configurations to test as a part of their experiment. As a result, the model tuning process takes too long to complete. Which of the following approaches can be used to speed up the model tuning process?
+
+---
+
+### **Options**
+
+* **A.** Implement MLflow Experiment Tracking
+* **B.** Scale up with Spark ML
+* **C.** Enable autoscaling clusters
+* **D.** Parallelize with Hyperopt
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 71
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has developed a machine learning pipeline with a static input data set using Spark ML, but the pipeline is taking too long to process. They increase the number of workers in the cluster to get the pipeline to run more efficiently. They notice that the number of rows in the training set after reconfiguring the cluster is different from the number of rows in the training set prior to reconfiguring the cluster. Which of the following approaches will guarantee a reproducible training and test set for each model?
+
+---
+
+### **Options**
+
+* **A.** Manually configure the cluster
+* **B.** Write out the split data sets to persistent storage
+* **C.** Set a speed in the data splitting operation
+* **D.** Manually partition the input data
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 72
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has produced three new models for a single machine learning problem. In the past, the solution used just one model. All four models have nearly the same prediction latency, but a machine learning engineer suggests that the new solution will be less time efficient during inference. In which situation will the machine learning engineer be correct?
+
+---
+
+### **Options**
+
+* **A.** When the new solution requires if-else logic determining which model to use to compute each prediction
+* **B.** When the new solution’s models have an average latency that is larger than the size of the original model
+* **C.** When the new solution requires the use of fewer feature variables than the original model
+* **D.** When the new solution requires that each model computes a prediction for every record
+* **E.** When the new solution’s models have an average size that is larger than the size of the original model
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 73
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+The implementation of linear regression in Spark ML first attempts to solve the linear regression problem using matrix decomposition, but this method does not scale well to large datasets with a large number of variables. Which of the following approaches does Spark ML use to distribute the training of a linear regression model for large data?
+
+---
+
+### **Options**
+
+* **A.** Logistic regression
+* **B.** Singular value decomposition
+* **C.** Iterative optimization
+* **D.** Least-squares method
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 74
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following machine learning algorithms typically uses bagging?
+
+---
+
+### **Options**
+
+* **A.** Gradient boosted trees
+* **B.** K-means
+* **C.** Random forest
+* **D.** Decision tree
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 75
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is calculating the importance of features as a part of an MLflow run. The feature importance values are being stored in the pandas DataFrame `importance_df` and being written as a CSV to the DBFS location `importance_path`. They would like to log these values with their active MLflow run. Which of the following lines of code can the data scientist use to log the feature importance values with their active MLflow run?
+
+---
+
+### **Options**
+
+* **A.** `mlflow.log_metric(importance_df, “importance_df”)`
+* **B.** `mlflow.log_artifact(importance_df)`
+* **C.** `mlflow.log_artifact(importance_path, “importance.csv”)`
+* **D.** `mlflow.log_artifact(importance_df, “importance_df”)`
+
+## **Question #76** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is utilizing MLflow Autologging to automatically track their machine learning experiments. After completing a series of runs for the experiment `experiment_id`, the data scientist wants to identify the run with the best root-mean-square error (RMSE).
+
+They have written the following incomplete block of code:
+
+```python
+mlflow._____(
+    experiment_id,
+    order_by = ["metrics.rmse"]
+)["run_id"][0]
+```
+
+**Which of the following pieces of code should the data scientist use to fill in the above blank to complete the code block to identify the run with the best RMSE?**
+
+- A. `show_runs`
+- B. `search_runs`
+- C. `experiment`
+- D. `client`
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 77
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following approaches makes the Python library gensim available to all notebooks run on a cluster?
+
+---
+
+### **Options**
+
+* **A.** Set the runtime-version variable in their Spark session to "ml"
+* **B.** Adding /databricks/python/bin/pip install genism to the cluster's bash init script
+* **C.** Running %pip install gensim once on any notebook attached to the cluster
+* **D.** Edit the cluster to use the Databricks Runtime for Machine Learning
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 78
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following approaches can be used to determine the exact date and time that an MLflow run was executed?
+
+---
+
+### **Options**
+
+* **A.** Viewing the “Start Time” value in the MLflow experiment page
+* **B.** Viewing the “Duration” value in the MLflow experiment page
+* **C.** Viewing the “Duration” value in the MLflow run page
+* **D.** Viewing the “Date” value in the MLflow run page
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 79
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineering team has started using Repos in Databricks for its projects. One of the machine learning engineers wants to save the new notebooks they have developed in Databricks to a remote Git provider. Which of the following approaches can the machine learning engineer use to complete this task?
+
+---
+
+### **Options**
+
+* **A.** They can commit and push the changes from the Repos dialog box.
+* **B.** They can commit the changes from the notebook’s Revision History and push the changes from the Repos dialog box.
+* **C.** They can commit the changes from the Repos dialog box and push the changes from the notebook’s Revision History.
+* **D.** They can commit and push the changes from the notebook’s Revision History.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 80
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is developing a machine learning pipeline using AutoML on Databricks Machine Learning, and they have identified the best model in the experiment. Now, they want to view the source code used to generate the best run. Which of the following approaches can the data scientist use to view the code that produced the best model?
+
+---
+
+### **Options**
+
+* **A.** They can click on the “View notebook for best model” button in the AutoML Experiment page
+* **B.** They can click on the link in the “Model” field for the appropriate row in the AutoML Experiment page's table
+* **C.** They can click on the link in the “Start Time” field for the appropriate row in the AutoML Experiment page's table
+* **D.** They can click on the “Share” button in the AutoML Experiment page
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 81
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer has tested a new Staging version of a model registered to the MLflow Model Registry. The model has passed all of its tests. As a result, the machine learning engineer wants to request that this model be put into production by transitioning it to the Production stage in the Model Registry. From which of the following pages in Databricks Machine Learning can the machine learning engineer accomplish this task?
+
+---
+
+### **Options**
+
+* **A.** The model page in the MLflow Model Registry
+* **B.** The model version page in the MLflow Model Registry
+* **C.** The run page in the Experiments observatory
+* **D.** The experiment page in the Experiments observatory
+
+## **Question #82** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer is updating a machine learning project to automatically refresh its model each time it runs. The project is attached to the existing model `model_name` in the MLflow Model Registry.
+
+They are using the following code block as part of their solution:
+
+```python
+mlflow.sklearn.log_model(
+    sk_model=model,
+    artifact_path="model",
+    registered_model_name=model_name
+)
+```
+
+**Which of the following describes the impact of the `registered_model_name=model_name` parameter and argument given that `model_name` already exists in the MLflow Model Registry?**
+
+- A. It identifies the name of the logged model in the MLflow Experiment.
+- B. It registers a new model called `model_name` in the MLflow Model Registry.
+- C. It avoids the need to specify the model name in the subsequent required call to `mlflow.register_model`.
+- D. It registers the new version of the `model_name` model in the MLflow Model Registry.
+
+## **Question #83** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer would like to develop a linear regression model with Spark ML to predict the price of a hotel room. They are using the Spark DataFrame `train_df` to train the model.
+
+The Spark DataFrame `train_df` has the following schema:
+
+```
+hotel_room_id STRING,
+price DOUBLE,
+stars DOUBLE,
+year_updated DOUBLE,
+beds DOUBLE
+```
+
+The machine learning engineer shares the following code block:
+
+```python
+lr = LinearRegression(
+    featuresCo1=["stars", "year_updated", "beds"],
+    labelCol="price"
+)
+lr_model = lr.fit(train_df)
+```
+
+**Which of the following changes does the machine learning engineer need to make to complete the task?**
+
+- A. They need to use the `lr` object as a stage in a Pipeline to fit the model
+- B. They need to call the `transform` method from the `lr_model` object on `train_df`
+- C. They do not need to make any changes
+- D. They need to convert the `stars`, `year_updated`, and `beds` columns to be a single vector column
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 84
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following causes the performance speed of using the pandas API on Spark to be slower than that of native Spark DataFrames for large datasets?
+
+---
+
+### **Options**
+
+* **A.** The usage of an InternalFrame to track metadata
+* **B.** The increased amount of required code
+* **C.** The lack of data distribution
+* **D.** The eager evaluation of all processing
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 85
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data science team is refactoring their machine learning projects to distribute model inference. They organize their projects by the modeling library used in an effort to identify which projects will need a UDF to distribute the inference process. Which of the following modeling libraries will need a UDF to distribute model inference?
+
+---
+
+### **Options**
+
+* **A.** Spark MLlib
+* **B.** Spark ML
+* **C.** scikit-learn
+* **D.** spacy
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 86
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following describes why pandas API syntax works inside of a Pandas UDF function applied on a Spark DataFrame?
+
+---
+
+### **Options**
+
+* **A.** The Pandas UDF uses Apache Arrow to transfer data between Spark and pandas formats
+* **B.** The Pandas UDF is calling the Pandas Function APIs inside of the function
+* **C.** The Pandas UDF automatically rewrites the function to Spark DataFrame syntax
+* **D.** The Pandas UDF is utilizing the pandas API on Spark inside of the function
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 87
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following tools can be used to facilitate a Bayesian hyperparameter tuning process for distributed Spark ML machine learning models?
+
+---
+
+### **Options**
+
+* **A.** AutoML
+* **B.** Hyperopt
+* **C.** MLflow Experiment Tracking
+* **D.** Autoscaling clusters
+
+## **Question #88** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is refactoring their pandas DataFrame code to utilize the pandas API on Spark.
+
+They are using the following incomplete code block:
+
+```python
+______
+df = ps.read_parquet(path)
+df["category"].value_counts()
+```
+
+**Which line of code can they use to fill in the blank to successfully refactor their code to utilize the pandas API on Spark?**
+
+- A. `import pandas as ps`
+- B. `import databricks.pandas as ps`
+- C. `import pyspark.pandas as ps`
+- D. `import pandas.spark as ps`
+
+## **Question #89** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer is converting a decision tree from sklearn to Spark ML.
+
+During the training process following this conversion, they receive the following error describing that need to set the `maxBins` parameter to at least 515 (or remove the feature):
+
+```
+DecisionTree requires maxBins (= 32) to be at least as large as the 
+number of values in each categorical feature, but categorical feature 
+49 has 515 values. Consider removing this and other categorical 
+features with a large number of values, or add more training examples.
+```
+
+**Which of the following results in Spark ML needing the `maxBins` parameter to be at least as large as the number values in each categorical feature?**
+
+- A. Spark ML tests a limit of 32 split candidates for categorical features in the splitting algorithm
+- B. Spark ML needs more split candidates in the splitting algorithm than single-node implementations
+- C. Spark ML needs at least one bin for each category in each categorical feature
+- D. Spark ML tests only categorical features in the splitting algorithm
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 90
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which of the following describes boosting for machine learning models?
+
+---
+
+### **Options**
+
+* **A.** Boosting is the ensemble process of training machine learning models sequentially with each model learning from the previously trained models.
+* **B.** Boosting is the ensemble process of training machine learning models sequentially with each model being trained on a unique subset of the data.
+* **C.** Boosting is the ensemble process of training a machine learning model for each sample in a set of bootstrapped samples of the training data, and then appending the model estimates as a feature variable on the training set which is used to train another model.
+* **D.** Boosting is the ensemble process of training a machine learning model for each sample in a set of bootstrapped samples of the training data and aggregating the predictions of each model to obtain a final estimate.
+
+## **Question #91** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist has created a Python function `compute_features` that returns a Spark DataFrame with the following schema:
+
+```
+customer_id STRING,
+spend DOUBLE,
+units INT,
+loyal INT,
+region STRING
+```
+
+The resulting DataFrame is assigned to the `features_df` variable. The data scientist wants to create a Feature Store table using `features_df`.
+
+**Which of the following code blocks can they use to create and populate the Feature Store table using the Feature Store Client `fs`?**
+
+**Option A:**
+```python
+fs.create_table(
+    name="new_table",
+    primary_keys="customer_id",
+    df=features_df,
+    schema=features_df.schema,
+    description="Customer features"
+)
+```
+
+**Option B:**
+```python
+fs.create_table(
+    name="new_table",
+    primary_keys="customer_id",
+    schema=features_df.schema,
+    description="Customer features"
+)
+```
+
+**Option C:**
+```python
+fs.create_table(
+    name="new_table",
+    primary_keys="customer_id",
+    function=compute_features,
+    schema=features_df.schema,
+    description="Customer features"
+)
+```
+
+**Option D:**
+```python
+features_df.write.mode("feature").path("new_table")
+```
+
+## **Question #92** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist has developed a three-class decision tree classifier using Spark ML and computed the predictions in a Spark DataFrame `preds_df` with the following schema:
+
+```
+prediction DOUBLE
+actual DOUBLE
+```
+
+**Which of the following code blocks can be used to compute the accuracy of the model according to the data in `preds_df` and assign it to the `accuracy` variable?**
+
+**Option A:**
+```python
+accuracy = Summarizer(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="accuracy"
+)
+```
+
+**Option B:**
+```python
+classification_evaluator = MulticlassClassificationEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="accuracy"
+)
+accuracy = classification_evaluator.evaluate(preds_df)
+```
+
+**Option C:**
+```python
+accuracy = MulticlassClassificationEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="accuracy"
+)
+```
+
+**Option D:**
+```python
+classification_evaluator = BinaryClassificationEvaluator(
+    predictionCol="prediction",
+    labelCol="actual",
+    metricName="accuracy"
+)
+accuracy = classification_evaluator.evaluate(preds_df)
+```
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 93
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer would like to calculate summary statistics on a dataset in Databricks. Specifically, they are looking for count, mean, stddev, min, max, and IQR. They are using SparkML on Databricks but also want the code to be portable to Spark not running on Databricks. What approach will do this?
+
+---
+
+### **Options**
+
+* **A.** Use the SparkML API function .describe()
+* **B.** Use the built in Data Profile functionality in Databricks Notebooks
+* **C.** Use dbutils.data.summarize
+* **D.** Use the SparkML API function .summary()
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 94
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has a Spark DataFrame df of new customers that they would like to add to their existing customer feature table in Unity Catalog. The following parameters are available for them to use when writing to the feature table.
+
+* **name** - the name of the feature table to write to.
+* **df** - a Spark DataFrame with feature data to be written to the feature table.
+* **mode** - the write operation to use when writing to the feature table (e.g. merge)
+* **primary key** - the primary key of the feature table.
+
+Using the Databricks Feature Store, if the FeatureEngineeringClient is instantiated, what are the minimum parameters required for the write_table function?
+
+---
+
+### **Options**
+
+* **A.** name, df, primary key
+* **B.** name, df
+* **C.** df
+* **D.** name, df, mode
+
+## **Question #95** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer is evaluating a dataset to determine if it is viable for the creation of a machine learning predictive model. They are concerned that there may be a strong relationship between two of the independent variables that could indicate that they are confounding. The variables in question are gender and highest education level as shown:
+
+| Gender | Highest Education Level |
+|--------|------------------------|
+| m      | B.S                    |
+| m      | M.S.                   |
+| f      | Ph.D                   |
+| m      | Ph.D                   |
+| f      | B.S                    |
+| f      | B.S                    |
+
+The machine learning engineer must investigate and rule out that these variables are confounding.
+
+**What action will do this?**
+
+- A. Use the Random Forest algorithm to calculate feature importance and isolate features that are not independent
+- B. Perform Pearson Correlation Coefficient test to evaluate for independence
+- C. Calculate IQR on the features and compare the 25th percentile against the 75th percentile to determine if either feature is statistically independent
+- D. Perform Chi-Squared Test to evaluate for independence
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 96
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has run several trials with different parameters and logged them under an MLflow experiment churn_prediction. Now they want to retrieve the run that performed best according to certain model metrics. How can the data scientist perform this task?
+
+---
+
+### **Options**
+
+* **A.** Use the mlflow.get_best_run() function with the necessary filter
+* **B.** Use the mlflow.client.MlflowClient.search_runs() function with search_all_experiments=True and filter on the pandas DataFrame returned.
+* **C.** Use the mlflow.get_experiment() function to retrieve the experiment. Filter on the runs property which has the list of all metadata for each run including the model metric
+* **D.** Use the mlflow.search_runs() function with the experiment name and filter on the pandas DataFrame returned.
+
+## **Question #97** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A machine learning engineer working for an Energy Distributor wants to perform a time-series forecast of critical turbines sensor measures.
+
+Here is the feature set under consideration:
+
+| FEATURE | DATASET NOTES |
+|---------|---------------|
+| Sensor Type | Types name of the sensors, for example, SensorA, SensorB, and SensorC. |
+| Temperature Measurement | Skewed values at certain hours of the day. Some missing values at random over the dataset. |
+| Vibration Measurement | Normally distributed values over the day but a few outliers that are out of range (-50, -1000, 10000, ...). Some missing values at random over the dataset. |
+| Date Time | Continuous. Granularity is hours per day. |
+
+The machine learning engineer creates a first model and gets a higher than expected RMSE. They believe the model can be improved using data imputation. They will use data science best practices for imputation.
+
+**Which data imputation strategy is most likely to enhance the dataset's quality and predictive performance?**
+
+- A. For sensor type use mode, for temperature and vibration use mean (per day).
+- B. They can just remove all out of range values and missing values from the training set.
+- C. For sensor type use mode, for temperature use median (per day) and for vibration use mean (per day).
+- D. For sensor type use mode, for temperature use mean (per day) and for vibration use median (per day).
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 98
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is evaluating the implementation of machine learning (ML) runtimes in their workflow and wants to understand the advantages of using Databricks ML runtimes over standard runtimes. Which aspect is a key advantage of using ML runtimes?
+
+---
+
+### **Options**
+
+* **A.** They automatically generate and optimize machine learning models without human intervention.
+* **B.** They eliminate the need for data preprocessing and feature engineering in machine learning pipelines.
+* **C.** They protect against model bias and drift by continuously retraining on new data.
+* **D.** They provide an optimized environment for model development and deployment, ensuring reproducibility and easier management of dependencies.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 99
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is developing a machine learning model to predict house prices in a competitive real estate market. They initially select a loss function that heavily penalizes large errors, hoping it will improve the model’s performance. However, after training, they observe that the model struggles to converge and produces unstable predictions, with large variations in price predictions for similar houses. The data scientist suspects that the chosen loss function is causing these issues. Why is it crucial to select the right loss function in this situation?
+
+---
+
+### **Options**
+
+* **A.** The loss faction ensures that the data is balanced.
+* **B.** The loss function directly influences how the model's parameters are updated during training.
+* **C.** The loss function controls the size of the training set.
+* **D.** The loss function determines the computational efficiency of the model.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 100
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist in an investment banking company has been asked to accelerate their model development process on certain tasks of their everyday job so they can free up time for other ones. Which task is typically automated by AutoML in Databricks for that purpose?
+
+---
+
+### **Options**
+
+* **A.** Monitoring model performance for inference.
+* **B.** Training and optimizing different models.
+* **C.** Deploying the model on a serving endpoint.
+* **D.** Creating a feature engineering set for model development.
+
+## **Question #101** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist wants to train a model using an existing Delta table as a feature table, in a workspace with Unity Catalog enabled. As this Delta table already contains data that is constantly being updated, they want to avoid duplicating data or having to keep another table synchronized. This table was created with the following code, with the `customer_id` column as the unique identifier:
+
+```sql
+CREATE TABLE store.rfv_analysis.customer_features (
+    customer_id INT,
+    date_last_purchase DATE,
+    value_last_purchase FLOAT,
+    number_recent_purchases INT
+);
+```
+
+**Which SQL code statement will enable them to use this Delta table as a feature table?**
+
+**Option A:**
+```sql
+CREATE FEATURE TABLE store.rfv_analysis.customer_features USING PRIMARY KEY (customer_id);
+```
+
+**Option B:**
+```sql
+CREATE OR REPLACE TABLE customer_feature_table (
+    customer_id NOT NULL PRIMARY KEY,
+    date_last_purchase DATE,
+    value_last_purchase FLOAT,
+    number_recent_purchases INT
+) AS SELECT * FROM store.rfv_analysis.customer_features;
+```
+
+**Option C:**
+```sql
+ALTER TABLE store.rfv_analysis.customer_features ADD CONSTRAINT customer_features_pk PRIMARY KEY(customer_id);
+```
+
+**Option D:**
+```sql
+ALTER TABLE store.rfv_analysis.customer_features ALTER COLUMN customer_id SET NOT NULL;
+ALTER TABLE store.rfv_analysis.customer_features ADD CONSTRAINT customer_features_pk PRIMARY KEY (customer_id);
+```
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/313104-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 102
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has developed a machine learning model using scikit-learn. The scientist now faces the task of performing batch inference on a substantial dataset of 100 GB. To efficiently process this large volume of data they plan to utilize an available Spark cluster consisting of 10 nodes. They want to process this in the shortest time possible. What set of steps will do this?
+
+---
+
+### **Options**
+
+* **A.** Because a Spark cluster is being used for model inference, the cluster will automatically distribute the inference process across all the nodes.
+* **B.** Convert the SKlearn model to a SparkML model using the .convert_model function. The model will now be able to natively take advantage of all the nodes.
+* **C.** Serialize the model using a Python UDF, convert inference data to Pandas dataframe, create a job to load data and perform inference via the Python UDF.
+* **D.** Serialize the model using a Pandas UDF, convert inference data to Spark dataframe, create a job to load data and perform inference via the Pandas UDF.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 103
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer is tasked with developing a model to classify emails as spam or not spam. After evaluating several models, they observe the following:
+
+* **Model A:** High training accuracy, low test accuracy
+* **Model B:** Low training accuracy, low test accuracy
+* **Model C:** Moderate training accuracy, moderate test accuracy
+* **Model D:** Low training accuracy, high test accuracy
+
+Based on these observations, which model is most likely to suffer from high variance?
+
+---
+
+### **Options**
+
+* **A.** Model A
+* **B.** Model B
+* **C.** Model C
+* **D.** Model D
+
+## **Question #104** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is considering two common model deployment patterns:
+
+- Promoting the model artifact towards production (deploy model)
+- Promoting the code that produces the model artifact towards production (deploy code)
+
+The diagram shows two approaches:
+
+**Deploy models:** Training code → Models → dev → staging → prod
+
+**Deploy code:** Training code → dev (with code and model) → staging (with code and model) → prod (with code and model)
+
+**Which scenario is inappropriate for the deploy model approach?**
+
+- A. The data scientist is not working with external repos or a CI/CD process.
+- B. Model training is very expensive or hard to reproduce.
+- C. Production data is not accessible from the development environment.
+- D. All work is done in a single Databricks workspace.
+
+## **Question #105** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist wants to tune hyperparameters for an sklearn model using the Hyperopt library. They have written the following code:
+
+```python
+def train_with_hyperopt(params):
+    # We will tune 2 hyperparameters:
+    # regularization and the penalty type (L1 vs L2).
+    regParam = float(params['regParam'])
+    penalty = params['penalty']
+    model, f1_score = train_tree(regParam, penalty)
+    loss = -f1_score
+    return {'loss': loss, 'status': STATUS_OK}
+
+with mlflow.start_run():
+    best_params = fmin(
+        fn=train_with_hyperopt,
+        space=search_space,
+        algo=hyperopt.tpe.suggest,
+        max_evals=100,
+        trials=Trials()
+    )
+```
+
+**Which statement explains the problem with the above Hyperopt code?**
+
+- A. Values of `max_evals` greater than 64 require `SparkTrials()` instead of `Trials()`.
+- B. Hyperopt `fmin` optimizes for the minimum value, so taking the negative of F1 score will return the worst performing model.
+- C. `Trials()` does not distribute trials to Spark workers, so the trial argument must be `SparkTrials()`.
+- D. The `hyperopt.tpe.suggest` algorithm does not work with sklearn, so the algorithm needs to be `hyperopt.rand.suggest`.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/313085-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 106
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning practitioner needs to build a linear regression model but wants to know if the dataset conforms to one of the four assumptions of linear regression. They know that data visualizations can provide a quick and easy way to test for one of their concerns: linearity. Which visualization technique will show linearity between the independent and dependent variables?
+
+---
+
+### **Options**
+
+* **A.** Plot each independent variable against other independent variables and visually inspect for linearity.
+* **B.** Plot the independent variable against the dependent variable and visually inspect for linearity.
+* **C.** Plot the average of the dependent variable vs the residual of the predicted value and visually inspect for linearity.
+* **D.** Plot the residuals of the predicted variable vs the actual dependent variable and visually inspect for linearity.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 107
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist applies random splits to train and test a time-series model but observes poor predictive performance. They know that they need to make an adjustment to their evaluation strategy to better suit time-series data. Which approach will do that?
+
+---
+
+### **Options**
+
+* **A.** Increase the number of time-series features and apply cross-validation.
+* **B.** Preserve the temporal order of observations and use rolling cross-validation.
+* **C.** Use larger random splits.
+* **D.** Use a different forecasting algorithm.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 108
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+What is a key advantage of creating feature store tables at the account level in Unity Catalog compared to the workspace level in Databricks?
+
+---
+
+### **Options**
+
+* **A.** Improved isolation and security through strict data segregation
+* **B.** Reduced storage costs
+* **C.** Simplified data discovery across workspaces
+* **D.** Automatic data encryption
+
+## **Question #109** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is working with a Spark DataFrame `df` containing numerical data. They want to remove outliers from the salary column based on the Interquartile Range (IQR) method. The cleaned DataFrame should be assigned to the variable `cleaned_df`.
+
+**Which approach correctly removes the outliers?**
+
+**Option A:**
+```python
+quantiles = df.approxQuantile("salary", [0.25, 0.75], 0.01)
+IQR = quantiles[1] - quantiles[0]
+lower_bound = quantiles[0] - 1.5 * IQR
+upper_bound = quantiles[1] + 1.5 * IQR
+cleaned_df = df.filter((df.salary >= lower_bound) & (df.salary <= upper_bound))
+```
+
+**Option B:**
+```python
+quantiles = df.approxQuantile("salary", [0.25, 0.75], 0.01)
+cleaned_df = df.filter((df.salary >= quantiles[0]) & (df.salary <= quantiles[1]))
+```
+
+**Option C:**
+```python
+stats = df.summary("mean", "stddev").collect()
+mean, stddev = float(stats[1][1]), float(stats[2][1])
+cleaned_df = df.filter((df.salary >= mean - 2 * stddev) & (df.salary <= mean + 2 * stddev))
+```
+
+**Option D:**
+```python
+stats = df.select(mean("salary"), stddev("salary")).collect()[0]
+cleaned_df = df.filter(abs(df.salary - stats[0]) <= 3 * stats[1])
+```
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 110
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is experimenting with different models and parameters using MLflow in a Databricks notebook. For this experiment, they need a cleaner view of the runs and therefore need to pick and choose which parameters, metrics and models are going to be logged. What is the correct way of achieving this?
+
+---
+
+### **Options**
+
+* **A.** Use log_param, log_metric and log_model from MLflow client within a with mlflow.start_run() block
+* **B.** Setting MLflow Autologging to not exclusive using mlflow.autolog(exclusive=False), then logging parameters, metrics and models manually using log_param, log_metric and log_model from MLfloW Client
+* **C.** Using log_param, log_metric and log_model from MLflow client anywhere in the notebook without requiring additional code.
+* **D.** Calling mlflow.autolog() before starting model training.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 111
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is developing a predictive model for customer churn using a Random Forest algorithm from the scikit-learn library. They are optimizing the algorithm's hyperparameters with Hyperopt on a Databricks cluster. However, the optimization process is slow because it is being executed on the driver node of the cluster. They attempted to use Optuna. a recommended alternative, but encountered the same issue. They want to distribute Hyperopt or Optuna trials to multiple machines on the Databricks cluster. What action will do this?
+
+---
+
+### **Options**
+
+* **A.** Use the MLflow implementation of those libraries to automatically distribute hyperparameter tuning.
+* **B.** Use the GridSearchCV implementation from Spark ML, which uses parallel execution.
+* **C.** If using Optuna. use the Joblib Apache Spark Backend library. If using Hyperopt. use SparkTrials library.
+* **D.** Use the parameters distributed=True in Optuna or parallel=True in Hyperopt.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 112
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer has trained a machine learning model to predict customer churn. They want to use this model to perform streaming predictions on streaming data using Delta Live Tables (DLT). The model is saved as a SparkML pipeline in MLflow and new customer data is streaming into a Delta table. They want to implement streaming inference using Delta Live Tables and MLflow. Which approach does this?
+
+---
+
+### **Options**
+
+* **A.** Load the MLflow model directly within the Delta Live Tables function using `mlflow.pyfunc.load_model()`. Then, within a streaming Delta Live Tables function, read the streaming data using `dlt.read()` and apply the loaded model to each row of the streaming customer data using a Pandas UDF.
+* **B.** Use `mlflow.sklearn.load_model()` to load the MLflow model as a scikit-learn object inside the Delta Live Tables function. Then, use `spark.readstream()` to read the streaming customer data, convert each batch to a pandas DataFrame, apply the scikit-learn model using `df.apply()`, and write the results back to a Delta table using `spark.writeStream()`.
+* **C.** Create a Spark UDF from the MLflow model using `mlflow.pyfunc.spark_udf()`. Then, within a streaming Delta Live Tables function, use `dlt.read_stream()` to read the streaming customer data and apply the UDF to create predictions.
+* **D.** Download the MLflow model artifacts to DBFS, then define a Spark ML Pipeline within the Delta Live Tables function. Use this pipeline model to transform the streaming customer data read using `dlt.read_stream()`.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 113
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A financial services company is considering different data processing approaches for their proposed machine learning projects. They have the following requirements:
+
+* **Daily Financial Reports:** The company needs to generate comprehensive financial reports at the end of each day, which involve processing large volumes of transaction data.
+* **Fraud Detection System:** The company wants to identify and stop fraudulent transactions as they occur, requiring immediate processing of transaction data.
+* **Customer Behavior Analysis:** The company aims to analyze customer behavior patterns in near real-time to offer personalized recommendations and promotions.
+
+Their machine learning engineer needs to choose the combinations of data processing approaches for the projects that meet all their requirements effectively while also taking cost into consideration. Which combination of approaches will do this?
+
+---
+
+### **Options**
+
+* **A.** Real-time processing for daily financial reports, batch processing for fraud detection, and stream processing for customer behavior analysis.
+* **B.** Batch processing for daily financial reports, stream processing for fraud detection, and real-time processing for customer behavior analysis.
+* **C.** Stream processing for daily financial reports, batch processing for fraud detection, and real-time processing for customer behavior analysis.
+* **D.** Batch processing for daily financial reports, real-time processing for fraud detection, and stream processing for customer behavior analysis.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 114
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer has developed a classification model to predict whether a customer will renew their gym membership. They are unsure if the model they developed is accurate enough to be used in a production environment. Which evaluation metric should they use to assess the model's performance?
+
+---
+
+### **Options**
+
+* **A.** Root Mean Squared Error (RMSE)
+* **B.** Mean Absolute Error (MAE)
+* **C.** R-Squared (R2)
+* **D.** ROC-AUC
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 115
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is using MLflow to optimize a complex deep learning model with the following hyperparameters:
+
+* **learning_rate:** continuous (range: 0.0001 to 0.1)
+* **num_layers:** discrete (range: 2 to 10)
+* **dropout_rate:** continuous (range: 0.1 to 0.5)
+* **batch_size:** discrete (range: 32 to 256)
+
+The model takes about 2 hours to train on a single set of hyperparameters, and the data scientist has a time budget of 24 hours for tuning. Which hyperparameter tuning method is correct for this scenario?
+
+---
+
+### **Options**
+
+* **A.** Grid Search
+* **B.** Tree-structured Parzen Estimator (TPE)
+* **C.** Exhaustive Search
+* **D.** Random Search
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 116
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+An e-commerce company has used Databricks Model Serving to deploy a factorization machines (FM) model to suggest products for customers. The company's data science team has developed two new models using the TensorFlow and PyTorch deep learning frameworks. The company needs to use A/B testing to evaluate the new models against the deployed model. The required A/B testing setup is as follows:
+
+* Send 70% of traffic to the existing FM model
+* Send 15% of traffic to the TensorFlow model
+* Send 15% of traffic to the PyTorch model
+
+Which architecture approach will implement the required A/B testing setup?
+
+---
+
+### **Options**
+
+* **A.** Update the existing Model Serving endpoint to add the TensorFlow and PyTorch models. Configure the traffic splitting in the endpoint to be 70/15/15.
+* **B.** As new models cannot be added to an existing endpoint, create a new Model Serving endpoint with the 3 models. Configure the traffic splitting in the endpoint to be 70/15/15.
+* **C.** Create two new Model Serving endpoints for the TensorFlow and PyTorch models in addition to the existing endpoint. Configure the traffic splitting in the calling application to be 70/15/15.
+* **D.** Create a new endpoint with the two TensorFlow and PyTorch models and sets the endpoint traffic split to be 50/50 between those models. Configure the traffic splitting in the calling application to be 70/30.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 117
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has completed a featurization process on a new dataset. They are considering if the resulting features should be saved to an online or offline feature table. They know that the features will be used primarily for real-time inference. After some thought, they decide to use an online feature table instead of an offline feature table. What aspect of online feature tables enabled their decision for this scenario?
+
+---
+
+### **Options**
+
+* **A.** They prioritize low-latency access and are optimized for point lookups, typically supported by key-value stores or column-oriented databases.
+* **B.** They only support real-time inference so they are the only option.
+* **C.** They support both batch and real-time inference equally in terms of cost and performance, providing the most flexibility.
+* **D.** They prioritize batch inference and leverage traditional data warehouses or data lakes, making them more cost-effective.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 118
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+The data science team at a retailer has developed a custom MLflow pyfunc model with private Python dependencies. They now want to deploy and serve the model for real-time inference using Databricks Model Serving. However, they are getting dependency errors during deployment. Which is the correct approach to resolve the issue?
+
+---
+
+### **Options**
+
+* **A.** Add the dependencies to the MLflow model using the add_libraries_to_model method
+* **B.** Log the dependencies separately using the log_dependencies method
+* **C.** Log the dependencies together with the model using log_model method with pip_requirements or extra_pip_requirements parameter
+* **D.** Use an MLflow native flavor model instead of the custom pyfunc model
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 119
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A major real estate company has successfully developed a predictive analytics model through its in-house data science team. This model serves two primary purposes:
+
+* To forecast future home prices in various markets
+* To explain the factors contributing to variability in observed home prices
+
+The model utilizes historical data, market trends, and various property attributes to generate its predictions and insights. By leveraging this advanced analytics tool, the company aims to make more informed decisions in property valuation, investment strategies, and market analysis. The team wants to assess how well the model fits the training data and measure the model errors. Which two evaluation metrics do this?
+
+---
+
+### **Options**
+
+* **A.** RMSE and R-Squared (R2)
+* **B.** RMSE and MSE
+* **C.** Accuracy and F1 Score
+* **D.** Precision and Recall
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 120
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is preparing a dataset for machine learning in Databricks. The dataset contains a categorical feature called color with values “red", "blue", and "green". They want to use one-hot encoding to transform this feature for model training. Which approach correctly implements one-hot encoding for the color feature using PySpark?
+
+---
+
+### **Options**
+
+* **A.** Apply the pd.get_dummies function after converting the Spark DataFrame to a Pandas DataFrame
+* **B.** Use Spark's built-in functions to one-hot encode the color column of the Spark DataFrame
+* **C.** Use the StringIndexer followed by the OneHotEncoder, then the VectorAssembler to create the final feature vector.
+* **D.** Apply the categorical_column function to the color column, then use the OneHotEncodingEstimator
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 121
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is working on a project to predict house prices based on various features such as square footage, number of bedrooms, and location. They notice that the distribution of house prices is heavily skewed. Additionally, the residuals from their initial linear regression model show a clear pattern, indicating a violation of the homoscedasticity assumption. Which action would account for the stated problems with the model?
+
+---
+
+### **Options**
+
+* **A.** Use a polynomial regression model to capture the non-linear relationship between the features and house prices.
+* **B.** Apply a log transformation to the dependent variable (house prices) to reduce skewness and improve model assumptions.
+* **C.** Remove the outliers from the dataset to achieve a more normal distribution of house prices.
+* **D.** Apply a square root transformation to the independent variables to achieve linearity.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 122
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+Which statement correctly describes the benefits and downsides of using cross-validation compared to a simple train-validation split?
+
+---
+
+### **Options**
+
+* **A.** Cross-validation always results in a higher model accuracy compared to a train-validation split because it uses the entire dataset for training.
+* **B.** Cross-validation provides a more reliable estimate of model performance but is computationally more expensive than a train-validation split.
+* **C.** Cross-validation uses only a single subset of data for validation, which can lead to overfitting, whereas a train-validation split uses multiple subsets for validation.
+* **D.** Cross-validation is faster and less computationally intensive than a train-validation split, but it provides a less reliable estimate of model performance.
+
+## **Question 123** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+A data scientist is building a logistic regression model using sklearn pipelines. They currently have the following code that only accounts for numeric features:
+
+```python
+pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler()),
+    ('classifier', LogisticRegression())
+])
+```
+
+The data scientist wants to update the pipeline to account for both numeric and categorical features.
+
+**Which code block will do this?**
+
+**Option A:**
+```python
+pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler()),
+    ('encoder', OneHotEncoder(sparse=False, handle_unknown='ignore')),
+    ('classifier', LogisticRegression())
+])
+```
+
+**Option B:**
+```python
+pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy=['mean', 'most_frequent'])),
+    ('scaler', StandardScaler()),
+    ('encoder', OneHotEncoder(drop='first')),
+    ('classifier', LogisticRegression())
+])
+```
+
+**Option C:**
+```python
+numeric_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler())
+])
+
+categorical_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('encoder', OneHotEncoder(drop=['first']))
+])
+```
+
+**Option D:**
+```python
+preprocessor = ColumnTransformer([
+    ('num', Pipeline([
+        ('imputer', SimpleImputer(strategy='mean')),
+        ('scaler', StandardScaler())
+    ]), numeric_features),
+    ('cat', Pipeline([
+        ('imputer', SimpleImputer(strategy='most_frequent')),
+        ('encoder', OneHotEncoder(drop='first'))
+    ]), categorical_features)
+])
+
+pipeline = Pipeline([
+    ('preprocessor', preprocessor),
+    ('classifier', LogisticRegression())
+])
+```
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/313107-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 124
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+The data scientist team is discussing their MLOps strategy. The current topic is on how to achieve different ModelOps tasks in Databricks. Which approach is a correct use of Databricks features?
+
+---
+
+### **Options**
+
+* **A.** Use Delta Live Tables for no-code model development.
+* **B.** Use AutoML to monitor model performance
+* **C.** Use MLflow to track model development.
+* **D.** Use Unity Catalog to version control model code.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 125
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is hyperparameter tuning a RandomForestClassifier model. They will use the GridSearchCV function in scikit-learn with the following parameters:
+
+* **cross validation** = 5
+* **param_grid** has 3 parameters to consider
+* max_depth: [5, 10, 15, 20]
+* max_features: ['auto', 'sqrt', 'log2']
+* n_estimators: [200, 500]
+
+
+
+How many models will be trained in total?
+
+---
+
+### **Options**
+
+* **A.** 14
+* **B.** 24
+* **C.** 45
+* **D.** 120
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/313123-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 126
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A Machine Learning engineer has been tasked with training a model using features from a Unity Catalog feature store table. They have access to multiple feature Store tables and are considering using the `FeatureEngineeringClient.create_training_set` method to create a training set with features from these tables. Which TWO statements are true about using `FeatureEngineeringClient.create_training_set` in this scenario? (Choose two.)
+
+---
+
+### **Options**
+
+* **A.** It requires the Machine Learning engineer to manually specify the schema of the training set.
+* **B.** It can be used to create a training set with features from multiple feature store tables.
+* **C.** It allows the Machine Learning engineer to create a training set using the same feature multiple times.
+* **D.** It automatically handles feature engineering tasks such as normalization and feature scaling.
+* **E.** It can only be used with a single feature store table.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 127
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer in a telecommunications company wants to create a predictive model to predict customer churn using Databricks. The required dataset has been prepared and is available in Unity Catalog. They set F1 as their evaluation metric and begin an AutoML experiment. After the AutoML experiment, they review the listed runs but are not convinced the selected model is the best-performing one that yields the best results based on the specified evaluation metric. What action will assist them in analyzing the results?
+
+---
+
+### **Options**
+
+* **A.** Review the best run notebook from the AutoML experiment to determine if further refinements can be made to improve the F1 score
+* **B.** Review the training dataset data types in Unity Catalog
+* **C.** Run the experiment again using AUC-ROC evaluations metrics and compare
+* **D.** Run the experiment again with a different ML problem type
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 128
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist has developed 2 regression models and wants to compare the performance of them using RMSE. In model A, they have applied a log transformation on the dependent variable, whereas in model B, they have left the dependent variable unchanged. What is the correct way to perform the comparison?
+
+---
+
+### **Options**
+
+* **A.** The model with higher RMSE is better.
+* **B.** Exponentiate the predictions of model A first before calculating the RMSE. The model with lower RMSE is better.
+* **C.** Exponentiate the predictions of model A first before calculating the RMSE. The model with higher RMSE is better.
+* **D.** The model with lower RMSE is better.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 129
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+An environmental scientist is researching the relationship between various environmental factors and the viability of a specific invasive plant species. They have developed a linear regression model to measure growth rate in relation to temperature, humidity, air quality index, and other variables. The scientist now aims to assess the performance of the model, focusing particularly on its goodness of fit. They need to select a metric that will indicate the proportion of the variance in the growth rate that is predicted from the independent variables. Which metric will do this?
+
+---
+
+### **Options**
+
+* **A.** R-Squared (R2)
+* **B.** Mean Squared Error (MSE)
+* **C.** Mean Absolute Error (MAE)
+* **D.** Root Mean Squared Error (RMSE)
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 130
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer at a health insurance company is going to deploy a model in Databricks to a real-time Model Serving endpoint. The Model Serving endpoint is in the company's development environment so that other teams can test the endpoint and model. The company is very cost conscious when it comes to IT spend and the engineer knows that the model only needs to be tested during normal business hours. They want to use the least amount of effort to reduce the overall cost of hosting the model using a real-time Model Serving endpoint. What approach does this?
+
+---
+
+### **Options**
+
+* **A.** Delete the endpoint at the end of business hours and recreate it at the beginning of business hours.
+* **B.** Set the Compute scale-out to Small.
+* **C.** Set Scale to zero in the endpoint s configuration.
+* **D.** Turn the endpoint off at the end of business hours and turn it back on at the beginning of business hours.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 131
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is developing a model to predict the likelihood of a customer making a purchase based on browsing behavior and demographic data. The predictions must be generated in real-time to support immediate recommendations or offers to the customer. What is the main reason for using features from an online feature store in this scenario?
+
+---
+
+### **Options**
+
+* **A.** Update the model's weights and biases using online learning.
+* **B.** Make predictions on new incoming data in real time.
+* **C.** Train a new model using historical online data for that specific customer.
+* **D.** Monitor the performance of the model in real time.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 132
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist who is part of their organization’s finance team is looking for a way to indicate that certain models are approved for use with Personally Identifiable Information (PII). The data scientist determines that setting a tag on the models with PII is the best way to categorize the models. The models are registered in Unity Catalog and they determine that they can apply the tag to the models to accomplish this goal using the function set_registered_model_tag Which set of parameters must the data scientist provide to correctly execute the function set_registered_model_tag?
+
+---
+
+### **Options**
+
+* **A.** name, version, value
+* **B.** name, key, value
+* **C.** name, value
+* **D.** name, version, key, value
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 133
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+An organization has over 100 data scientists, so the organization’s leadership is concerned that it will be difficult to understand which data was used to train the machine learning models. All of the organization’s training data is saved in Unity Catalog tables. An enterprise architect has been tasked with solving the problem and is considering whether to register models in the Unity Catalog registry or the workspace registry. Which feature of the Unity Catalog model registry solves this problem?
+
+---
+
+### **Options**
+
+* **A.** Model auditing
+* **B.** Data lineage
+* **C.** Centralized access control
+* **D.** Chronological model lineage
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 134
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist at a large e-commerce company has been experimenting with different machine learning models to predict customer churn. They’ve trained several models using different algorithms and hyperparameters. Now, they want to compare the performance of these models and select the best one for deployment They are using the managed MLflow UI on Databricks and are comparing the performance metrics of multiple runs. Which feature should the data scientist use?
+
+---
+
+### **Options**
+
+* **A.** Experiment Notes
+* **B.** Run Comparison
+* **C.** Model Registry
+* **D.** Artifact Logging
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/discussions/databricks/view/313117-exam-certified-machine-learning-associate-topic-1-question/)
+* **Question No:** 135
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist intends to implement a champion/challenger framework for model management. As new model versions are released, this framework will evaluate each as a challenger to determine if it should replace the current champion model. The framework should support automated updates through a CI/CD process. Which approach is a best practice for implementing this framework?
+
+---
+
+### **Options**
+
+* **A.** Update the model aliases to the appropriate versions in the Databricks Ul.
+* **B.** Use MLflow client.set_registered_model_alias() to define the Champion alias used in the model deployment code.
+* **C.** Update the Challenger model version to the maximum model version number available.
+* **D.** Use MLflow client.set_registered_model_tag() to define the Champion tag used in the model deployment code
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 136
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is working on a machine learning project involving a dataset with the following features:
+
+* **CustomerID:** A unique identifier for each customer.
+* **Age:** The age of the customer.
+* **Gender:** The gender of the customer (Male, Female).
+* **ZipCode:** The United States Zip Code where the customer resides.
+* **PurchaseAmount:** The total amount spent by the customer.
+
+They are building a linear regression model to predict `PurchaseAmount`. Given the features in the dataset, to which column and why should the machine learning engineer apply one-hot encoding to prepare this dataset for training a machine learning model?
+
+---
+
+### **Options**
+
+* **A.** CustomerID column to ensure each customer is uniquely represented in the model.
+* **B.** Age column to handle the numerical values appropriately.
+* **C.** Gender column as it has a small number of categories and no ordinal relationship.
+* **D.** ZipCode column to capture all possible zip code values in the model.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 137
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer is developing a model to predict whether an item purchased from a store will be returned. They plan to use Databricks AutoML to train a series of models and then they will pick the best performing one. As they explore the data the models will be trained on, they find that many key numerical columns have a high percentage of null values. Which approach requires the least amount of code to impute the missing values?
+
+---
+
+### **Options**
+
+* **A.** Let AutoML select and perform the best imputation approach
+* **B.** Prior to executing the AutoML experiment, perform the imputation by leveraging PySpark MLlib’s Imputer class
+* **C.** Select the imputation approach and let AutoML perform the imputation
+* **D.** Prior to executing the AutoML experiment, perform the imputation by leveraging SimpleImputer simple imputer class
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 138
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A machine learning engineer wants to register a model from a logged MLflow training run that was previously executed by a data scientist. They are using a workspace with Unity Catalog enabled and want this model to be registered in a project-specific catalog in Unity Catalog. How can they achieve this?
+
+---
+
+### **Options**
+
+* **A.** Use mlflow.log_model and specify the three-level name of the model using the registered_model_name parameter.
+* **B.** Call mlflow.register_model with the desired name for the model on a Unity Catalog-enabled workspace that will automatically register the model on Unity Catalog.
+* **C.** Ensure the model is logged with a model signature, set the Mlflow registry to Unity Catalog and then call mlflow.register_model passing the three-level name of the model.
+* **D.** Use mlflow.log_model and provide an input example to the input_example parameter to automatically generate the model signature and the name of the model using the registered_model_name parameter on a Unity Catalog-enabled workspace which will automatically register the model on Unity Catalog.
+
+Based on the current webpage content, here are the extracted details for the question:
+
+### **Question Details**
+
+* **Exam:** Databricks [Certified Machine Learning Associate](https://www.examtopics.com/exams/databricks/certified-machine-learning-associate/)
+* **Question No:** 139
+* **Topic:** 1
+
+---
+
+### **Context / Question Text**
+
+A data scientist is tasked with building a predictive model for a healthcare application that identifies patients at risk of developing a rare disease. The dataset is highly imbalanced, with only 1% of the samples representing patients with the disease. This imbalance is causing the model to predict the majority class (healthy patients) almost exclusively, resulting in poor detection of the rare disease cases. They need to address this class imbalance to improve the model's performance on the minority class. Which strategy should they implement to effectively mitigate the class imbalance in their training data?
+
+---
+
+### **Options**
+
+* **A.** Apply an oversampling technique to increase the number of samples from the minority class (patients with the disease).
+* **B.** Perform dimensionality reduction to decrease the number of features in the dataset
+* **C.** Increase the number of epochs during model training to allow the model to learn better from the data.
+* **D.** Implement a cross-validation technique to ensure the model generalizes well to unseen data.
+
+## **Question #140** (Databricks Certified Machine Learning Associate)
+**Topic #1**
+
+Consider the following code block:
+
+```python
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml.feature import StandardScaler
+
+assembler = VectorAssembler(inputCols=["feature1", "feature2"], outputCol="features")
+
+scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures")
+
+lr = LogisticRegression(maxIter=10, regParam=0.01)
+```
+
+**Which statement is true about this code block?**
+
+- A. VectorAssembler is an Estimator, StandardScaler is an Estimator, and LogisticRegression is a Transformer.
+- B. VectorAssembler is a Transformer, StandardScaler is a Transformer, and LogisticRegression is an Estimator.
+- C. VectorAssembler is a Transformer, StandardScaler is an Estimator, and LogisticRegression is an Estimator.
+- D. VectorAssembler is an Estimator, StandardScaler is a Transformer, and LogisticRegression is a Transformer.
+
+
+
+
+
