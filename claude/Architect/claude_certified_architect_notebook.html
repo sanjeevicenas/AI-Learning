@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Certified Architect — Field Notebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f4eee1;
+  --paper-shade: #eae2cf;
+  --ink: #16161f;
+  --ink-soft: #383844;
+  --muted: #6a6456;
+  --rule: #d4cab2;
+  --c1: #1f6f78;  /* agentic loop - teal */
+  --c2: #9c2c7e;  /* multi-agent - magenta */
+  --c3: #c0392b;  /* hooks - red */
+  --c4: #c97a13;  /* decomposition/sessions - amber */
+  --c5: #3f7d35;  /* tool interfaces - green */
+  --c6: #1f5e92;  /* mcp errors - blue */
+  --c7: #6b4423;  /* mcp servers - brown */
+  --c8: #534aa6;  /* claude.md - indigo */
+  --c9: #2c6e6e;  /* plan/ci - dark cyan */
+  --c10: #b5530f; /* prompt precision - burnt orange */
+  --c11: #356a3f; /* structured/batch - forest */
+  --c12: #7a2230; /* context/reliability - maroon */
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Newsreader', Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.65;
+  font-size: 18px;
+  background-image: radial-gradient(circle at 1px 1px, rgba(22,22,31,0.04) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at top left, rgba(31,111,120,0.05), transparent 50%),
+              radial-gradient(ellipse at bottom right, rgba(156,44,126,0.04), transparent 50%);
+}
+.page { max-width: 920px; margin: 0 auto; padding: 60px 48px 100px; position: relative; z-index: 1; }
+
+/* COVER */
+.cover { padding: 70px 0 50px; border-bottom: 3px double var(--ink); margin-bottom: 48px; position: relative; }
+.cover-sticker {
+  position: absolute; top: 10px; right: 0; background: #f0c14b; padding: 14px 22px;
+  font-family: 'Caveat', cursive; font-size: 21px; color: var(--ink); transform: rotate(5deg);
+  box-shadow: 3px 5px 0 rgba(22,22,31,0.15); border: 1.5px solid var(--ink); text-align: center;
+}
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
+h1.title { font-family: 'Fraunces', serif; font-weight: 900; font-size: clamp(42px, 7vw, 84px); line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 18px; font-variation-settings: "opsz" 144; }
+h1.title em { font-style: italic; color: var(--c3); font-weight: 600; }
+.tagline { font-family: 'Caveat', cursive; font-size: 29px; color: var(--ink-soft); margin-top: 26px; max-width: 640px; }
+.byline { margin-top: 32px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); letter-spacing: 0.1em; }
+
+/* EXAM AT A GLANCE */
+.glance { background: var(--ink); color: var(--paper); padding: 36px 40px; margin-bottom: 60px; position: relative; }
+.glance h2 { font-family: 'Fraunces', serif; font-weight: 800; font-size: 26px; margin-bottom: 6px; }
+.glance .sub { font-family: 'Caveat', cursive; font-size: 20px; color: rgba(244,238,225,0.7); margin-bottom: 24px; }
+.glance-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.glance-stat { border: 1px solid rgba(244,238,225,0.2); padding: 16px; background: rgba(255,255,255,0.04); }
+.glance-stat .big { font-family: 'Fraunces', serif; font-weight: 800; font-size: 30px; line-height: 1; }
+.glance-stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(244,238,225,0.65); margin-top: 8px; }
+.domains-bar { margin-top: 26px; }
+.domain-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 14px; }
+.domain-row .name { min-width: 230px; font-family: 'Newsreader', serif; }
+.domain-row .bar { flex: 1; height: 14px; background: rgba(255,255,255,0.08); position: relative; }
+.domain-row .fill { height: 100%; }
+.domain-row .pct { font-family: 'JetBrains Mono', monospace; font-size: 12px; min-width: 38px; text-align: right; }
+
+/* TOC */
+.toc { background: var(--paper-shade); padding: 34px 40px; border-left: 6px solid var(--ink); margin-bottom: 80px; }
+.toc-title { font-family: 'Fraunces', serif; font-weight: 800; font-size: 28px; margin-bottom: 22px; }
+.toc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px 32px; font-size: 15px; }
+.toc-item { display: flex; align-items: baseline; gap: 11px; color: var(--ink-soft); }
+.toc-num { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); font-weight: 600; min-width: 26px; }
+.toc-tag { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 2px 6px; letter-spacing: 0.1em; }
+.tag-high { background: var(--c3); color: var(--paper); }
+.tag-med { background: var(--ink-soft); color: var(--paper); }
+
+/* CHAPTERS */
+.chapter { margin-bottom: 96px; position: relative; scroll-margin-top: 30px; }
+.chapter-header { display: flex; align-items: flex-start; gap: 26px; margin-bottom: 30px; padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
+.chapter-num { font-family: 'Fraunces', serif; font-weight: 900; font-size: 104px; line-height: 0.85; color: var(--accent); letter-spacing: -0.04em; font-variation-settings: "opsz" 144; }
+.chapter-meta { flex: 1; padding-top: 10px; }
+.chapter-kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 9px; }
+.chapter-title { font-family: 'Fraunces', serif; font-weight: 800; font-size: 38px; line-height: 1.05; letter-spacing: -0.02em; }
+.chapter-title em { font-style: italic; font-weight: 500; color: var(--accent); }
+.subtitle { font-family: 'Caveat', cursive; font-size: 22px; color: var(--muted); margin-top: 8px; }
+
+.lede { font-size: 20px; line-height: 1.55; margin-bottom: 30px; font-style: italic; border-left: 3px solid var(--accent); padding-left: 20px; }
+.diagram { background: white; border: 1.5px solid var(--ink); padding: 26px; margin: 34px 0; position: relative; box-shadow: 5px 6px 0 rgba(22,22,31,0.1); }
+.diagram-label { position: absolute; top: -12px; left: 22px; background: var(--paper); padding: 0 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.diagram svg { display: block; width: 100%; height: auto; }
+
+h3.section-h { font-family: 'Fraunces', serif; font-weight: 700; font-size: 23px; letter-spacing: -0.01em; margin: 30px 0 13px; display: flex; align-items: baseline; gap: 12px; }
+h3.section-h::before { content: ''; width: 24px; height: 3px; background: var(--accent); display: inline-block; }
+p { margin-bottom: 14px; }
+p strong, .body strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 60%, rgba(255,233,150,0.55) 60%); padding: 0 2px; }
+
+.callout { background: var(--paper-shade); border-left: 4px solid var(--accent); padding: 22px 26px; margin: 24px 0; }
+.callout-kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.callout-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; margin-bottom: 10px; }
+
+.sticky { background: #f0c14b; padding: 18px 22px; font-family: 'Caveat', cursive; font-size: 21px; color: var(--ink); transform: rotate(-1.5deg); box-shadow: 3px 4px 0 rgba(22,22,31,0.12); margin: 28px 0; border: 1px solid rgba(22,22,31,0.15); max-width: 92%; }
+.sticky.right { transform: rotate(2deg); margin-left: auto; }
+.sticky.pink { background: #f6b1bd; } .sticky.blue { background: #a4d2e6; } .sticky.green { background: #b6d6a6; }
+.sticky-pin { display: inline-block; font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--ink); background: rgba(22,22,31,0.1); padding: 2px 8px; margin-bottom: 6px; }
+
+.scenario { background: white; border: 2px dashed var(--accent); padding: 24px 28px; margin: 28px 0; position: relative; }
+.scenario::before { content: 'TOUGH SCENARIO'; position: absolute; top: -10px; left: 20px; background: var(--accent); color: white; padding: 3px 10px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; font-weight: 600; }
+.scenario p:last-child { margin-bottom: 0; }
+
+ul.bullets { margin: 14px 0 14px 4px; padding: 0; list-style: none; }
+ul.bullets li { padding: 6px 0 6px 28px; position: relative; line-height: 1.55; }
+ul.bullets li::before { content: '✦'; position: absolute; left: 0; top: 6px; color: var(--accent); font-size: 14px; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 24px 0; }
+.col-card { background: white; padding: 22px; border: 1px solid var(--rule); border-top: 4px solid var(--accent); }
+.col-card h4 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.col-card .label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+
+code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: var(--paper-shade); padding: 1px 6px; border-radius: 2px; }
+.dialogue { background: white; border: 1px solid var(--rule); padding: 20px 24px; margin: 22px 0; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; }
+.dialogue .speaker { font-weight: 600; color: var(--accent); margin-right: 8px; }
+.dialogue p { margin-bottom: 8px; } .dialogue p:last-child { margin-bottom: 0; }
+
+.fact-row { display: flex; gap: 16px; align-items: flex-start; padding: 15px 0; border-bottom: 1px dashed var(--rule); }
+.fact-row:last-child { border-bottom: none; }
+.fact-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); font-weight: 600; min-width: 120px; padding-top: 4px; }
+
+.qbox { background: var(--paper-shade); border: 1px solid var(--accent); padding: 18px 22px; margin: 22px 0; font-size: 15px; }
+.qbox .qlabel { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.qbox .ans { font-weight: 600; color: var(--accent); font-family: 'Newsreader', serif; }
+
+/* EXAM SECTION */
+.exam-section { background: var(--ink); color: var(--paper); padding: 60px 48px; margin: 80px -48px 0; }
+.exam-section h2 { font-family: 'Fraunces', serif; font-weight: 800; font-size: 42px; letter-spacing: -0.02em; margin-bottom: 12px; }
+.exam-section .tagline { color: rgba(244,238,225,0.7); }
+.exam-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; margin-top: 34px; }
+.exam-card { border: 1px solid rgba(244,238,225,0.2); padding: 22px; background: rgba(255,255,255,0.04); }
+.exam-card h4 { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; margin-bottom: 11px; }
+.exam-card p { font-size: 15px; color: rgba(244,238,225,0.85); }
+.golden { background: rgba(240,193,75,0.12); border: 1px solid rgba(240,193,75,0.4); padding: 26px 30px; margin-top: 36px; }
+.golden h3 { font-family: 'Fraunces', serif; font-size: 24px; color: #f0c14b; margin-bottom: 16px; }
+.golden ul { list-style: none; }
+.golden li { padding: 8px 0 8px 26px; position: relative; font-size: 15.5px; color: var(--paper); border-bottom: 1px dashed rgba(244,238,225,0.15); }
+.golden li:last-child { border-bottom: none; }
+.golden li::before { content: '→'; position: absolute; left: 0; color: #f0c14b; font-weight: 700; }
+.golden li b { color: #f0c14b; font-weight: 600; }
+
+@media (max-width: 720px) {
+  .page { padding: 40px 22px 60px; }
+  .chapter-header { flex-direction: column; gap: 10px; }
+  .chapter-num { font-size: 76px; }
+  .chapter-title { font-size: 28px; }
+  .toc-grid, .two-col, .exam-grid, .glance-grid { grid-template-columns: 1fr; }
+  .domain-row .name { min-width: 140px; font-size: 12px; }
+  .exam-section { margin: 80px -22px 0; padding: 40px 22px; }
+  h1.title { font-size: 50px; }
+}
+@media print {
+  body { background: var(--paper); }
+  .diagram, .sticky, .scenario, .callout, .dialogue, .col-card, .exam-card, .fact-row, .qbox, .glance-stat { break-inside: avoid; page-break-inside: avoid; }
+  .chapter-header { break-inside: avoid; page-break-inside: avoid; break-after: avoid; }
+  h3.section-h { break-after: avoid; page-break-after: avoid; }
+}
+
+/* ===== PRACTICE QUESTION BANK ===== */
+.qbank { margin: 90px -48px 0; background: var(--ink); color: var(--paper); padding: 60px 48px; }
+.qbank-head { margin-bottom: 36px; }
+.qbank-head h2 { font-family: 'Fraunces', serif; font-weight: 800; font-size: 38px; letter-spacing: -0.02em; margin-bottom: 12px; }
+.qbank-sub { font-size: 16px; color: rgba(244,238,225,0.78); max-width: 720px; }
+.qtopic { margin-bottom: 44px; }
+.qtopic-head { display: flex; align-items: baseline; gap: 14px; padding-bottom: 12px; margin-bottom: 18px; border-bottom: 2px solid var(--accent); }
+.qtopic-num { font-family: 'Fraunces', serif; font-weight: 900; font-size: 40px; color: var(--accent); line-height: 1; }
+.qtopic-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; color: var(--paper); }
+.qtopic-count { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.15em; color: var(--accent); }
+.qcard { background: rgba(255,255,255,0.04); border: 1px solid rgba(244,238,225,0.16); border-left: 4px solid var(--accent); padding: 22px 24px; margin-bottom: 18px; }
+.qcard-top { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+.qnum { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px; color: var(--accent); background: rgba(255,255,255,0.06); padding: 2px 8px; }
+.qscn { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(244,238,225,0.5); }
+.qtext { font-family: 'Newsreader', serif; font-size: 16px; line-height: 1.5; color: var(--paper); margin-bottom: 14px; }
+.qopts { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.qopt { display: flex; gap: 11px; align-items: flex-start; padding: 9px 12px; border: 1px solid rgba(244,238,225,0.12); font-size: 14px; line-height: 1.45; color: rgba(244,238,225,0.82); border-radius: 3px; }
+.qopt.correct { background: rgba(120,200,120,0.14); border-color: rgba(120,200,120,0.55); color: #eafaea; }
+.qlet { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; min-width: 18px; text-align: center; color: rgba(244,238,225,0.6); padding-top: 1px; }
+.qopt.correct .qlet { color: #7ad17a; }
+.qotext { flex: 1; }
+.qwhy { font-family: 'Newsreader', serif; font-size: 14px; line-height: 1.5; color: rgba(244,238,225,0.88); background: rgba(240,193,75,0.10); border-left: 3px solid #f0c14b; padding: 11px 14px; }
+.qwhy-lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: #f0c14b; margin-right: 10px; }
+@media (max-width: 720px) {
+  .qbank { margin: 90px -22px 0; padding: 40px 22px; }
+  .qbank-head h2 { font-size: 28px; }
+  .qtopic-num { font-size: 30px; } .qtopic-title { font-size: 19px; }
+}
+@media print {
+  .qcard, .qtopic-head { break-inside: avoid; page-break-inside: avoid; }
+  .qtopic { break-inside: auto; }
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- COVER -->
+<section class="cover">
+  <div class="cover-sticker">Pass mark:<br>720 / 1000 ✦</div>
+  <div class="kicker">Foundations Edition · Field Notebook · 2026</div>
+  <h1 class="title">Claude Certified<br><em>Architect</em></h1>
+  <p class="tagline">Twelve chapters of analogies, diagrams &amp; memory hooks — engineered around the exam's own logic, not dry theory.</p>
+  <div class="byline">AGENT SDK · MCP · CLAUDE CODE · CLAUDE API</div>
+</section>
+
+<!-- EXAM AT A GLANCE -->
+<section class="glance">
+  <h2>The exam at a glance</h2>
+  <div class="sub">know the shape of the thing before you fight it</div>
+  <div class="glance-grid">
+    <div class="glance-stat"><div class="big">720</div><div class="lbl">Pass score (of 100–1000)</div></div>
+    <div class="glance-stat"><div class="big">4 of 6</div><div class="lbl">Scenarios shown, picked at random</div></div>
+    <div class="glance-stat"><div class="big">1 + 3</div><div class="lbl">One right answer, three distractors</div></div>
+  </div>
+  <div class="domains-bar">
+    <div class="domain-row"><span class="name">1 · Agentic Architecture &amp; Orchestration</span><span class="bar"><span class="fill" style="width:100%;background:var(--c1)"></span></span><span class="pct">27%</span></div>
+    <div class="domain-row"><span class="name">3 · Claude Code Configuration &amp; Workflows</span><span class="bar"><span class="fill" style="width:74%;background:var(--c8)"></span></span><span class="pct">20%</span></div>
+    <div class="domain-row"><span class="name">4 · Prompt Engineering &amp; Structured Output</span><span class="bar"><span class="fill" style="width:74%;background:var(--c10)"></span></span><span class="pct">20%</span></div>
+    <div class="domain-row"><span class="name">2 · Tool Design &amp; MCP Integration</span><span class="bar"><span class="fill" style="width:67%;background:var(--c6)"></span></span><span class="pct">18%</span></div>
+    <div class="domain-row"><span class="name">5 · Context Management &amp; Reliability</span><span class="bar"><span class="fill" style="width:56%;background:var(--c12)"></span></span><span class="pct">15%</span></div>
+  </div>
+</section>
+
+<!-- TOC -->
+<section class="toc">
+  <div class="toc-title">What's inside</div>
+  <div class="toc-grid">
+    <div class="toc-item"><span class="toc-num">01</span>The Agentic Loop<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">02</span>Multi-Agent Orchestration<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">03</span>Enforcement &amp; Hooks<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">04</span>Decomposition &amp; Sessions<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">05</span>Designing Tool Interfaces<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">06</span>MCP Errors &amp; Tool Distribution<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">07</span>MCP Servers &amp; Built-in Tools<span class="toc-tag tag-med">MED</span></div>
+    <div class="toc-item"><span class="toc-num">08</span>CLAUDE.md &amp; Rules<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">09</span>Plan Mode, Iteration &amp; CI/CD<span class="toc-tag tag-med">MED</span></div>
+    <div class="toc-item"><span class="toc-num">10</span>Prompting for Precision<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">11</span>Structured Output &amp; Batch<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">12</span>Context &amp; Reliability<span class="toc-tag tag-high">HIGH</span></div>
+  </div>
+</section>
+
+<!-- CH 01: AGENTIC LOOP -->
+<section class="chapter" style="--accent: var(--c1);">
+  <div class="chapter-header">
+    <div class="chapter-num">01</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 1 · 27% · The Heartbeat</div>
+      <h2 class="chapter-title">The <em>Agentic Loop</em></h2>
+      <div class="subtitle">Keep cooking until the dish says "done"</div>
+    </div>
+  </div>
+
+  <p class="lede">An agent isn't magic — it's a loop. Send to Claude, look at one signal, act if told to, send again. The entire exam stands on this one idea, so get it bone-deep.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 1 · The loop, driven by stop_reason</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="40" width="150" height="60" rx="8" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="115" y="66" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#1f6f78" font-weight="700">SEND REQUEST</text>
+      <text x="115" y="84" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6a6456" font-style="italic">to Claude</text>
+
+      <path d="M 190 70 L 250 70" stroke="#16161f" stroke-width="1.5" marker-end="url(#a1)"/>
+      <defs><marker id="a1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#16161f"/></marker></defs>
+
+      <polygon points="350,40 430,80 350,120 270,80" fill="#fff" stroke="#1f6f78" stroke-width="2"/>
+      <text x="350" y="76" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1f6f78" font-weight="700">stop_reason?</text>
+      <text x="350" y="92" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">inspect it</text>
+
+      <!-- tool_use branch -->
+      <path d="M 430 80 L 510 80" stroke="#16161f" stroke-width="1.5" marker-end="url(#a1)"/>
+      <text x="468" y="72" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#c0392b" font-weight="600">"tool_use"</text>
+      <rect x="510" y="50" width="150" height="60" rx="8" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="585" y="74" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1f6f78" font-weight="700">RUN TOOLS</text>
+      <text x="585" y="92" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">append results</text>
+
+      <!-- loop back -->
+      <path d="M 585 110 L 585 180 L 115 180 L 115 105" stroke="#1f6f78" stroke-width="2" fill="none" stroke-dasharray="5,4" marker-end="url(#a1)"/>
+      <text x="350" y="200" text-anchor="middle" font-family="Caveat" font-size="18" fill="#1f6f78">loop: results go back into history, model reasons again</text>
+
+      <!-- end_turn branch -->
+      <path d="M 350 120 L 350 240" stroke="#16161f" stroke-width="1.5" marker-end="url(#a1)"/>
+      <text x="395" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#3f7d35" font-weight="600">"end_turn"</text>
+      <rect x="275" y="240" width="150" height="50" rx="8" fill="#b6d6a6" stroke="#16161f" stroke-width="1.5"/>
+      <text x="350" y="263" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#16161f" font-weight="700">DONE → REPLY</text>
+      <text x="350" y="280" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#16161f" font-style="italic">terminate the loop</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">How the loop actually runs</h3>
+  <p>You send a request. Claude responds with a <code>stop_reason</code>. If it's <strong>"tool_use"</strong>, the model is asking you to run a tool — so you execute it, <strong>append the result to the conversation history</strong>, and send again. If it's <strong>"end_turn"</strong>, Claude is finished — you stop and show the answer. That's the whole engine.</p>
+  <p>Crucially, this is <strong>model-driven</strong>: Claude decides which tool to call next based on context. You are <em>not</em> hardcoding a decision tree or a fixed tool sequence — you're letting the model reason its way forward.</p>
+
+  <div class="sticky blue">
+    <span class="sticky-pin">ANALOGY</span><br>
+    A chef keeps cooking — taste, adjust, taste — until the dish is ready. They don't stop because they've stirred exactly 5 times. <strong>stop_reason is the "is it ready?" taste test.</strong>
+  </div>
+
+  <h3 class="section-h">The anti-patterns the exam loves to punish</h3>
+  <ul class="bullets">
+    <li><strong>Parsing natural language</strong> to decide when to stop ("if the reply contains 'done'…"). Fragile and wrong — use <code>stop_reason</code>.</li>
+    <li><strong>Arbitrary iteration caps</strong> as your <em>primary</em> stopping mechanism. A safety net, yes; the main control, no.</li>
+    <li><strong>Checking assistant text content</strong> as a completion signal. The signal is structural, not prose.</li>
+  </ul>
+
+  <div class="scenario">
+    <p><strong>The problem:</strong> Your agent sometimes loops forever, sometimes quits early. You've been scanning the reply text for the word "complete."</p>
+    <p><strong>Bad approach:</strong> Add more keywords to scan for. (You're now playing whack-a-mole with English.)</p>
+    <p><strong>Good approach:</strong> Drive control flow purely on <code>stop_reason</code> — continue on <code>"tool_use"</code>, terminate on <code>"end_turn"</code>. Deterministic, language-agnostic, correct.</p>
+  </div>
+
+  <div class="sticky right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"stop_reason is the boss."</strong> The structural signal drives the loop — never the prose, never a counter, never a vibe.
+  </div>
+</section>
+
+<!-- CH 02: MULTI-AGENT -->
+<section class="chapter" style="--accent: var(--c2);">
+  <div class="chapter-header">
+    <div class="chapter-num">02</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 1 · The Newsroom</div>
+      <h2 class="chapter-title">Multi-Agent <em>Orchestration</em></h2>
+      <div class="subtitle">One editor, many reporters, hub-and-spoke</div>
+    </div>
+  </div>
+
+  <p class="lede">When one agent isn't enough, you build a crew: a coordinator who delegates, and specialized subagents who do the focused work. But there's a catch that trips up half the test-takers — the subagents have amnesia.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 2 · Hub-and-spoke coordination</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="350" cy="160" r="56" fill="#9c2c7e" stroke="#16161f" stroke-width="2"/>
+      <text x="350" y="152" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700">COORDINATOR</text>
+      <text x="350" y="170" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#fff" font-style="italic">decompose,</text>
+      <text x="350" y="184" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#fff" font-style="italic">delegate, aggregate</text>
+
+      <!-- subagents -->
+      <g>
+        <rect x="40" y="40" width="140" height="54" rx="6" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="110" y="62" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9c2c7e" font-weight="700">WEB SEARCH</text>
+        <text x="110" y="80" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">isolated context</text>
+        <line x1="180" y1="67" x2="300" y2="140" stroke="#16161f" stroke-width="1.5"/>
+      </g>
+      <g>
+        <rect x="40" y="230" width="140" height="54" rx="6" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="110" y="252" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9c2c7e" font-weight="700">DOC ANALYSIS</text>
+        <text x="110" y="270" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">isolated context</text>
+        <line x1="180" y1="257" x2="300" y2="180" stroke="#16161f" stroke-width="1.5"/>
+      </g>
+      <g>
+        <rect x="520" y="40" width="140" height="54" rx="6" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="590" y="62" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9c2c7e" font-weight="700">SYNTHESIS</text>
+        <text x="590" y="80" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">isolated context</text>
+        <line x1="520" y1="67" x2="400" y2="140" stroke="#16161f" stroke-width="1.5"/>
+      </g>
+      <g>
+        <rect x="520" y="230" width="140" height="54" rx="6" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="590" y="252" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9c2c7e" font-weight="700">REPORT GEN</text>
+        <text x="590" y="270" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">isolated context</text>
+        <line x1="520" y1="257" x2="400" y2="180" stroke="#16161f" stroke-width="1.5"/>
+      </g>
+      <text x="350" y="300" text-anchor="middle" font-family="Caveat" font-size="17" fill="#9c2c7e">All talk routes through the coordinator — never spoke-to-spoke</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">How coordination works</h3>
+  <p>The <strong>coordinator</strong> decomposes the task, decides which subagents to invoke based on query complexity, and routes all communication for observability and consistent error handling. Subagents are spawned via the <strong>Task tool</strong> — and the coordinator's <code>allowedTools</code> must include <code>"Task"</code> or it simply can't spawn anything.</p>
+  <p>The big gotcha: <strong>subagents run with isolated context.</strong> They do <em>not</em> inherit the coordinator's conversation history, and they share no memory between invocations. Whatever a subagent needs to know, you must put directly in its prompt — including complete findings from prior agents.</p>
+
+  <h3 class="section-h">Going parallel</h3>
+  <p>To run subagents at the same time, the coordinator emits <strong>multiple Task tool calls in a single response</strong> — not across separate turns. Partition the work (distinct subtopics or source types per agent) to minimize duplication, and design coordinator prompts around <em>goals and quality criteria</em>, not rigid step-by-step instructions, so subagents stay adaptable.</p>
+
+  <div class="sticky pink">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Subagents have amnesia."</strong> They remember nothing you don't hand them in the prompt. Pass findings explicitly, with source metadata attached.
+  </div>
+
+  <div class="scenario">
+    <p><strong>The problem:</strong> You research "impact of AI on creative industries." Every subagent succeeds — yet the final report covers only visual arts. The coordinator's log shows it split the topic into "digital art," "graphic design," and "photography."</p>
+    <p><strong>Bad diagnosis:</strong> Blame the search agent's queries, or the synthesis agent's gap-detection. They all worked correctly within their assigned scope.</p>
+    <p><strong>Right diagnosis:</strong> The <strong>coordinator's decomposition was too narrow</strong> — it never assigned music, writing, or film. Fix the decomposition and add iterative refinement loops that re-delegate when coverage has gaps.</p>
+  </div>
+</section>
+
+<!-- CH 03: HOOKS -->
+<section class="chapter" style="--accent: var(--c3);">
+  <div class="chapter-header">
+    <div class="chapter-num">03</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 1 · The Bouncer</div>
+      <h2 class="chapter-title">Enforcement &amp; <em>Hooks</em></h2>
+      <div class="subtitle">A gate beats a guideline when money's on the line</div>
+    </div>
+  </div>
+
+  <p class="lede">Prompts are persuasion. Hooks are physics. When a business rule absolutely must hold — verify identity before a refund — you don't ask nicely. You build a wall the agent literally cannot walk through.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 3 · Programmatic gate vs prompt-based hope</div>
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- prompt side -->
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="300" height="230" rx="8" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+        <text x="150" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#6a6456" font-weight="700" letter-spacing="1">PROMPT-BASED</text>
+        <text x="150" y="60" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#16161f" font-style="italic">"Please verify the customer</text>
+        <text x="150" y="78" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#16161f" font-style="italic">before any refund."</text>
+        <text x="150" y="120" text-anchor="middle" font-family="Caveat" font-size="40" fill="#c0392b">≈ 88%</text>
+        <text x="150" y="148" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6a6456">compliance, not 100%</text>
+        <text x="150" y="185" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#c0392b">NON-ZERO FAILURE RATE</text>
+        <text x="150" y="210" text-anchor="middle" font-family="Caveat" font-size="18" fill="#6a6456">a sign on the door 🪧</text>
+      </g>
+      <!-- hook side -->
+      <g transform="translate(370,30)">
+        <rect x="0" y="0" width="300" height="230" rx="8" fill="#fff" stroke="#c0392b" stroke-width="2.5"/>
+        <text x="150" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#c0392b" font-weight="700" letter-spacing="1">PROGRAMMATIC GATE</text>
+        <text x="150" y="60" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#16161f" font-style="italic">block process_refund UNTIL</text>
+        <text x="150" y="78" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#16161f" font-style="italic">get_customer returns verified ID</text>
+        <text x="150" y="120" text-anchor="middle" font-family="Caveat" font-size="40" fill="#3f7d35">100%</text>
+        <text x="150" y="148" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6a6456">deterministic guarantee</text>
+        <text x="150" y="185" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#3f7d35">CANNOT BE SKIPPED</text>
+        <text x="150" y="210" text-anchor="middle" font-family="Caveat" font-size="18" fill="#6a6456">a bouncer at the door 💪</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Two kinds of hooks</h3>
+  <ul class="bullets">
+    <li><strong>PostToolUse hooks</strong> intercept tool <em>results</em> before the model sees them — perfect for normalizing messy data (Unix timestamps, ISO 8601, numeric status codes) into one clean format.</li>
+    <li><strong>Tool-call interception hooks</strong> intercept <em>outgoing</em> calls to enforce rules — e.g., block any refund over $500 and redirect to human escalation.</li>
+  </ul>
+
+  <h3 class="section-h">The principle that wins points</h3>
+  <p>When compliance must be <strong>guaranteed</strong> — identity checks before financial operations, hard policy limits — use <strong>programmatic enforcement</strong> (hooks, prerequisite gates). Prompt instructions have a non-zero failure rate, which is unacceptable when errors cost money. Use prompts for guidance; use code for guarantees.</p>
+
+  <h3 class="section-h">Structured handoffs</h3>
+  <p>When escalating mid-process to a human who can't see the transcript, hand off a <strong>structured summary</strong>: customer ID, root-cause analysis, refund amount, and recommended action. Don't make the human reverse-engineer the conversation.</p>
+
+  <div class="qbox">
+    <div class="qlabel">Straight from the practice exam · Q1</div>
+    Agent skips <code>get_customer</code> 12% of the time → wrong refunds. The fix isn't a stronger prompt or more few-shot examples. <span class="ans">It's a programmatic prerequisite that blocks <code>lookup_order</code> and <code>process_refund</code> until <code>get_customer</code> returns a verified ID.</span> Prompts (B, C) are probabilistic; a routing classifier (D) fixes availability, not ordering.
+  </div>
+
+  <div class="sticky green right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"If money's on the line, use a gate — not a guideline."</strong> Deterministic compliance = hooks. Probabilistic = prompts.
+  </div>
+</section>
+
+<!-- CH 04: DECOMPOSITION & SESSIONS -->
+<section class="chapter" style="--accent: var(--c4);">
+  <div class="chapter-header">
+    <div class="chapter-num">04</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 1 · The Assembly Line &amp; The Detective</div>
+      <h2 class="chapter-title">Decomposition &amp; <em>Sessions</em></h2>
+      <div class="subtitle">Chain when you know the steps, branch when you don't</div>
+    </div>
+  </div>
+
+  <p class="lede">Big tasks need a plan of attack. Sometimes the steps are obvious (assembly line). Sometimes you discover them as you go (detective). And once work spans days, you'll need to resume, fork, or wisely start fresh.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 4 · Fixed chaining vs adaptive decomposition + sessions</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- chaining -->
+      <text x="40" y="30" font-family="JetBrains Mono" font-size="10" fill="#c97a13" font-weight="700">PROMPT CHAINING — predictable</text>
+      <rect x="40" y="42" width="90" height="40" rx="5" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="85" y="66" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">analyze A</text>
+      <path d="M 130 62 L 165 62" stroke="#16161f" stroke-width="1.5" marker-end="url(#a4)"/>
+      <defs><marker id="a4" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#16161f"/></marker></defs>
+      <rect x="167" y="42" width="90" height="40" rx="5" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="212" y="66" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">analyze B</text>
+      <path d="M 257 62 L 292 62" stroke="#16161f" stroke-width="1.5" marker-end="url(#a4)"/>
+      <rect x="294" y="42" width="120" height="40" rx="5" fill="#f0c14b" stroke="#16161f" stroke-width="1.5"/>
+      <text x="354" y="66" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">cross-file pass</text>
+
+      <!-- dynamic -->
+      <text x="40" y="130" font-family="JetBrains Mono" font-size="10" fill="#c97a13" font-weight="700">DYNAMIC — open-ended investigation</text>
+      <circle cx="80" cy="170" r="22" fill="#fff" stroke="#c97a13" stroke-width="2"/>
+      <text x="80" y="174" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#16161f">map</text>
+      <path d="M 102 165 L 140 150" stroke="#16161f" stroke-width="1.5" marker-end="url(#a4)"/>
+      <path d="M 102 178 L 140 195" stroke="#16161f" stroke-width="1.5" marker-end="url(#a4)"/>
+      <circle cx="165" cy="148" r="20" fill="#fff" stroke="#c97a13" stroke-width="2"/>
+      <text x="165" y="152" text-anchor="middle" font-family="Newsreader" font-size="8" fill="#16161f">lead 1</text>
+      <circle cx="165" cy="198" r="20" fill="#fff" stroke="#c97a13" stroke-width="2"/>
+      <text x="165" y="202" text-anchor="middle" font-family="Newsreader" font-size="8" fill="#16161f">lead 2</text>
+      <path d="M 185 145 L 225 138" stroke="#16161f" stroke-width="1.5" marker-end="url(#a4)"/>
+      <circle cx="250" cy="135" r="18" fill="#fff" stroke="#c97a13" stroke-width="2"/>
+      <text x="250" y="139" text-anchor="middle" font-family="Newsreader" font-size="8" fill="#16161f">deeper</text>
+      <text x="330" y="175" font-family="Caveat" font-size="17" fill="#c97a13">plan adapts as</text>
+      <text x="330" y="195" font-family="Caveat" font-size="17" fill="#c97a13">discoveries arrive</text>
+
+      <!-- sessions -->
+      <text x="40" y="255" font-family="JetBrains Mono" font-size="10" fill="#c97a13" font-weight="700">SESSIONS</text>
+      <rect x="40" y="266" width="180" height="40" rx="5" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="130" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f">--resume &lt;name&gt;</text>
+      <text x="130" y="298" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">continue prior work</text>
+      <rect x="240" y="266" width="180" height="40" rx="5" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="330" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f">fork_session</text>
+      <text x="330" y="298" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">branch from baseline</text>
+      <rect x="440" y="266" width="220" height="40" rx="5" fill="#f6b1bd" stroke="#16161f" stroke-width="1.5"/>
+      <text x="550" y="284" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f">fresh + summary</text>
+      <text x="550" y="298" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#16161f" font-style="italic">when results are stale</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Choosing your decomposition</h3>
+  <ul class="bullets">
+    <li><strong>Prompt chaining</strong> for predictable, multi-aspect work: review each file individually, then run a separate cross-file integration pass.</li>
+    <li><strong>Dynamic decomposition</strong> for open-ended investigation: "add comprehensive tests to a legacy codebase" → first map the structure, identify high-impact areas, then build a prioritized plan that adapts as dependencies surface.</li>
+    <li>Split large reviews into <strong>per-file passes</strong> plus a cross-file pass to avoid <em>attention dilution</em>.</li>
+  </ul>
+
+  <h3 class="section-h">Managing sessions across time</h3>
+  <p>Use <code>--resume &lt;session-name&gt;</code> to continue a specific named conversation, and <code>fork_session</code> to spin independent branches from a shared analysis baseline (e.g., comparing two refactoring strategies). When prior <strong>tool results have gone stale</strong> — code changed since you last looked — it's more reliable to <strong>start fresh with a structured summary</strong> than to resume on outdated context. If you do resume, tell the agent exactly which files changed for targeted re-analysis.</p>
+
+  <div class="sticky">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Chain when you know the steps; branch when you don't."</strong> And: stale results → fresh start with a summary beats a stale resume.
+  </div>
+</section>
+
+<!-- CH 05: TOOL INTERFACES -->
+<section class="chapter" style="--accent: var(--c5);">
+  <div class="chapter-header">
+    <div class="chapter-num">05</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 2 · 18% · The Job Posting</div>
+      <h2 class="chapter-title">Designing Tool <em>Interfaces</em></h2>
+      <div class="subtitle">A tool is only as findable as its description</div>
+    </div>
+  </div>
+
+  <p class="lede">The model picks tools by reading their descriptions — that's the entire selection mechanism. Write vague descriptions and you'll get the wrong tool called, confidently, again and again.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 5 · Why tool selection goes wrong</div>
+    <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+      <!-- confused -->
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="300" height="100" rx="8" fill="#fdf6e3" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#c0392b" font-weight="700">MINIMAL DESCRIPTIONS</text>
+        <text x="20" y="48" font-family="Newsreader" font-size="11" fill="#16161f"><tspan font-family="JetBrains Mono" font-size="10">get_customer</tspan>: "Retrieves customer info"</text>
+        <text x="20" y="70" font-family="Newsreader" font-size="11" fill="#16161f"><tspan font-family="JetBrains Mono" font-size="10">lookup_order</tspan>: "Retrieves order details"</text>
+        <text x="150" y="92" text-anchor="middle" font-family="Caveat" font-size="16" fill="#c0392b">model can't tell them apart → misroutes</text>
+      </g>
+      <!-- fixed -->
+      <g transform="translate(370,30)">
+        <rect x="0" y="0" width="300" height="100" rx="8" fill="#fff" stroke="#3f7d35" stroke-width="2"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#3f7d35" font-weight="700">RICH DESCRIPTIONS</text>
+        <text x="18" y="46" font-family="Newsreader" font-size="10" fill="#16161f">+ input formats + example queries</text>
+        <text x="18" y="64" font-family="Newsreader" font-size="10" fill="#16161f">+ edge cases + "use this vs that"</text>
+        <text x="150" y="90" text-anchor="middle" font-family="Caveat" font-size="16" fill="#3f7d35">model routes reliably ✓</text>
+      </g>
+      <!-- split -->
+      <g transform="translate(140,160)">
+        <rect x="0" y="0" width="160" height="44" rx="5" fill="#eae2cf" stroke="#16161f" stroke-width="1.5"/>
+        <text x="80" y="20" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f">analyze_document</text>
+        <text x="80" y="36" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">generic, overloaded</text>
+        <path d="M 160 22 L 200 22" stroke="#16161f" stroke-width="1.5" marker-end="url(#a5)"/>
+        <defs><marker id="a5" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#16161f"/></marker></defs>
+      </g>
+      <g transform="translate(360,150)">
+        <rect x="0" y="0" width="150" height="22" rx="3" fill="#b6d6a6" stroke="#16161f" stroke-width="1"/>
+        <text x="75" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#16161f">extract_data_points</text>
+        <rect x="0" y="28" width="150" height="22" rx="3" fill="#b6d6a6" stroke="#16161f" stroke-width="1"/>
+        <text x="75" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#16161f">summarize_content</text>
+        <rect x="0" y="56" width="150" height="22" rx="3" fill="#b6d6a6" stroke="#16161f" stroke-width="1"/>
+        <text x="75" y="71" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#16161f">verify_claim</text>
+      </g>
+      <text x="585" y="200" text-anchor="middle" font-family="Caveat" font-size="16" fill="#3f7d35">split generic tools into</text>
+      <text x="585" y="218" text-anchor="middle" font-family="Caveat" font-size="16" fill="#3f7d35">purpose-specific ones</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">What a great tool description contains</h3>
+  <p>Each description should spell out the tool's <strong>purpose, input formats, example queries, edge cases, and boundaries</strong> — including when to use it <em>versus</em> a similar alternative. Ambiguous, overlapping descriptions (<code>analyze_content</code> vs <code>analyze_document</code> with near-identical text) cause misrouting.</p>
+  <p>Two fixes: <strong>rename and re-scope</strong> to kill overlap (<code>analyze_content</code> → <code>extract_web_results</code> with a web-specific description), and <strong>split generic tools</strong> into purpose-specific ones with clear input/output contracts. Also watch your <strong>system prompt</strong> — keyword-sensitive wording there can quietly override even well-written descriptions.</p>
+
+  <div class="qbox">
+    <div class="qlabel">Straight from the practice exam · Q2</div>
+    Agent calls <code>get_customer</code> for order queries; both tools have minimal descriptions. Most effective <em>first</em> step? <span class="ans">Expand each tool's description with input formats, example queries, edge cases, and boundaries.</span> It's the root cause and a low-effort, high-leverage fix. Few-shot (A) adds tokens without fixing the cause; a routing layer (C) is over-engineered; consolidation (D) is more effort than a "first step" warrants.
+  </div>
+
+  <div class="sticky green right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"A tool is only as findable as its description."</strong> Selection problems? Fix the words first — before reaching for few-shot or routing layers.
+  </div>
+</section>
+
+<!-- CH 06: MCP ERRORS & DISTRIBUTION -->
+<section class="chapter" style="--accent: var(--c6);">
+  <div class="chapter-header">
+    <div class="chapter-num">06</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 2 · The GPS &amp; The Toolbox</div>
+      <h2 class="chapter-title">MCP Errors &amp; Tool <em>Distribution</em></h2>
+      <div class="subtitle">Recalculate the route; hand out small toolboxes</div>
+    </div>
+  </div>
+
+  <p class="lede">A good error tells the agent exactly what went wrong and whether to try again. A generic "Operation failed" is a dead end. And the more tools you pile on an agent, the worse its aim gets.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 6 · Structured errors + tool-count vs reliability</div>
+    <svg viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg">
+      <!-- error categories -->
+      <text x="40" y="26" font-family="JetBrains Mono" font-size="10" fill="#1f5e92" font-weight="700">isError + structured metadata</text>
+      <g transform="translate(40,38)">
+        <rect x="0" y="0" width="135" height="40" rx="5" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="67" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#1f5e92" font-weight="600">TRANSIENT</text>
+        <text x="67" y="33" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#3f7d35" font-style="italic">retryable: true</text>
+        <rect x="145" y="0" width="135" height="40" rx="5" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="212" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#1f5e92" font-weight="600">VALIDATION</text>
+        <text x="212" y="33" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#c0392b" font-style="italic">fix input</text>
+        <rect x="0" y="48" width="135" height="40" rx="5" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="67" y="66" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#1f5e92" font-weight="600">BUSINESS</text>
+        <text x="67" y="81" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#c0392b" font-style="italic">retryable: false</text>
+        <rect x="145" y="48" width="135" height="40" rx="5" fill="#fff" stroke="#16161f" stroke-width="1.5"/>
+        <text x="212" y="66" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#1f5e92" font-weight="600">PERMISSION</text>
+        <text x="212" y="81" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#c0392b" font-style="italic">no retry</text>
+      </g>
+      <text x="40" y="120" font-family="Caveat" font-size="16" fill="#1f5e92">…so the agent recovers intelligently instead of guessing</text>
+
+      <!-- tool count meter -->
+      <text x="400" y="26" font-family="JetBrains Mono" font-size="10" fill="#1f5e92" font-weight="700">TOOLS vs SELECTION RELIABILITY</text>
+      <line x1="400" y1="120" x2="660" y2="120" stroke="#16161f" stroke-width="1.5"/>
+      <line x1="400" y1="40" x2="400" y2="120" stroke="#16161f" stroke-width="1.5"/>
+      <path d="M 410 50 Q 470 55 510 75 Q 560 100 650 113" stroke="#c0392b" stroke-width="2.5" fill="none"/>
+      <circle cx="430" cy="58" r="5" fill="#3f7d35"/>
+      <text x="430" y="48" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#3f7d35">4–5 tools ✓</text>
+      <circle cx="640" cy="112" r="5" fill="#c0392b"/>
+      <text x="615" y="104" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#c0392b">18 tools ✗</text>
+      <text x="530" y="138" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456">more tools → more confusion</text>
+
+      <!-- least privilege -->
+      <g transform="translate(40,160)">
+        <rect x="0" y="0" width="620" height="100" rx="8" fill="#eae2cf" stroke="#16161f" stroke-width="1.5"/>
+        <text x="20" y="26" font-family="Fraunces" font-size="15" font-weight="700" fill="#16161f">Scoped access + tool_choice</text>
+        <text x="20" y="50" font-family="Newsreader" font-size="11" fill="#16161f">Give each agent only its role's tools, plus a few high-frequency cross-role helpers.</text>
+        <text x="20" y="72" font-family="JetBrains Mono" font-size="10" fill="#1f5e92" font-weight="600">"auto"</text><text x="78" y="72" font-family="Newsreader" font-size="10" fill="#16161f">may return text · </text>
+        <text x="215" y="72" font-family="JetBrains Mono" font-size="10" fill="#1f5e92" font-weight="600">"any"</text><text x="262" y="72" font-family="Newsreader" font-size="10" fill="#16161f">must call some tool · </text>
+        <text x="415" y="72" font-family="JetBrains Mono" font-size="10" fill="#1f5e92" font-weight="600">forced</text><text x="465" y="72" font-family="Newsreader" font-size="10" fill="#16161f">must call a named tool</text>
+        <text x="20" y="92" font-family="Newsreader" font-size="10" fill="#6a6456" font-style="italic">Forced selection guarantees a specific tool runs first (e.g., extract_metadata before enrichment).</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Errors that enable recovery</h3>
+  <p>Use the MCP <code>isError</code> flag and return <strong>structured metadata</strong>: an <code>errorCategory</code> (transient / validation / business / permission), an <code>isRetryable</code> boolean, and a human-readable message. This lets the agent retry transient failures, explain business-rule violations to the customer, and stop wasting attempts on non-retryable errors. Critically, distinguish <strong>access failures</strong> (a timeout needing a retry decision) from <strong>valid empty results</strong> (a successful query that simply found nothing). Subagents should recover locally from transient blips and only propagate what they truly can't resolve — with partial results and what was attempted.</p>
+
+  <h3 class="section-h">Distributing tools wisely</h3>
+  <p>Too many tools degrades selection — an agent with 18 tools chooses worse than one with 4–5. Agents also misuse tools outside their specialty (a synthesis agent attempting web searches). Apply <strong>least privilege</strong>: scope each agent to its role, add only a few high-frequency cross-role helpers, and use <code>tool_choice</code> (<code>"auto"</code> / <code>"any"</code> / forced) to control when and what gets called.</p>
+
+  <div class="qbox">
+    <div class="qlabel">Straight from the practice exam · Q9</div>
+    Synthesis agent needs verification; 85% are simple fact-checks, 15% complex. <span class="ans">Give it a scoped <code>verify_fact</code> tool for the common case, and keep delegating complex checks through the coordinator.</span> That's least privilege. Giving it all web tools (C) over-provisions and breaks separation of concerns; batching (B) creates blocking dependencies; speculative caching (D) can't predict needs.
+  </div>
+
+  <div class="sticky blue right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Small toolbox, clear error map."</strong> 4–5 tools per agent, and every error says its category + whether to retry.
+  </div>
+</section>
+
+<!-- CH 07: MCP SERVERS & BUILT-IN -->
+<section class="chapter" style="--accent: var(--c7);">
+  <div class="chapter-header">
+    <div class="chapter-num">07</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 2 · The Plugins &amp; The Knives</div>
+      <h2 class="chapter-title">MCP Servers &amp; Built-in <em>Tools</em></h2>
+      <div class="subtitle">Project scope = shared, secrets live in env vars</div>
+    </div>
+  </div>
+
+  <p class="lede">MCP servers plug external systems into Claude Code; the built-in tools are your everyday kitchen knives. Knowing where config lives — and never committing a secret — is pure exam points.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 7 · Config scopes + the built-in toolset</div>
+    <svg viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg">
+      <!-- project scope -->
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="300" height="110" rx="8" fill="#fff" stroke="#6b4423" stroke-width="2"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6b4423" font-weight="700">.mcp.json (PROJECT)</text>
+        <text x="150" y="46" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f" font-style="italic">shared via version control</text>
+        <text x="150" y="68" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#3f7d35">${GITHUB_TOKEN}</text>
+        <text x="150" y="86" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6a6456">env-var expansion — no committed secrets</text>
+        <text x="150" y="104" text-anchor="middle" font-family="Caveat" font-size="15" fill="#6b4423">team tooling 🤝</text>
+      </g>
+      <!-- user scope -->
+      <g transform="translate(370,30)">
+        <rect x="0" y="0" width="300" height="110" rx="8" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6b4423" font-weight="700">~/.claude.json (USER)</text>
+        <text x="150" y="46" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f" font-style="italic">personal / experimental</text>
+        <text x="150" y="68" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6a6456">not shared with teammates</text>
+        <text x="150" y="90" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">both scopes' tools available at once</text>
+        <text x="150" y="106" text-anchor="middle" font-family="Caveat" font-size="15" fill="#6b4423">your sandbox 🧪</text>
+      </g>
+      <!-- built-in tools -->
+      <text x="40" y="172" font-family="JetBrains Mono" font-size="10" fill="#6b4423" font-weight="700">BUILT-IN TOOLS</text>
+      <g transform="translate(40,182)" font-family="Newsreader" font-size="10">
+        <rect x="0" y="0" width="100" height="36" rx="4" fill="#eae2cf" stroke="#16161f" stroke-width="1"/>
+        <text x="50" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#16161f" font-weight="600">Grep</text>
+        <text x="50" y="30" text-anchor="middle" fill="#6a6456">search content</text>
+        <rect x="110" y="0" width="100" height="36" rx="4" fill="#eae2cf" stroke="#16161f" stroke-width="1"/>
+        <text x="160" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#16161f" font-weight="600">Glob</text>
+        <text x="160" y="30" text-anchor="middle" fill="#6a6456">match paths</text>
+        <rect x="220" y="0" width="100" height="36" rx="4" fill="#eae2cf" stroke="#16161f" stroke-width="1"/>
+        <text x="270" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#16161f" font-weight="600">Read/Write</text>
+        <text x="270" y="30" text-anchor="middle" fill="#6a6456">full files</text>
+        <rect x="330" y="0" width="100" height="36" rx="4" fill="#eae2cf" stroke="#16161f" stroke-width="1"/>
+        <text x="380" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#16161f" font-weight="600">Edit</text>
+        <text x="380" y="30" text-anchor="middle" fill="#6a6456">targeted change</text>
+        <rect x="440" y="0" width="180" height="36" rx="4" fill="#f6b1bd" stroke="#16161f" stroke-width="1"/>
+        <text x="530" y="15" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f" font-weight="600">Edit fails on non-unique?</text>
+        <text x="530" y="30" text-anchor="middle" fill="#16161f">→ Read + Write fallback</text>
+      </g>
+      <text x="350" y="258" text-anchor="middle" font-family="Caveat" font-size="16" fill="#6b4423">Build understanding incrementally: Grep for entry points → Read to follow imports</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Wiring up MCP servers</h3>
+  <ul class="bullets">
+    <li><strong>Project scope</strong> (<code>.mcp.json</code>): shared team tooling, committed to version control.</li>
+    <li><strong>User scope</strong> (<code>~/.claude.json</code>): personal or experimental servers, not shared.</li>
+    <li>Use <strong>environment-variable expansion</strong> (<code>${GITHUB_TOKEN}</code>) so credentials never get committed.</li>
+    <li>All configured servers' tools are discovered at connection time and available simultaneously.</li>
+    <li>Expose <strong>MCP resources</strong> as content catalogs (issue summaries, doc hierarchies, DB schemas) to cut exploratory tool calls. Prefer community servers (e.g., Jira) over custom ones for standard integrations.</li>
+    <li>Enhance MCP tool descriptions so the agent doesn't default to a built-in (like Grep) over a more capable MCP tool.</li>
+  </ul>
+
+  <h3 class="section-h">Picking the right built-in tool</h3>
+  <p><strong>Grep</strong> searches file contents (find all callers of a function). <strong>Glob</strong> matches file paths (<code>**/*.test.tsx</code>). <strong>Read/Write</strong> handle whole files; <strong>Edit</strong> makes targeted changes via unique text matching — and when the anchor text isn't unique, fall back to <strong>Read + Write</strong>. Don't read everything upfront: start with Grep to find entry points, then Read to follow imports and trace flows.</p>
+
+  <div class="sticky right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Project = shared, user = solo. Secrets in env vars."</strong> And Edit choking on duplicate text → Read + Write to the rescue.
+  </div>
+</section>
+
+<!-- CH 08: CLAUDE.md & RULES -->
+<section class="chapter" style="--accent: var(--c8);">
+  <div class="chapter-header">
+    <div class="chapter-num">08</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 3 · 20% · The Handbook &amp; The Memos</div>
+      <h2 class="chapter-title">CLAUDE.md &amp; <em>Rules</em></h2>
+      <div class="subtitle">Always-on vs sometimes-on, scoped by path</div>
+    </div>
+  </div>
+
+  <p class="lede">CLAUDE.md is your project's standing instructions — the company handbook. Path-scoped rules are department memos that appear only when you're working on the right files. Knowing which lever to pull is half this domain.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 8 · Config hierarchy + how each piece loads</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- hierarchy pyramid -->
+      <text x="40" y="26" font-family="JetBrains Mono" font-size="10" fill="#534aa6" font-weight="700">CLAUDE.md HIERARCHY</text>
+      <rect x="40" y="38" width="300" height="34" rx="4" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="55" y="59" font-family="JetBrains Mono" font-size="9" fill="#534aa6" font-weight="600">~/.claude/CLAUDE.md</text>
+      <text x="330" y="59" text-anchor="end" font-family="Newsreader" font-size="9" fill="#c0392b" font-style="italic">user — NOT shared</text>
+      <rect x="40" y="78" width="300" height="34" rx="4" fill="#eae2cf" stroke="#16161f" stroke-width="1.5"/>
+      <text x="55" y="99" font-family="JetBrains Mono" font-size="9" fill="#534aa6" font-weight="600">.claude/CLAUDE.md (root)</text>
+      <text x="330" y="99" text-anchor="end" font-family="Newsreader" font-size="9" fill="#3f7d35" font-style="italic">project — shared</text>
+      <rect x="40" y="118" width="300" height="34" rx="4" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="55" y="139" font-family="JetBrains Mono" font-size="9" fill="#534aa6" font-weight="600">subdir/CLAUDE.md</text>
+      <text x="330" y="139" text-anchor="end" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">directory-level</text>
+      <text x="40" y="176" font-family="Caveat" font-size="15" fill="#534aa6">@import keeps it modular; /memory shows what's loaded</text>
+
+      <!-- path rules -->
+      <text x="400" y="26" font-family="JetBrains Mono" font-size="10" fill="#534aa6" font-weight="700">.claude/rules/ — glob-scoped</text>
+      <rect x="400" y="38" width="260" height="114" rx="6" fill="#fff" stroke="#534aa6" stroke-width="2"/>
+      <text x="415" y="60" font-family="JetBrains Mono" font-size="9" fill="#16161f">paths: ["**/*.test.tsx"]</text>
+      <text x="415" y="82" font-family="Newsreader" font-size="10" fill="#16161f" font-style="italic">loads ONLY when editing</text>
+      <text x="415" y="98" font-family="Newsreader" font-size="10" fill="#16161f" font-style="italic">a matching file</text>
+      <text x="415" y="124" font-family="Newsreader" font-size="10" fill="#3f7d35">✓ spans many directories</text>
+      <text x="415" y="142" font-family="Newsreader" font-size="10" fill="#3f7d35">✓ saves tokens</text>
+
+      <!-- skills -->
+      <text x="40" y="210" font-family="JetBrains Mono" font-size="10" fill="#534aa6" font-weight="700">SKILLS — .claude/skills/SKILL.md frontmatter</text>
+      <g transform="translate(40,220)">
+        <rect x="0" y="0" width="200" height="40" rx="5" fill="#eae2cf" stroke="#16161f" stroke-width="1"/>
+        <text x="100" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f" font-weight="600">context: fork</text>
+        <text x="100" y="33" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456">isolate verbose output</text>
+        <rect x="210" y="0" width="200" height="40" rx="5" fill="#eae2cf" stroke="#16161f" stroke-width="1"/>
+        <text x="310" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f" font-weight="600">allowed-tools</text>
+        <text x="310" y="33" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456">restrict tool access</text>
+        <rect x="420" y="0" width="200" height="40" rx="5" fill="#eae2cf" stroke="#16161f" stroke-width="1"/>
+        <text x="520" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f" font-weight="600">argument-hint</text>
+        <text x="520" y="33" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456">prompt for params</text>
+      </g>
+      <text x="350" y="290" text-anchor="middle" font-family="Caveat" font-size="16" fill="#534aa6">Commands &amp; skills: .claude/ = shared via VC · ~/.claude/ = personal</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">The hierarchy and how to keep it sane</h3>
+  <p>CLAUDE.md loads at three levels: <strong>user</strong> (<code>~/.claude/CLAUDE.md</code> — applies only to you, <em>not</em> shared via version control), <strong>project</strong> (<code>.claude/CLAUDE.md</code> or root), and <strong>directory</strong> (subdirectory files). Use <code>@import</code> to pull in external standards files and keep things modular, or split a monolith into topic files under <code>.claude/rules/</code>. The <code>/memory</code> command shows which memory files are actually loaded — your go-to for diagnosing inconsistent behavior.</p>
+
+  <h3 class="section-h">Path-scoped rules and skills</h3>
+  <p><code>.claude/rules/</code> files carry YAML frontmatter with glob <code>paths</code> (e.g., <code>paths: ["terraform/**/*"]</code>) so a rule loads only when you edit a matching file — ideal for conventions that span directories (test files scattered everywhere). <strong>Skills</strong> live in <code>.claude/skills/</code> with SKILL.md frontmatter: <code>context: fork</code> runs them in an isolated subagent context (no pollution of the main chat), <code>allowed-tools</code> restricts access, and <code>argument-hint</code> prompts for missing parameters. Project-scoped commands and skills (<code>.claude/...</code>) are version-controlled and team-wide; <code>~/.claude/...</code> variants are personal.</p>
+
+  <div class="two-col">
+    <div class="qbox" style="margin:0;">
+      <div class="qlabel">Practice exam · Q4</div>
+      A <code>/review</code> command for every developer on clone/pull? <span class="ans">Put it in <code>.claude/commands/</code></span> — version-controlled, shared automatically. Not <code>~/.claude/</code> (personal), not CLAUDE.md, not a non-existent config.json.
+    </div>
+    <div class="qbox" style="margin:0;">
+      <div class="qlabel">Practice exam · Q6</div>
+      Conventions for test files scattered across the codebase? <span class="ans">Use <code>.claude/rules/</code> with a glob like <code>**/*.test.tsx</code>.</span> Directory-bound CLAUDE.md can't span dirs; skills need manual invocation.
+    </div>
+  </div>
+
+  <div class="sticky pink right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Always-on → CLAUDE.md. Sometimes-on → rules/ with a glob."</strong> Shared lives in <code>.claude/</code>; personal lives in <code>~/.claude/</code>.
+  </div>
+</section>
+
+<!-- CH 09: PLAN MODE, ITERATION, CI -->
+<section class="chapter" style="--accent: var(--c9);">
+  <div class="chapter-header">
+    <div class="chapter-num">09</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 3 · The Blueprint &amp; The Pipeline</div>
+      <h2 class="chapter-title">Plan Mode, Iteration &amp; <em>CI/CD</em></h2>
+      <div class="subtitle">Plan the big, just-do the small, and always -p in CI</div>
+    </div>
+  </div>
+
+  <p class="lede">Some tasks deserve a blueprint before a single line changes; others you just fix. And when Claude Code runs inside a pipeline, one missing flag will hang the whole job forever.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 9 · Plan vs direct + the CI flags that matter</div>
+    <svg viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg">
+      <!-- plan vs direct -->
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="300" height="110" rx="8" fill="#fff" stroke="#2c6e6e" stroke-width="2"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#2c6e6e" font-weight="700">PLAN MODE</text>
+        <text x="150" y="48" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f">large-scale · architectural ·</text>
+        <text x="150" y="64" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f">multi-file · many valid paths</text>
+        <text x="150" y="88" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6a6456" font-style="italic">explore &amp; design before changing</text>
+        <text x="150" y="105" text-anchor="middle" font-family="Caveat" font-size="15" fill="#2c6e6e">blueprint first 📐</text>
+      </g>
+      <g transform="translate(370,30)">
+        <rect x="0" y="0" width="300" height="110" rx="8" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#2c6e6e" font-weight="700">DIRECT EXECUTION</text>
+        <text x="150" y="48" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f">simple · well-scoped ·</text>
+        <text x="150" y="64" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f">clear single-file change</text>
+        <text x="150" y="88" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6a6456" font-style="italic">one validation check, a bug fix</text>
+        <text x="150" y="105" text-anchor="middle" font-family="Caveat" font-size="15" fill="#2c6e6e">just fix it 🔧</text>
+      </g>
+      <!-- CI flags -->
+      <g transform="translate(40,160)">
+        <rect x="0" y="0" width="620" height="100" rx="8" fill="#16161f"/>
+        <text x="20" y="28" font-family="JetBrains Mono" font-size="11" fill="#f0c14b" font-weight="700">IN CI/CD — non-interactive</text>
+        <text x="20" y="54" font-family="JetBrains Mono" font-size="11" fill="#fff">claude <tspan fill="#f0c14b">-p</tspan> "Analyze this PR"   <tspan fill="#a4d2e6">← prevents the hang</tspan></text>
+        <text x="20" y="78" font-family="JetBrains Mono" font-size="10" fill="#fff"><tspan fill="#f0c14b">--output-format json</tspan> + <tspan fill="#f0c14b">--json-schema</tspan>  → machine-parseable PR comments</text>
+        <text x="20" y="94" font-family="Newsreader" font-size="10" fill="rgba(244,238,225,0.75)" font-style="italic">CLAUDE.md supplies project context · an independent instance reviews better than the generator</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Plan mode vs direct execution</h3>
+  <p><strong>Plan mode</strong> is for complex tasks: large-scale changes, architectural decisions, multi-file edits, multiple valid approaches (microservice restructuring, a library migration touching 45+ files). It enables safe exploration and design before you commit, preventing costly rework. <strong>Direct execution</strong> fits simple, well-scoped changes (a single-file bug fix with a clear stack trace). For verbose discovery, use the <strong>Explore subagent</strong> to isolate output and return summaries — protecting your context window.</p>
+
+  <h3 class="section-h">Iterating well</h3>
+  <p>The most effective clarifier is <strong>concrete input/output examples</strong> when prose is interpreted inconsistently. Try <strong>test-driven iteration</strong> (write tests first, then share failures), and the <strong>interview pattern</strong> (have Claude ask questions before implementing in an unfamiliar domain). Fix <em>interacting</em> problems in one message; fix <em>independent</em> ones sequentially.</p>
+
+  <h3 class="section-h">Running in CI/CD</h3>
+  <p>Use <code>-p</code> (or <code>--print</code>) to run non-interactively so the job doesn't hang waiting for input. Pair <code>--output-format json</code> with <code>--json-schema</code> for parseable findings you can post as inline PR comments. And remember: the same session that <em>generated</em> code is a weak reviewer of its own work — use an <strong>independent instance</strong> for review.</p>
+
+  <div class="two-col">
+    <div class="qbox" style="margin:0;">
+      <div class="qlabel">Practice exam · Q5</div>
+      Monolith → microservices, dozens of files, boundary decisions? <span class="ans">Enter plan mode</span> to explore and design first. Direct execution risks late-discovered rework.
+    </div>
+    <div class="qbox" style="margin:0;">
+      <div class="qlabel">Practice exam · Q10</div>
+      Pipeline hangs waiting for input? <span class="ans">Add the <code>-p</code> flag.</span> Not a non-existent <code>CLAUDE_HEADLESS</code> var or <code>--batch</code> flag; not a stdin hack.
+    </div>
+  </div>
+
+  <div class="sticky blue right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Plan the big, just-do the small. In CI, always -p."</strong>
+  </div>
+</section>
+
+<!-- CH 10: PROMPTING FOR PRECISION -->
+<section class="chapter" style="--accent: var(--c10);">
+  <div class="chapter-header">
+    <div class="chapter-num">10</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 4 · 20% · The Checklist</div>
+      <h2 class="chapter-title">Prompting for <em>Precision</em></h2>
+      <div class="subtitle">"Be careful" does nothing; a checklist does everything</div>
+    </div>
+  </div>
+
+  <p class="lede">Vague adjectives — "be conservative," "high-confidence only" — don't move the needle. Specific criteria and a couple of worked examples do. This is the difference between a tool developers trust and one they mute.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 10 · Vague vs explicit, and what few-shot adds</div>
+    <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="300" height="96" rx="8" fill="#fdf6e3" stroke="#c0392b" stroke-width="1.5"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#c0392b" font-weight="700">VAGUE</text>
+        <text x="150" y="50" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#16161f" font-style="italic">"check that comments</text>
+        <text x="150" y="68" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#16161f" font-style="italic">are accurate"</text>
+        <text x="150" y="88" text-anchor="middle" font-family="Caveat" font-size="15" fill="#c0392b">false positives → lost trust</text>
+      </g>
+      <g transform="translate(370,30)">
+        <rect x="0" y="0" width="300" height="96" rx="8" fill="#fff" stroke="#b5530f" stroke-width="2"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b5530f" font-weight="700">EXPLICIT CRITERIA</text>
+        <text x="150" y="48" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f" font-style="italic">"flag a comment only when its</text>
+        <text x="150" y="66" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f" font-style="italic">claim contradicts the code"</text>
+        <text x="150" y="88" text-anchor="middle" font-family="Caveat" font-size="15" fill="#3f7d35">precise, consistent ✓</text>
+      </g>
+      <!-- few-shot -->
+      <g transform="translate(120,150)">
+        <rect x="0" y="0" width="460" height="100" rx="8" fill="#eae2cf" stroke="#16161f" stroke-width="1.5"/>
+        <text x="230" y="26" text-anchor="middle" font-family="Fraunces" font-size="15" font-weight="700" fill="#16161f">Few-shot: 2–4 worked examples</text>
+        <text x="20" y="50" font-family="Newsreader" font-size="11" fill="#16161f">• show the desired output format (location, issue, severity, fix)</text>
+        <text x="20" y="70" font-family="Newsreader" font-size="11" fill="#16161f">• show reasoning for ambiguous cases — why one choice over another</text>
+        <text x="20" y="90" font-family="Newsreader" font-size="11" fill="#16161f">• generalize judgment to novel patterns; cut extraction hallucination</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Explicit criteria beat vague instructions</h3>
+  <p>"Flag comments only when claimed behavior contradicts actual code behavior" works; "check that comments are accurate" doesn't. General hedges like "be conservative" or "only report high-confidence findings" <strong>fail to improve precision</strong> — define <em>categorical</em> criteria instead: which issues to report (bugs, security) versus skip (minor style, local patterns). Because high false-positive categories erode trust in the accurate ones, you can temporarily disable a noisy category while you fix its prompt, and define explicit severity levels with concrete code examples for consistent classification.</p>
+
+  <h3 class="section-h">Few-shot: the most effective lever</h3>
+  <p>When detailed instructions still produce inconsistent results, <strong>few-shot examples</strong> are the strongest fix. Use 2–4 targeted examples that demonstrate the exact output format and show <em>reasoning</em> for ambiguous cases (why one action beat a plausible alternative). They let the model generalize judgment to novel patterns rather than matching only pre-specified cases — and they sharply reduce hallucination in extraction across varied document structures.</p>
+
+  <div class="qbox">
+    <div class="qlabel">Straight from the practice exam · Q3</div>
+    Agent escalates easy cases, attempts hard ones — 55% resolution vs 80% target. Best fix? <span class="ans">Add explicit escalation criteria with few-shot examples showing when to escalate vs resolve.</span> Self-reported confidence (B) is poorly calibrated — the agent is already wrongly confident on hard cases. A trained classifier (C) is over-engineered; sentiment (D) doesn't track complexity.
+  </div>
+
+  <div class="sticky right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Adjectives don't move the needle; criteria and examples do."</strong> Confidence scores and sentiment are NOT reliable proxies.
+  </div>
+</section>
+
+<!-- CH 11: STRUCTURED OUTPUT & BATCH -->
+<section class="chapter" style="--accent: var(--c11);">
+  <div class="chapter-header">
+    <div class="chapter-num">11</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 4 · The Form &amp; The Overnight Job</div>
+      <h2 class="chapter-title">Structured Output &amp; <em>Batch</em></h2>
+      <div class="subtitle">tool_use fixes syntax, not sense</div>
+    </div>
+  </div>
+
+  <p class="lede">A JSON schema via tool use is a form with required fields — you literally can't submit broken syntax. But you can still type wrong answers. And the Batch API is a money-saver only when nobody's waiting.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 11 · Schema → tool_use → validate-retry · batch vs sync</div>
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- extraction flow -->
+      <rect x="30" y="30" width="120" height="50" rx="6" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+      <text x="90" y="52" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#356a3f" font-weight="700">JSON SCHEMA</text>
+      <text x="90" y="68" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">nullable fields</text>
+      <path d="M 150 55 L 185 55" stroke="#16161f" stroke-width="1.5" marker-end="url(#a11)"/>
+      <defs><marker id="a11" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#16161f"/></marker></defs>
+      <rect x="187" y="30" width="120" height="50" rx="6" fill="#b6d6a6" stroke="#16161f" stroke-width="1.5"/>
+      <text x="247" y="52" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#16161f" font-weight="700">tool_use</text>
+      <text x="247" y="68" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#16161f" font-style="italic">no syntax errors</text>
+      <path d="M 307 55 L 342 55" stroke="#16161f" stroke-width="1.5" marker-end="url(#a11)"/>
+      <rect x="344" y="30" width="130" height="50" rx="6" fill="#fff" stroke="#356a3f" stroke-width="2"/>
+      <text x="409" y="52" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#356a3f" font-weight="700">VALIDATE</text>
+      <text x="409" y="68" text-anchor="middle" font-family="Newsreader" font-size="9" fill="#6a6456" font-style="italic">semantic check</text>
+      <path d="M 409 80 L 409 120 L 90 120 L 90 82" stroke="#356a3f" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#a11)"/>
+      <text x="250" y="138" text-anchor="middle" font-family="Caveat" font-size="15" fill="#356a3f">retry WITH the specific error appended (if it's a format error, not missing info)</text>
+
+      <text x="540" y="48" font-family="Newsreader" font-size="10" fill="#c0392b">⚠ syntax ✓ but</text>
+      <text x="540" y="64" font-family="Newsreader" font-size="10" fill="#c0392b">totals may not sum</text>
+
+      <!-- batch vs sync -->
+      <g transform="translate(30,165)">
+        <rect x="0" y="0" width="300" height="115" rx="8" fill="#fff" stroke="#356a3f" stroke-width="2"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#356a3f" font-weight="700">MESSAGE BATCHES API</text>
+        <text x="150" y="48" text-anchor="middle" font-family="Fraunces" font-size="20" font-weight="800" fill="#356a3f">50% cheaper</text>
+        <text x="150" y="70" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">up to 24h · NO latency SLA</text>
+        <text x="150" y="88" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">custom_id correlation · no mid-request tools</text>
+        <text x="150" y="106" text-anchor="middle" font-family="Caveat" font-size="15" fill="#356a3f">overnight reports ✓</text>
+      </g>
+      <g transform="translate(370,165)">
+        <rect x="0" y="0" width="300" height="115" rx="8" fill="#fdf6e3" stroke="#16161f" stroke-width="1.5"/>
+        <text x="150" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#356a3f" font-weight="700">SYNCHRONOUS API</text>
+        <text x="150" y="50" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#16161f">for blocking workflows</text>
+        <text x="150" y="70" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">pre-merge checks where devs wait</text>
+        <text x="150" y="106" text-anchor="middle" font-family="Caveat" font-size="15" fill="#c0392b">never batch a blocker ✗</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Guaranteeing structured output</h3>
+  <p><strong>Tool use with a JSON schema</strong> is the most reliable way to get schema-compliant output — it eliminates JSON <em>syntax</em> errors. But it does <strong>not</strong> prevent <em>semantic</em> errors (line items that don't sum, values in the wrong field). Control behavior with <code>tool_choice</code>: <code>"auto"</code> (may return text), <code>"any"</code> (must call some tool), or forced (<code>{"type":"tool","name":"extract_metadata"}</code> to run a specific extraction first). Make fields <strong>nullable/optional</strong> when the source may lack them — this stops the model from fabricating values to satisfy required fields — and add <code>"other" + detail</code> or <code>"unclear"</code> enums for extensible, ambiguous cases.</p>
+
+  <h3 class="section-h">Validation, retry, and review</h3>
+  <p>On a validation failure, <strong>append the specific error</strong> and retry with the original document and failed extraction. But know the limit: retries can't conjure information that's <em>absent</em> from the source — they only fix format/structural errors. To catch semantics, extract <code>calculated_total</code> alongside <code>stated_total</code> and flag discrepancies. For reviews, an <strong>independent instance</strong> beats self-review (the generator keeps its own reasoning bias), and large reviews go faster and cleaner as per-file passes plus a cross-file integration pass.</p>
+
+  <h3 class="section-h">Batch processing</h3>
+  <p>The <strong>Message Batches API</strong> gives 50% cost savings with up to a 24-hour window and <em>no</em> latency SLA — great for overnight reports and weekly audits, wrong for blocking pre-merge checks. Correlate request/response with <code>custom_id</code>, resubmit only failed items, and note it can't do multi-turn tool calling within a single request.</p>
+
+  <div class="two-col">
+    <div class="qbox" style="margin:0;">
+      <div class="qlabel">Practice exam · Q11</div>
+      Batch both a blocking pre-merge check and an overnight report? <span class="ans">Batch the report only; keep the pre-merge check synchronous.</span> Batch's 24h window can't serve a blocking workflow.
+    </div>
+    <div class="qbox" style="margin:0;">
+      <div class="qlabel">Practice exam · Q12</div>
+      14-file review gives inconsistent, contradictory feedback? <span class="ans">Split into per-file passes + a cross-file integration pass.</span> A bigger context window (C) doesn't fix attention dilution.
+    </div>
+  </div>
+
+  <div class="sticky green right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"tool_use fixes syntax, not sense. Batch the overnight, sync the blocking."</strong> Nullable fields stop fabrication.
+  </div>
+</section>
+
+<!-- CH 12: CONTEXT & RELIABILITY -->
+<section class="chapter" style="--accent: var(--c12);">
+  <div class="chapter-header">
+    <div class="chapter-num">12</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Domain 5 · 15% · The Whiteboard</div>
+      <h2 class="chapter-title">Context &amp; <em>Reliability</em></h2>
+      <div class="subtitle">Pin the facts, route the doubts, keep the receipts</div>
+    </div>
+  </div>
+
+  <p class="lede">Context is a whiteboard that fills up fast — and models read the top and bottom far better than the middle. The reliable architect copies key facts somewhere permanent, escalates on the right signals, and never loses a source.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 12 · Lost-in-the-middle, case-facts block, provenance</div>
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- lost in middle -->
+      <text x="40" y="26" font-family="JetBrains Mono" font-size="10" fill="#7a2230" font-weight="700">"LOST IN THE MIDDLE"</text>
+      <rect x="40" y="38" width="260" height="30" rx="3" fill="#b6d6a6" stroke="#16161f" stroke-width="1"/>
+      <text x="170" y="58" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">beginning — read reliably ✓</text>
+      <rect x="40" y="72" width="260" height="46" rx="3" fill="#f6b1bd" stroke="#16161f" stroke-width="1"/>
+      <text x="170" y="92" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">middle — may be dropped ✗</text>
+      <text x="170" y="108" text-anchor="middle" font-family="Caveat" font-size="14" fill="#c0392b">put key findings up top</text>
+      <rect x="40" y="122" width="260" height="30" rx="3" fill="#b6d6a6" stroke="#16161f" stroke-width="1"/>
+      <text x="170" y="142" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#16161f">end — read reliably ✓</text>
+
+      <!-- case facts -->
+      <text x="400" y="26" font-family="JetBrains Mono" font-size="10" fill="#7a2230" font-weight="700">PERSISTENT "CASE FACTS"</text>
+      <rect x="400" y="38" width="260" height="114" rx="6" fill="#fff" stroke="#7a2230" stroke-width="2"/>
+      <text x="415" y="60" font-family="Newsreader" font-size="11" fill="#16161f">order #4471 · ₹3,200 · status: shipped</text>
+      <text x="415" y="80" font-family="Newsreader" font-size="11" fill="#16161f">promised: refund by Fri</text>
+      <text x="415" y="104" font-family="Newsreader" font-size="10" fill="#6a6456" font-style="italic">extracted out of summarized history,</text>
+      <text x="415" y="120" font-family="Newsreader" font-size="10" fill="#6a6456" font-style="italic">included in every prompt</text>
+      <text x="415" y="142" font-family="Caveat" font-size="15" fill="#7a2230">numbers never get fuzzed 📌</text>
+
+      <!-- provenance -->
+      <g transform="translate(40,170)">
+        <rect x="0" y="0" width="620" height="110" rx="8" fill="#eae2cf" stroke="#16161f" stroke-width="1.5"/>
+        <text x="20" y="26" font-family="Fraunces" font-size="15" font-weight="700" fill="#16161f">Provenance &amp; escalation — keep receipts, route doubts</text>
+        <text x="20" y="50" font-family="Newsreader" font-size="11" fill="#16161f">• claim → source mappings (URL, doc, excerpt, date) survive synthesis</text>
+        <text x="20" y="70" font-family="Newsreader" font-size="11" fill="#16161f">• conflicting stats? annotate BOTH with sources — don't pick arbitrarily</text>
+        <text x="20" y="90" font-family="Newsreader" font-size="11" fill="#16161f">• escalate on: explicit human request · policy gaps · can't progress (NOT sentiment)</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Preserving context across long interactions</h3>
+  <p>Progressive summarization quietly destroys numbers, percentages, dates, and customer-stated expectations. And the <strong>lost-in-the-middle</strong> effect means content buried in the middle of a long input gets skipped. So extract transactional facts (amounts, order IDs, statuses) into a persistent <strong>"case facts" block</strong> that rides outside the summarized history in every prompt; <strong>trim verbose tool outputs</strong> to only relevant fields before they pile up (40+ fields when you need 5); place key findings at the <strong>top</strong> of aggregated inputs; and lean on <strong>scratchpad files</strong> and <code>/compact</code> during long codebase sessions to fight context degradation.</p>
+
+  <h3 class="section-h">Escalation, error propagation, and provenance</h3>
+  <ul class="bullets">
+    <li><strong>Escalate</strong> on the right triggers: an explicit request for a human (honor it immediately), a policy gap/exception, or genuine inability to progress. Sentiment and self-reported confidence are <em>unreliable</em> proxies for complexity. Multiple customer matches → ask for more identifiers, don't guess.</li>
+    <li><strong>Propagate errors</strong> with structured context (failure type, attempted query, partial results, alternatives). Never silently suppress an error as "success," and never kill the whole workflow over one subagent failure.</li>
+    <li><strong>Keep provenance:</strong> require claim-source mappings that survive synthesis; annotate conflicting statistics with their sources rather than picking one; include publication/collection dates so temporal differences aren't misread as contradictions.</li>
+    <li><strong>Calibrate confidence:</strong> aggregate accuracy (97%!) can hide weak spots — use stratified sampling, field-level confidence calibrated on labeled sets, and route low-confidence or contradictory cases to human review.</li>
+  </ul>
+
+  <div class="qbox">
+    <div class="qlabel">Straight from the practice exam · Q8</div>
+    A search subagent times out — how should that flow to the coordinator? <span class="ans">Return structured error context: failure type, attempted query, partial results, and alternatives.</span> A generic "search unavailable" (B) hides context; marking failure as success (C) prevents recovery; killing the whole workflow (D) is overkill.
+  </div>
+
+  <div class="sticky pink right">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    <strong>"Pin the facts, route the doubts, keep the receipts."</strong> Case-facts block + right escalation triggers + claim-source mappings.
+  </div>
+</section>
+
+<!-- PRACTICE QUESTION BANK -->
+<section class="qbank">
+  <div class="qbank-head">
+    <div class="kicker" style="color: rgba(244,238,225,0.6);">BONUS · 60-QUESTION PRACTICE BANK</div>
+    <h2>Every practice question, mapped to its chapter</h2>
+    <p class="qbank-sub">All 60 questions from the practice exam, grouped by the topic they test. The correct option is marked, with a one-line reason. A handful are interpretive — verify against the official key when you sit the test.</p>
+  </div>
+  <div class="qtopic" style="--accent: var(--c1);">
+    <div class="qtopic-head"><span class="qtopic-num">01</span><span class="qtopic-title">The Agentic Loop</span><span class="qtopic-count">2 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q38</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">Implementing the agentic loop, after each API call you must decide whether to continue (run tools, call Claude again) or stop (present the final response). What determines this decision?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Check the stop_reason field — continue when it equals &quot;tool_use&quot; and stop when it equals &quot;end_turn&quot;.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Set a maximum iteration count (e.g., 10) and stop when reached, regardless of whether more work is needed.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Check whether the response includes any assistant text content — if Claude generated text, end the loop.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Parse Claude&#x27;s text for phrases like &quot;I&#x27;ve completed&quot; or &quot;Is there anything else?&quot; as completion signals.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>stop_reason is the structural signal. B, C, D are the three named anti-patterns (iteration caps, text-content checks, parsing natural language).</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q34</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">Your agent averages 4+ API round-trips per resolution; Claude requests get_customer and lookup_order in separate sequential turns even when both are needed upfront. Most effective way to reduce round-trips?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Prompt Claude to batch tool requests per turn, returning all tool results together before the next API call.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Speculative execution that auto-calls likely-needed tools alongside any requested tool, returning all results.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Increase max_tokens to give Claude more space to plan ahead and naturally batch its requests.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Create composite tools like get_customer_with_orders that bundle common lookup combinations.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Claude can emit multiple tool_use blocks in one response. Speculative execution (B) is wasteful; max_tokens (C) is a misconception; composite tools (D) are rigid. (D is a defensible runner-up.)</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c2);">
+    <div class="qtopic-head"><span class="qtopic-num">02</span><span class="qtopic-title">Multi-Agent Orchestration</span><span class="qtopic-count">4 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q2</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">A colleague suggests the document analysis agent send output directly to the synthesis agent instead of routing through the coordinator. Main advantage of keeping the coordinator as the central hub?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">The coordinator can observe all interactions, handle errors consistently, and decide what each subagent receives.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Subagents have isolated memory and direct communication needs complex serialization only the coordinator can do.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Routing through the coordinator enables automatic retry logic that agent-to-agent calls cannot support.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">The coordinator batches multiple subagent requests together, reducing total API calls and latency.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Hub-and-spoke gives observability, consistent error handling, and controlled information flow. The others are fabricated or secondary benefits.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q9</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">The web search and document analysis agents have returned findings to the coordinator. Appropriate next step for an integrated research output?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Each agent directly sends findings to the report generation agent, bypassing the coordinator.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">The coordinator passes both sets of findings to the synthesis agent for unified integration.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">The coordinator concatenates the raw outputs and returns them as the final result.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">The document analysis agent requests the web search results and merges them internally.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>All flow routes through the coordinator, which hands findings to synthesis. Bypassing the coordinator (A, D) or raw concatenation (C) breaks the pattern.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q11</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">On &quot;impact of AI on creative industries,&quot; every subagent succeeds but reports cover only visual arts. The coordinator decomposed into &quot;digital art,&quot; &quot;graphic design,&quot; and &quot;photography.&quot; Most likely root cause?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">The synthesis agent lacks instructions for identifying coverage gaps.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">The document analysis agent filters out non-visual sources via overly restrictive relevance criteria.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">The web search agent&#x27;s queries aren&#x27;t comprehensive enough.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">The coordinator&#x27;s task decomposition is too narrow, so subagent assignments don&#x27;t cover all domains.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>The logs show the coordinator never assigned music, writing, or film. Subagents worked correctly within scope — the decomposition is the cause.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q13</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">The web search and document analysis agents both investigate the same subtopics; token usage nearly doubled without more coverage. Most effective fix?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">A shared-state mechanism where agents log their focus area so others avoid duplicating work in progress.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Let both finish parallel work, then have the coordinator deduplicate overlapping findings before synthesis.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Convert to sequential execution: document analysis runs after web search, using its findings to avoid overlap.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Have the coordinator partition the research space before delegation, assigning distinct subtopics/source types.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Partitioning scope up front prevents duplication. Dedup after the fact (B) and sequential (C) waste work; shared state (A) is more complex and less reliable.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c3);">
+    <div class="qtopic-head"><span class="qtopic-num">03</span><span class="qtopic-title">Enforcement &amp; Hooks</span><span class="qtopic-count">2 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q35</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">In 12% of cases the agent skips get_customer and calls lookup_order using only the stated name, causing misidentified accounts and wrong refunds. Most effective change?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Enhance the system prompt to state that get_customer verification is mandatory before any order operation.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Add few-shot examples showing the agent always calling get_customer first.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Implement a routing classifier that enables only the subset of tools appropriate for the request type.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add a programmatic prerequisite blocking lookup_order and process_refund until get_customer returns a verified ID.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Financial correctness needs a deterministic gate. Prompts (A) and few-shot (B) are probabilistic; a classifier (D-distractor C) fixes availability, not ordering.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q45</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">The agent misreads MCP data: Unix timestamps (get_customer), ISO 8601 (lookup_order), numeric status codes; some tools are third-party you can&#x27;t modify. Most maintainable normalization?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Add detailed format documentation to the system prompt explaining each tool&#x27;s conventions.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Use a PostToolUse hook to intercept tool results and apply formatting transformations before processing.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Modify tools you control to return human-readable formats; create wrapper tools for third-party ones.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Create a normalize_data tool the agent calls after each retrieval to transform values.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>A PostToolUse hook normalizes results deterministically before the model sees them — works even for tools you can&#x27;t modify. Prompt docs (A) are probabilistic; wrappers (C) and a normalize tool (D) are more work and less reliable.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c4);">
+    <div class="qtopic-head"><span class="qtopic-num">04</span><span class="qtopic-title">Decomposition &amp; Sessions</span><span class="qtopic-count">2 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q32</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">Single-concern accuracy is 94%, but multi-concern messages drop tool-selection accuracy to 58% — the agent addresses one concern or mixes parameters. Most effective approach?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Response validation that detects incomplete responses and re-prompts the agent for missed concerns.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">A preprocessing layer using a separate model call to decompose multi-concern messages into individual requests, process each independently, then combine.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Consolidate related tools into fewer, more general-purpose tools.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Add few-shot examples demonstrating correct reasoning and tool sequence for multi-concern requests.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Decomposing into distinct concerns is the documented fix for multi-concern handling. (D, few-shot, is a defensible alternative; consolidation (C) and re-prompting (A) don&#x27;t address the root cause.)</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q44</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">Simple requests resolve in 3-4 tool calls (91%); complex multi-part ones average 12+ calls (54%), investigating concerns sequentially and re-gathering customer data. Most effective change?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Decompose into distinct concerns, then investigate each in parallel using shared customer context before synthesizing.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Add few-shot examples of ideal tool sequences for multi-part billing scenarios.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add explicit verification gates between steps, checkpointing after each concern.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Consolidate get_customer, lookup_order, and billing lookups into one investigate_issue tool.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Decompose + parallel investigation with shared context is the guide&#x27;s exact prescription — avoids sequential round-trips and redundant data gathering.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c5);">
+    <div class="qtopic-head"><span class="qtopic-num">05</span><span class="qtopic-title">Designing Tool Interfaces</span><span class="qtopic-count">5 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q6</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">&quot;Analyze the quarterly report I uploaded&quot; routes to the web search agent 45% of the time. Its analyze_content tool says &quot;analyzes content and extracts key information&quot;; analyze_document says &quot;analyzes documents and extracts key information.&quot; Fix?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Rename the web search tool to extract_web_results, description &quot;processes and returns info retrieved from web searches and URLs.&quot;</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Expand the document tool&#x27;s description with examples like &quot;Use for uploaded PDFs, Word docs, spreadsheets,&quot; leaving web tool unchanged.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add few-shot routing examples to the coordinator&#x27;s prompt.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Add a pre-routing classifier to detect uploaded files vs web content before delegation.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Near-identical descriptions cause misrouting; rename + re-scope to eliminate overlap. (B helps but only half the fix; few-shot/classifier are heavier and don&#x27;t fix the root ambiguity.)</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q10</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">You gave the document analysis agent a general fetch_url tool; it now fetches search-engine result pages to do ad-hoc web searches. Most effective fix?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Filtering that blocks fetch_url calls to known search-engine domains.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Add prompt instructions to use fetch_url only for document URLs, not searching.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Remove fetch_url and route all URL loading through the coordinator to the web search agent.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Replace fetch_url with a load_document tool that validates URLs point to document formats.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Replace the over-broad tool with a constrained alternative (load_document). Prompt instructions (B) are probabilistic; filtering (A) is brittle; full re-routing (C) is heavier than needed.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q31</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">The agent calls get_customer for order queries like &quot;check my order #12345&quot; instead of lookup_order. Both have minimal descriptions and similar identifier formats. Most effective first step?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">A routing layer that parses input and pre-selects a tool from keywords/identifier patterns.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Expand each tool&#x27;s description with input formats, example queries, edge cases, and when-to-use-vs-similar boundaries.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Consolidate both into one lookup_entity tool that picks the backend internally.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Add 5-8 few-shot examples to the system prompt routing order queries to lookup_order.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Descriptions are the primary selection mechanism — fix them first (low-effort, high-leverage). Few-shot (D) adds tokens without fixing the cause; routing (A)/consolidation (C) are over-engineered for a first step.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q36</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">When messages include &quot;account,&quot; the agent calls get_customer first 78% of the time; without it, lookup_order first 93%. The tool descriptions are well-written and unambiguous. Most likely root cause?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Base-training associations between &quot;account&quot; and customer operations override the tool descriptions.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">The descriptions need negative examples specifying when NOT to use each tool.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">The system prompt contains keyword-sensitive instructions that steer behavior on terms like &quot;account.&quot;</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">The model needs fine-tuning on multi-concept messages.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>When descriptions are already good, suspect the system prompt: keyword-sensitive wording creates unintended tool associations.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q40</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">The agent frequently calls get_customer for order-status questions even though lookup_order fits better. What should you examine first?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Add few-shot examples covering every order-related query pattern.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Reduce the number of tools available to simplify selection.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Review tool descriptions to ensure they clearly distinguish each tool&#x27;s purpose.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Implement a pre-processing classifier that routes order queries to lookup_order.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>First check the descriptions — the primary selection mechanism. The others are heavier fixes that skip the root cause.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c6);">
+    <div class="qtopic-head"><span class="qtopic-num">06</span><span class="qtopic-title">MCP Errors &amp; Tool Distribution</span><span class="qtopic-count">4 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q1</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">A subagent queries three sources: academic DBs return 15 papers, industry reports return &quot;0 results found,&quot; patent DBs return &quot;Connection timeout.&quot; Best error-propagation design for recovery?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Have the subagent retry transient failures internally and report only persistent errors.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Distinguish access failures (timeout, needs retry decision) from valid empty results (&quot;0 results&quot;, a successful query).</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Report both the timeout and &quot;0 results&quot; as failures requiring coordinator intervention.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Aggregate outcomes into a single success-rate metric (e.g., &quot;67% coverage&quot;) with logs on request.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>The coordinator must tell a real failure (timeout) from a valid empty result. Lumping them (C) or hiding detail in a metric (D) blocks good recovery decisions.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q4</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">The synthesis agent often needs to verify claims, currently round-tripping through the coordinator (+40% latency). 85% are simple fact-checks; 15% need deeper investigation. Most effective approach?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Give the synthesis agent access to all web search tools so it handles any verification directly.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Give it a scoped verify_fact tool for simple lookups; complex verifications still delegate through the coordinator.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Have the web search agent proactively cache extra context around each source during research.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Have synthesis batch all verification needs and return them to the coordinator at the end of its pass.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Least privilege: a scoped tool for the 85% common case, delegation for the rest. All tools (A) over-provisions; caching (C) can&#x27;t predict needs; batching (D) creates blocking dependencies.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q5</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">The document subagent hits PDF failures (corruption, password-protection, parse timeouts); any exception immediately terminates it and forces coordinator decisions. Most effective architectural improvement?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Have the subagent recover locally from transient failures and only propagate unresolvable errors — with what was attempted and any partial results.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Create a dedicated error-handling agent monitoring all failures via a shared queue, dispatching retries.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Have the coordinator validate all documents before dispatch, rejecting likely-to-fail files.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Always return partial results with success status, embedding errors in metadata; coordinator treats all as success.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Local recovery for transient issues, propagate only what can&#x27;t be resolved (with context + partials). A separate error agent (B) over-engineers; pre-validation (C) is impractical; marking failures as success (D) hides errors.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q14</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">The document subagent hits a corrupted PDF it cannot parse. Most effective way to handle this failure?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Silently skip the corrupted document and continue with others.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Automatically retry parsing three times with exponential backoff before reporting failure.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Throw an exception that terminates the entire research workflow.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Return the error with context to the coordinator, letting it decide how to proceed.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>A corrupted PDF won&#x27;t parse on retry — surface a structured error with context so the coordinator decides (skip, substitute, etc.). Silent skip (A) hides gaps; blind retry (B) is wasteful; terminating (C) is overkill.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c7);">
+    <div class="qtopic-head"><span class="qtopic-num">07</span><span class="qtopic-title">MCP Servers &amp; Built-in Tools</span><span class="qtopic-count">1 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q23</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Your team wants a GitHub MCP server for PR lookups and CI checks; each of six developers has their own personal access token. Consistent tooling, no committed credentials. Most effective configuration?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Project scope with a placeholder token; developers override it in local-scope config.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Each developer configures the server in user scope with claude mcp add --scope user.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Project-scoped .mcp.json with environment-variable expansion (${GITHUB_TOKEN}); document the env var in the README.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">An MCP server wrapper that reads tokens from a .env file and proxies to GitHub; add the wrapper to .mcp.json.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>Project-scoped .mcp.json gives consistent shared tooling; ${GITHUB_TOKEN} expansion keeps each dev&#x27;s secret out of version control. User-scope (B) loses consistency; a custom wrapper (D) is unnecessary.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c8);">
+    <div class="qtopic-head"><span class="qtopic-num">08</span><span class="qtopic-title">CLAUDE.md &amp; Rules</span><span class="qtopic-count">10 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q16</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Distinct areas have different conventions; test files are scattered alongside the code they test (Button.test.tsx next to Button.tsx) and must all follow the same conventions regardless of location. Most maintainable way for Claude to auto-apply them?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Skills in .claude/skills/ for each code type containing the conventions.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Consolidate everything in root CLAUDE.md under headers, relying on Claude to infer the right section.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Rule files in .claude/rules/ with YAML frontmatter glob patterns to apply conventions by file path.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">A separate CLAUDE.md in each subdirectory with that area&#x27;s conventions.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>Glob-scoped rules apply to files by type wherever they live — ideal for scattered test files. CLAUDE.md inference (B) is unreliable; directory CLAUDE.md (D) can&#x27;t span dirs; skills (A) need manual invocation.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q18</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Your /explore-alternatives skill leaves Claude&#x27;s later responses influenced by abandoned exploration ideas. Most effective configuration?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Create the skill in ~/.claude/skills/ instead of .claude/skills/.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Split into /explore-start and /explore-end to demarcate when exploratory context is discarded.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add context: fork to the skill&#x27;s frontmatter.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Use the ! prefix to execute the exploration logic as a bash subprocess.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>context: fork runs the skill in an isolated sub-agent context, so its exploratory output never pollutes the main conversation.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q20</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Three developers report Claude follows the &quot;always include comprehensive error handling&quot; guideline; a newly joined fourth doesn&#x27;t. All are in the same repo with latest code pulled. Most likely cause and fix?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">The new dev&#x27;s ~/.claude/CLAUDE.md has conflicting instructions overriding project settings — remove them.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Claude Code caches CLAUDE.md after first read; the new dev loaded post-modification — clear caches.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">The guideline lives in the original devs&#x27; ~/.claude/CLAUDE.md (user-level), not the project&#x27;s .claude/CLAUDE.md — move it to the project file.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Claude builds per-user preference models over time; the new dev must repeatedly specify the requirement.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>If it were in the shared project file, the new dev would have it after pulling. It&#x27;s sitting in the others&#x27; personal user-level files (never committed). Caching (B) and preference models (D) are invented mechanisms.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q21</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Your /migration skill (name via $ARGUMENTS) shows three issues: invoked without args → bad names; pulls schema details from unrelated earlier chats; once triggered destructive cleanup due to broad tool access. Which config fixes all three?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">SKILL.md instructions to verify $ARGUMENTS, ignore prior context, and list forbidden operations.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add argument-hint frontmatter for required params, context: fork to isolate execution, and restrict allowed-tools to file writes.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Split into /migration-create and /migration-apply with name prompts and different allowed-tools scopes.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Use $1/$2, @-syntax schema references, and a description warning about destructive operations.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Three frontmatter levers map to three problems: argument-hint (missing args), context: fork (context bleed), allowed-tools (destructive access). Prose instructions (A) are probabilistic.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q22</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Your 400+ line CLAUDE.md mixes coding standards, testing, a PR review checklist, deployment, and migration steps. You want standards/testing always applied, but PR/deploy/migration guidance only during those tasks. Most effective restructuring?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Keep all in CLAUDE.md but use @import to organize into separate files by category.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Move all guidance into Skills files by workflow type, keeping only a brief description in CLAUDE.md.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Keep universal standards in CLAUDE.md; create Skills for task-specific workflows (PR review, deploy, migration) with trigger keywords.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Split CLAUDE.md into .claude/rules/ files with path-specific glob patterns.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>Always-on standards → CLAUDE.md; on-demand task workflows → Skills. The split is task-based, not file-path-based, so path rules (D) don&#x27;t fit; @import (A) still always-loads everything.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q24</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">You want a custom /review slash command running your team&#x27;s review checklist, available to every developer on clone/pull. Where should the command file live?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">In the .claude/commands/ directory in the project repository.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">In the CLAUDE.md file at the project root.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">In a .claude/config.json file with a commands array.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">In ~/.claude/commands/ in each developer&#x27;s home directory.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Project-scoped commands in .claude/commands/ are version-controlled and shared automatically. ~/.claude/ (D) is personal; CLAUDE.md (B) holds context, not commands; config.json (C) doesn&#x27;t exist.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q25</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Your /analyze-codebase skill (dependency scan, coverage, quality metrics) leaves Claude less responsive and losing the original task afterward. Most effective fix that preserves full analysis?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Split into three smaller skills that each generate less output.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Add instructions to compress all output into a brief summary before display.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add model: haiku to the frontmatter for a faster model.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add context: fork to run the analysis in an isolated sub-agent context.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>context: fork isolates the verbose analysis so it doesn&#x27;t flood (and degrade) the main session, while keeping full capability.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q26</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Your 500+ line CLAUDE.md mixes many topics and is hard to navigate/update. What does Claude Code support for organizing project instructions into focused modules?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Separate markdown files in .claude/rules/, each covering one topic (testing.md, api-conventions.md).</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Multiple CLAUDE.md files at different tree levels, each overriding the parent.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">README.md files in subdirectories that Claude auto-loads as instructions.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">A .claude/config.yaml mapping file patterns to sections within CLAUDE.md.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Topic files under .claude/rules/ are the supported modular alternative to a monolithic CLAUDE.md. The others describe non-existent or unsupported mechanisms.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q28</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">A teammate wants to customize the shared /commit skill (different message format, extra checks) without affecting others. What do you recommend?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Create a personal version at ~/.claude/skills/commit/SKILL.md with the same name.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Set override: true in the personal skill&#x27;s frontmatter to take precedence.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Create a personal version in ~/.claude/skills/ with a different name like /my-commit.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Add username-based conditional logic to the project skill&#x27;s frontmatter.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>A personal variant with a different name in ~/.claude/skills/ avoids clashing with or affecting teammates&#x27; shared skill. override:true (B) and username logic (D) aren&#x27;t the documented approach.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q30</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Including 2-3 exemplar endpoint implementations greatly improves new-endpoint generation, but this context only helps for creating endpoints — not bug fixes, reviews, or other API work. Most efficient configuration?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Add the exemplar code + docs to project CLAUDE.md so it&#x27;s always available.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Reference the exemplars manually each time by copying code into your prompt.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Create a skill that references the exemplars with pattern-following instructions, invoked on-demand via slash command.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Configure path-specific rules in .claude/rules/api/ that include the exemplars and activate in the API directory.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>On-demand skill loads the exemplars only when creating endpoints. CLAUDE.md (A) is always-on waste; path rules (D) would fire for ALL API-directory work, not just new endpoints.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c9);">
+    <div class="qtopic-head"><span class="qtopic-num">09</span><span class="qtopic-title">Plan Mode, Iteration &amp; CI/CD</span><span class="qtopic-count">7 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q17</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Adding error-handling wrappers across 120 files: (1) discover call sites, (2) design approach, (3) implement. In Phase 1 Claude&#x27;s verbose output fills the context window before discovery finishes. Most effective approach?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Continue all phases in the main conversation, using /compact periodically.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Use the Explore subagent for Phase 1 to isolate verbose output and return a summary, then continue Phases 2-3 in the main conversation.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Define the pattern in CLAUDE.md, then process files in batches across sessions, relying on the memory file.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Switch to headless mode with --continue, passing explicit context summaries between batch invocations.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>The Explore subagent isolates verbose discovery and returns a summary, preserving main-context budget for design + implementation.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q19</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Adding Slack support; the ticket says &quot;add Slack support&quot; but the API offers webhooks (simple), bot tokens (delivery confirmation), or Apps (bidirectional, needs approval), and it&#x27;s unclear which features are needed. How to approach?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Enter plan mode to explore the integration options and architectural implications, then recommend before implementing.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Direct execution using bot tokens to enable delivery confirmation.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Direct execution to scaffold the channel class, deferring the integration-method decision.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Direct execution using incoming webhooks to match the existing one-way pattern.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Multiple valid approaches + architectural implications + ambiguous requirements = plan mode. Jumping into direct execution (B/C/D) risks committing to the wrong integration.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q27</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">Restructuring a monolith into microservices — changes across dozens of files, decisions about service boundaries and dependencies. Which approach?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Start direct execution incrementally, letting implementation reveal service boundaries.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Enter plan mode to explore the codebase, understand dependencies, and design an approach before changing.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Direct execution with comprehensive upfront instructions detailing every service&#x27;s structure.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Begin in direct execution; switch to plan mode only if unexpected complexity appears.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Large-scale architectural change = plan mode (explore + design before committing). The complexity is already stated, so deferring planning (D) or improvising (A/C) risks costly rework.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q29</span><span class="qscn">Code Generation</span></div>
+      <div class="qtext">After two iterations, Claude&#x27;s API-response transformer still mismatches expectations (nesting, timestamps) and reinterprets your prose differently each time. Most effective next iteration?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Ask Claude to explain its current interpretation so you can find where it diverges.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Provide 2-3 concrete input-output examples showing the expected transformation.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Rewrite the requirements with greater technical precision (exact field mappings, nesting, timestamp formats).</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Write a JSON schema for the output and validate against it each iteration.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Concrete input/output examples are the most effective way to communicate a transformation when prose is interpreted inconsistently. (D validates structure but doesn&#x27;t teach the mapping; C is more prose.)</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q46</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Your pipeline runs claude &quot;Analyze this PR...&quot; but hangs waiting for interactive input. Correct way to run Claude Code in an automated pipeline?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Add the --batch flag.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Redirect stdin from /dev/null.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add the -p flag (claude -p &quot;...&quot;).</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Set CLAUDE_HEADLESS=true before running.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>-p / --print runs non-interactively: process, print to stdout, exit. --batch and CLAUDE_HEADLESS don&#x27;t exist; the stdin hack doesn&#x27;t address Claude Code&#x27;s syntax.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q48</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Your review suggests 10 test cases for a PR but 6 duplicate scenarios already in the existing suite. Most effective change to reduce duplicates?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Post-processing that filters suggestions matching keywords from existing test names.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Reduce requested suggestions from 10 to 5, assuming Claude prioritizes the best.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Instruct Claude to focus exclusively on edge cases and error conditions.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Include the existing test file in context so Claude sees what&#x27;s already covered.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Give Claude the existing tests as context so it doesn&#x27;t re-suggest covered scenarios. Keyword filtering (A) is brittle; reducing count (B) or restricting scope (C) loses valuable cases.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q49</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">After 12 findings, a developer pushes fixes; the re-run produces 8 findings but 5 duplicate earlier comments on already-fixed code. Most effective way to eliminate redundant feedback while staying thorough?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Include prior review findings in context, instructing Claude to report only new or still-unaddressed issues.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Restrict review scope to only files in the most recent push.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Run reviews only on initial creation and final pre-merge, skipping intermediate commits.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Add a post-processing filter removing findings matching previous paths/descriptions.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Give Claude the prior findings so it reports only new/unaddressed issues — thorough but non-redundant. Scope restriction (B) misses cross-file issues; skipping commits (C) reduces coverage; brittle filtering (D).</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c10);">
+    <div class="qtopic-head"><span class="qtopic-num">10</span><span class="qtopic-title">Prompting for Precision</span><span class="qtopic-count">7 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q39</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">Your agent hits 55% first-contact resolution vs 80% target — escalating easy cases while attempting complex policy-exception ones. Most effective way to improve escalation calibration?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Deploy a separate classifier trained on historical tickets to predict escalation before processing.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add explicit escalation criteria to the system prompt with few-shot examples of when to escalate vs resolve.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Have the agent self-report a 1-10 confidence score and route below a threshold to humans.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Implement sentiment analysis to escalate when negative sentiment exceeds a threshold.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Explicit criteria + few-shot fix the unclear decision boundary. Self-confidence (C) is poorly calibrated; sentiment (D) doesn&#x27;t track complexity; a classifier (A) is over-engineered before trying prompts.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q42</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">Complex cases score 15% lower CSAT despite correct resolutions — the agent inconsistently omits policy details, timelines, or next steps, and the gaps vary by case. Improve quality without human-review overhead. Most effective?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Raise the model tier from Haiku to Sonnet for complex cases.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Add a confirmation step asking &quot;Does this fully address your concern?&quot; before closing.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add a self-critique step where the agent evaluates its draft for completeness (concern addressed, context, follow-ups).</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Few-shot examples showing complete resolution explanations for five common complex case types (policy, timelines, next steps).</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Few-shot examples demonstrating complete explanations drive consistent, complete output. (C, self-critique, is a defensible alternative; the exam generally favors examples over self-assessment.)</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q43</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">The agent sometimes picks get_customer when lookup_order fits, especially for ambiguous requests. You&#x27;ll add few-shot examples — which approach is most effective?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Add &quot;use when&quot;/&quot;do not use when&quot; guidelines in each tool&#x27;s description for the ambiguous cases.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add 4-6 examples targeting ambiguous scenarios, each showing reasoning for why one tool beat the alternatives.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add 10-15 examples of clear, unambiguous requests demonstrating typical use cases.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Group examples by tool — all get_customer scenarios, then all lookup_order scenarios.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>A few targeted ambiguous examples that show the reasoning generalize best. Many unambiguous examples (C) don&#x27;t help the hard cases; grouping (D) doesn&#x27;t teach disambiguation; (A) is description editing, not few-shot.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q47</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">False-positive rates by category: security/correctness 8%, performance 18%, style/naming 52%, documentation 48%. Devs are dismissing findings wholesale. Best approach to restore trust while improving?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Temporarily disable high false-positive categories (style, naming, docs); run only high-precision ones while improving prompts.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Keep all categories but show a confidence score with each finding.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Apply a uniform strictness reduction across all categories.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Keep all categories enabled while adding few-shot examples to improve accuracy over weeks.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Disable the noisy categories now to rebuild trust, fix their prompts offline. Confidence scores (B) are unreliable; uniform reduction (C) hurts good categories; (D) leaves the noise live for weeks.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q53</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Reviews identify valid issues but feedback isn&#x27;t actionable (&quot;complex logic,&quot; &quot;potential null pointer&quot;). Adding &quot;always include specific fix suggestions&quot; still yields inconsistent output. Most reliable technique?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Further refine instructions with explicit requirements for each feedback part.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Two-pass approach: one prompt identifies issues, a second generates fixes.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Add 3-4 few-shot examples showing the exact format: issue, code location, specific fix.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Expand the context window to include more surrounding code.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>Few-shot examples demonstrating the exact desired format produce consistency where instructions alone failed (the scenario already shows refined instructions failing — rules out A).</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q58</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Your comment/docstring review (&quot;check comments are accurate and up-to-date&quot;) flags acceptable patterns (TODOs, plain descriptions) while missing comments describing behavior the code no longer implements. Root-cause fix?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Include git blame data to find comments predating recent changes.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Filter out TODO/FIXME/descriptive patterns before analysis.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add few-shot examples of misleading comments.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Specify explicit criteria: flag comments only when their claimed behavior contradicts actual code behavior.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Replace the vague instruction with precise categorical criteria. git blame (A) and filtering (B) are workarounds; few-shot (C) helps but the explicit criterion is the direct root-cause fix.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q60</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Severity ratings are inconsistent — null-pointer risks are &quot;critical&quot; in some PRs, &quot;medium&quot; in others — eroding trust. Most effective way to improve severity consistency?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Include explicit severity criteria in the prompt with concrete code examples for each level.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Rate severity relative to other issues in the same PR (most severe = critical, others proportional).</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add a CLAUDE.md mapping issue types to default severities for Claude to reference.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Have Claude include reasoning per assignment, then manually calibrate during review.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Explicit severity criteria with concrete examples per level give consistent classification. Relative rating (B) is unstable across PRs; a static map (C) ignores context; manual calibration (D) adds overhead.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c11);">
+    <div class="qtopic-head"><span class="qtopic-num">11</span><span class="qtopic-title">Structured Output &amp; Batch</span><span class="qtopic-count">8 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q50</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Two workflows on real-time calls: (1) a blocking pre-merge check, (2) an overnight technical-debt report. Your manager proposes switching BOTH to the Message Batches API (50% savings). How to evaluate?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Switch both to batch with a timeout fallback to real-time.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Use batch for the technical-debt reports only; keep real-time for pre-merge checks.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Keep real-time for both to avoid batch ordering issues.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Switch both to batch with status polling.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>Batch (up to 24h, no SLA) suits the overnight report but not a blocking pre-merge check. Ordering (C) is a non-issue (custom_id); fallbacks/polling on a blocker (A/D) are unacceptable.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q51</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Three analyses: (1) quick style checks that block merging, (2) weekly full-codebase security audits, (3) nightly test generation for changed modules. Match each to its API approach?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Synchronous for style checks and nightly test gen; batch only for weekly audits.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Batch for all three to maximize savings, polling for completion.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Synchronous for all three; rely on prompt caching for cost.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Synchronous for style checks; batch for weekly audits and nightly test generation.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Only the style check blocks merging (synchronous); the weekly audit and nightly test gen are non-blocking → batch. (A wrongly makes nightly test gen synchronous.)</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q52</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Reviews average 15 findings, 40% false positives; the bottleneck is investigation time (devs click into each finding to read reasoning). CLAUDE.md already has acceptable-pattern rules, and stakeholders reject filtering before review. Best change for the bottleneck?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Categorize findings as &quot;blocking&quot; vs &quot;suggestions&quot; with tiered review.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">A post-processor that auto-suppresses findings matching historical false-positive signatures.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Configure Claude to surface only high-confidence findings, filtering uncertain ones.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Require Claude to include its reasoning and confidence inline with each finding.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Filtering is off the table (rules out B, C). The bottleneck is clicking in to read reasoning — surfacing it inline removes that step. (A re-prioritizes but devs still read reasoning.)</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q54</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Subtle issues (edge-case-breaking optimizations, behavior-changing cleanups) only surface when a different teammate reviews the PR; Claude&#x27;s generation reasoning shows it considered and dismissed them. Approach that addresses the self-review root cause?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Enable extended thinking for the generation pass.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Have a second, independent Claude instance review the changes without seeing the generator&#x27;s reasoning.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Include comprehensive tests and docs in the generation prompt context.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Add explicit self-review instructions to the generation prompt.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY B</span>An independent instance lacks the generator&#x27;s reasoning bias and catches what self-review misses. Extended thinking (A) and self-review instructions (D) keep the same biased context.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q55</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Two review modes: a pre-merge-commit hook that blocks merging, and &quot;deep analysis&quot; that runs overnight, polls for batch completion, then posts. Which mode should use batch processing?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Deep analysis only.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Both modes.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Neither mode.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Pre-merge-commit hook only.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Deep analysis is non-blocking/overnight → batch. The pre-merge hook blocks merging and can&#x27;t tolerate a 24h window → synchronous.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q56</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Review works iteratively: Claude analyzes a file, then requests related files via tool calling before final feedback. You&#x27;re considering batch processing. Primary technical constraint?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">The batch API doesn&#x27;t support tool definitions in request parameters.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Batch processing lacks request-correlation identifiers for matching outputs.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">The asynchronous model prevents executing tools mid-request and returning results for Claude to continue.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Batch latency (up to 24h) is too slow for PR feedback, though it could otherwise function.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>Batch can&#x27;t do multi-turn tool calling within one request — it can&#x27;t run a tool mid-request and feed results back. Correlation exists via custom_id (B); latency (D) is a concern but not the *technical* blocker for this tool-loop workflow.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q57</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">Your --print CI reviews are insightful but produce narrative paragraphs that must be hand-copied into PR comments; you want each finding posted inline (needs file, line, severity, fix). Most effective approach?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Explicit formatting instructions requiring a parseable template like [FILE:..][LINE:..][SEVERITY:..].</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Keep narrative format, add a summarization step generating a structured JSON summary.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Add a &quot;Review Output Format&quot; section to CLAUDE.md with structured examples.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Use --output-format json and --json-schema to enforce structured findings, then parse and post via the GitHub API.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>CLI flags --output-format json + --json-schema guarantee machine-parseable structured output for inline posting. Template instructions (A) and CLAUDE.md examples (C) are probabilistic; a second summarization pass (B) adds cost/fragility.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q59</span><span class="qscn">CI/CD</span></div>
+      <div class="qtext">A PR modifies 14 files; a single-pass review gives inconsistent depth, misses bugs, and even contradicts itself (flagging a pattern in one file, approving identical code elsewhere). How to restructure?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Split into focused passes: analyze each file individually for local issues, then a separate cross-file integration pass.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Require developers to split large PRs into 3-4 file submissions.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Run three independent passes and flag only issues appearing in at least two.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Switch to a higher-tier model with a larger context window for all 14 files at once.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Per-file passes plus a cross-file pass fix attention dilution. Pushing work to devs (B) doesn&#x27;t fix the system; consensus voting (C) suppresses real bugs; a bigger window (D) doesn&#x27;t fix attention quality.</div>
+    </div>
+  </div>
+  <div class="qtopic" style="--accent: var(--c12);">
+    <div class="qtopic-head"><span class="qtopic-num">12</span><span class="qtopic-title">Context &amp; Reliability</span><span class="qtopic-count">8 Q</span></div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q3</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">The document analysis agent finds two credible sources with conflicting stats (40% vs 12% growth) that could change conclusions. Most effective way to handle this?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Complete the analysis with both figures, explicitly annotate the conflict with source attribution, and let the coordinator reconcile before synthesis.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Halt and escalate immediately, asking the coordinator which source is authoritative before continuing.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Include both figures without flagging the conflict, letting synthesis decide based on broader context.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Apply credibility heuristics to pick the likely-accurate figure, with a footnote on the discrepancy.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Preserve both values with source attribution and annotate the conflict — don&#x27;t arbitrarily pick (D) or hide it (C). Let the coordinator decide; halting (B) is unnecessary.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q7</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">At ~75K tokens, synthesis reliably cites the first 15K and last 10K but omits critical findings in the middle 50K. How to restructure the aggregated input?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Place a key-findings summary at the beginning and organize detailed results with explicit section headers.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Summarize all outputs to under 20K tokens before aggregation.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Stream results incrementally, finishing web search before introducing document analysis.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Rotate which subagent&#x27;s results appear first across tasks for equal primacy over time.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>Counter &quot;lost in the middle&quot; by front-loading key findings and adding clear section headers. Over-summarizing (B) loses detail; rotation (D) and streaming (C) don&#x27;t fix mid-context omission within one input.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q8</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">Web search returned 3 of 5 source categories (news archives and social feeds timed out); document analysis succeeded. Synthesis must produce a summary from mixed-quality input. Best error-propagation strategy?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Return an error to the coordinator for incomplete upstream data, triggering full retry or failure.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Request the coordinator retry the timed-out sources with extended timeouts before synthesis.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Structure synthesis output with coverage annotations showing well-supported findings vs gaps from unavailable sources.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Proceed using only successful sources, without indicating what was unavailable.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>Proceed but annotate coverage gaps so consumers know what&#x27;s well-supported vs missing. Failing/retrying everything (A/B) is heavy; hiding gaps (D) misleads.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q12</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">Combined outputs (web 85K incl. page content + docs 70K incl. reasoning) total 155K tokens, but synthesis is optimal under 50K. Most effective solution?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Have synthesis process findings in sequential batches with running state.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Add an intermediate summarization agent to condense findings before synthesis.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Modify upstream agents to return structured data (key facts, citations, relevance scores) instead of verbose content and reasoning.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Store findings in a vector DB and give synthesis retrieval tools.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY C</span>Have upstream agents emit structured key facts/citations rather than verbose content/reasoning — fixes the bloat at the source. Summarization (B) risks losing detail; batching (A)/retrieval (D) add complexity.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q15</span><span class="qscn">Multi-Agent Research</span></div>
+      <div class="qtext">The web search subagent times out on a complex topic. Which error-propagation approach best enables intelligent recovery by the coordinator?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Catch the timeout and return an empty result set marked successful.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Propagate the exception to a top-level handler that terminates the workflow.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Auto-retry with exponential backoff, returning a generic &quot;search unavailable&quot; only after retries.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Return structured error context: failure type, attempted query, partial results, and potential alternatives.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Structured error context lets the coordinator retry differently, try alternatives, or proceed with partials. Marking failure as success (A) hides it; terminating (B) is overkill; a generic status (C) loses context.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q33</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">Progressive summarization condenses details stated 20+ turns ago (&quot;the 15% discount I mentioned&quot;) into vague summaries, and the agent returns wrong values. Most effective fix?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Extract transactional facts (amounts, dates, order numbers) into a persistent &quot;case facts&quot; block included in each prompt, outside summarized history.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Store full history externally and retrieve when the agent detects phrases like &quot;as I mentioned.&quot;</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Revise the summarization prompt to preserve all numbers, percentages, dates, and expectations verbatim.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Raise the summarization threshold from 70% to 85% capacity.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>A persistent case-facts block keeps exact values out of lossy summaries. Retrieval (B) is heavier; relying on the summarizer (C) still risks loss; a higher threshold (D) only delays the problem.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q37</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">After get_customer and lookup_order, the agent faces uncertainty. Which situation is the most appropriate trigger for escalate_to_human?</div>
+      <div class="qopts">
+        <div class="qopt"><span class="qlet">A</span><span class="qotext">Customer wants to cancel an order shipping tomorrow — escalate in case they change their mind.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Message mentions a billing question and a product return — escalate so a human handles both together.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">Customer claims non-delivery but tracking shows delivered &amp; signed three days ago — escalate to avoid friction.</span></div>
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Customer requests a competitor price match; policy covers own-site drops within 14 days but is silent on competitors — escalate for policy interpretation.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY D</span>Escalate when policy is ambiguous/silent on the request. The others are routine (A), multi-concern handling (B), or evidence-presentation (C) the agent can manage.</div>
+    </div>
+    <div class="qcard">
+      <div class="qcard-top"><span class="qnum">Q41</span><span class="qscn">Customer Support</span></div>
+      <div class="qtext">get_customer returns all name matches; Claude picks the one with the most recent order, but 15% of multi-match cases proceed with the wrong account. How to address this?</div>
+      <div class="qopts">
+        <div class="qopt correct"><span class="qlet">✓</span><span class="qotext">Instruct Claude to ask for an additional identifier (email, phone, order #) when multiple matches return, before any customer-specific action.</span></div>
+        <div class="qopt"><span class="qlet">B</span><span class="qotext">Few-shot examples using conversational context (products, dates) to infer the right customer without asking.</span></div>
+        <div class="qopt"><span class="qlet">C</span><span class="qotext">A confidence-scoring system that proceeds above 85% and prompts below it.</span></div>
+        <div class="qopt"><span class="qlet">D</span><span class="qotext">Modify get_customer to return only the single most likely match via ranking.</span></div>
+      </div>
+      <div class="qwhy"><span class="qwhy-lbl">WHY A</span>On multiple matches, ask for a disambiguating identifier rather than guessing. Inference (B)/confidence (C) still risk wrong accounts; hiding matches behind a ranking (D) bakes in the error.</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXAM SURVIVAL -->
+<div class="exam-section">
+  <div class="kicker" style="color: rgba(244,238,225,0.6);">FINAL PAGES · EXAM SURVIVAL</div>
+  <h2>The night-before checklist</h2>
+  <p class="tagline">Twelve hooks for twelve chapters — skim these in the elevator to the test center.</p>
+
+  <div class="exam-grid">
+    <div class="exam-card"><h4>01 · Agentic Loop</h4><p>stop_reason is the boss. Continue on "tool_use", stop on "end_turn". Never parse text or rely on iteration caps.</p></div>
+    <div class="exam-card"><h4>02 · Multi-Agent</h4><p>Hub-and-spoke. Subagents have amnesia — pass context explicitly. Parallel = multiple Task calls in one response. allowedTools must include "Task".</p></div>
+    <div class="exam-card"><h4>03 · Hooks</h4><p>Money on the line → gate, not guideline. Prerequisite gates + PostToolUse hooks for deterministic compliance.</p></div>
+    <div class="exam-card"><h4>04 · Decomposition</h4><p>Chain when you know the steps; branch when you don't. Stale results → fresh start with summary.</p></div>
+    <div class="exam-card"><h4>05 · Tool Interfaces</h4><p>Selection = descriptions. Fix the words first. Split generic tools; rename to kill overlap.</p></div>
+    <div class="exam-card"><h4>06 · Errors &amp; Tools</h4><p>Structured errors (category + isRetryable). 4–5 tools beats 18. Least privilege + tool_choice.</p></div>
+    <div class="exam-card"><h4>07 · MCP &amp; Built-in</h4><p>Project = shared, user = solo. Secrets in env vars. Edit fails on dupes → Read + Write.</p></div>
+    <div class="exam-card"><h4>08 · CLAUDE.md</h4><p>Always-on → CLAUDE.md; sometimes-on → rules/ with a glob. Commands/skills: .claude/ shared, ~/.claude/ personal.</p></div>
+    <div class="exam-card"><h4>09 · Plan &amp; CI</h4><p>Plan the big, just-do the small. In CI always -p; --output-format json for parseable results.</p></div>
+    <div class="exam-card"><h4>10 · Precision</h4><p>Criteria &amp; examples, not adjectives. Confidence scores &amp; sentiment are unreliable proxies.</p></div>
+    <div class="exam-card"><h4>11 · Structured &amp; Batch</h4><p>tool_use fixes syntax, not sense. Nullable fields stop fabrication. Batch overnight, sync blocking.</p></div>
+    <div class="exam-card"><h4>12 · Context</h4><p>Pin facts (case-facts block), beat lost-in-the-middle, keep claim-source receipts, route doubts to humans.</p></div>
+  </div>
+
+  <div class="golden">
+    <h3>★ The one mega-pattern behind half the questions</h3>
+    <ul>
+      <li><b>Need a guarantee?</b> Use code (hooks, prerequisite gates), never a prompt.</li>
+      <li><b>Tool picked wrong?</b> Fix the description first — before few-shot or routing layers.</li>
+      <li><b>Escalation/precision off?</b> Explicit criteria + few-shot. Not confidence scores, not sentiment.</li>
+      <li><b>Loop misbehaving?</b> Drive it on stop_reason, not on parsed text or counters.</li>
+      <li><b>Reviewing generated code?</b> An independent instance beats self-review.</li>
+      <li><b>Cost vs latency?</b> Batch for non-blocking only; synchronous for anything that blocks.</li>
+      <li><b>Big architectural change?</b> Plan mode. Small scoped fix? Direct execution.</li>
+      <li><b>Subagent failed?</b> Propagate structured error context; never suppress or nuke the workflow.</li>
+      <li><b>Distractors</b> are usually over-engineered (train a classifier, add infra) or probabilistic where determinism is required. Pick the proportionate, root-cause fix.</li>
+    </ul>
+  </div>
+
+  <p style="margin-top: 40px; font-family: 'Caveat', cursive; font-size: 28px; color: rgba(244,238,225,0.9); text-align: center;">720 is the bar. You've got the map. Go clear it. 🗺️</p>
+</div>
+
+</div>
+</body>
+</html>

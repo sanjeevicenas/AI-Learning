@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The AI Foundation Field Notebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,600&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f5efe0;
+  --paper-shade: #ebe3cf;
+  --ink: #181820;
+  --ink-soft: #3a3a48;
+  --muted: #6b6557;
+  --rule: #d6cdb6;
+  --c-foundation: #2a6f7a;
+  --c-blocks: #c43d3d;
+  --c-prompt: #d97706;
+  --c-patterns: #b8860b;
+  --c-rag: #4a7c3a;
+  --c-langchain: #5b4ba8;
+  --c-agentic: #9c2c7e;
+  --c-types: #1f5b88;
+  --c-loop: #7a3e1d;
+  --c-multi: #386641;
+  --c-tools: #6b4226;
+  --c-ethics: #6e2c2c;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Newsreader', Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.65;
+  font-size: 18px;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(24,24,32,0.04) 1px, transparent 0);
+  background-size: 24px 24px;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at top left, rgba(196, 61, 61, 0.04), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(91, 75, 168, 0.04), transparent 50%);
+  z-index: 0;
+}
+
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 60px 48px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ====== COVER ====== */
+.cover {
+  padding: 80px 0 60px;
+  text-align: left;
+  border-bottom: 3px double var(--ink);
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.cover-sticker {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  background: #f4c95d;
+  padding: 14px 22px;
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  color: var(--ink);
+  transform: rotate(6deg);
+  box-shadow: 3px 5px 0 rgba(24,24,32,0.15);
+  border: 1.5px solid var(--ink);
+}
+
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+h1.title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(48px, 8vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+  font-variation-settings: "opsz" 144;
+}
+
+h1.title em {
+  font-style: italic;
+  color: var(--c-blocks);
+  font-weight: 600;
+}
+
+.tagline {
+  font-family: 'Caveat', cursive;
+  font-size: 30px;
+  color: var(--ink-soft);
+  margin-top: 28px;
+  max-width: 600px;
+}
+
+.byline {
+  margin-top: 36px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* ====== TOC ====== */
+.toc {
+  background: var(--paper-shade);
+  padding: 36px 40px;
+  border-left: 6px solid var(--ink);
+  margin-bottom: 80px;
+  position: relative;
+}
+
+.toc-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 28px;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 32px;
+  font-family: 'Newsreader', serif;
+  font-size: 16px;
+}
+
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--ink-soft);
+}
+
+.toc-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  min-width: 28px;
+}
+
+.toc-tag {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  letter-spacing: 0.1em;
+}
+
+.tag-high { background: var(--c-blocks); color: var(--paper); }
+.tag-med { background: var(--ink-soft); color: var(--paper); }
+
+/* ====== CHAPTERS ====== */
+.chapter {
+  margin-bottom: 100px;
+  position: relative;
+  scroll-margin-top: 30px;
+}
+
+.chapter-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.chapter-num {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: 110px;
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 144;
+}
+
+.chapter-meta { flex: 1; padding-top: 12px; }
+
+.chapter-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.chapter-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 42px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.chapter-title em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.subtitle {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* ====== SECTIONS WITHIN CHAPTERS ====== */
+.lede {
+  font-size: 21px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin-bottom: 32px;
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  border-left: 3px solid var(--accent);
+  padding-left: 20px;
+}
+
+.diagram {
+  background: white;
+  border: 1.5px solid var(--ink);
+  padding: 28px;
+  margin: 36px 0;
+  position: relative;
+  box-shadow: 5px 6px 0 rgba(24,24,32,0.1);
+}
+
+.diagram-label {
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--paper);
+  padding: 0 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.diagram svg { display: block; width: 100%; height: auto; }
+
+h3.section-h {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  margin: 32px 0 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+h3.section-h::before {
+  content: '';
+  width: 24px;
+  height: 3px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+p { margin-bottom: 14px; }
+
+p strong, .body strong { font-weight: 600; color: var(--ink); background: linear-gradient(transparent 60%, rgba(255,235,150,0.6) 60%); padding: 0 2px; }
+
+.callout {
+  background: var(--paper-shade);
+  border-left: 4px solid var(--accent);
+  padding: 22px 26px;
+  margin: 24px 0;
+  position: relative;
+}
+
+.callout-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.callout-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.sticky {
+  background: #f4c95d;
+  padding: 18px 22px;
+  font-family: 'Caveat', cursive;
+  font-size: 21px;
+  color: var(--ink);
+  transform: rotate(-1.5deg);
+  box-shadow: 3px 4px 0 rgba(24,24,32,0.12);
+  margin: 28px 0;
+  border: 1px solid rgba(24,24,32,0.15);
+  max-width: 92%;
+}
+
+.sticky.right { transform: rotate(2deg); margin-left: auto; }
+.sticky.pink { background: #f8b4c0; }
+.sticky.blue { background: #a8d5e8; }
+.sticky.green { background: #b8d8a8; }
+
+.sticky-pin {
+  display: inline-block;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  background: rgba(24,24,32,0.1);
+  padding: 2px 8px;
+  margin-bottom: 6px;
+}
+
+.scenario {
+  background: white;
+  border: 2px dashed var(--accent);
+  padding: 24px 28px;
+  margin: 28px 0;
+  position: relative;
+}
+
+.scenario::before {
+  content: 'TOUGH SCENARIO';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background: var(--accent);
+  color: white;
+  padding: 3px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+
+.scenario p:last-child { margin-bottom: 0; }
+
+ul.bullets {
+  margin: 14px 0 14px 4px;
+  padding: 0;
+  list-style: none;
+}
+
+ul.bullets li {
+  padding: 6px 0 6px 28px;
+  position: relative;
+  line-height: 1.55;
+}
+
+ul.bullets li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.col-card {
+  background: white;
+  padding: 22px;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--accent);
+}
+
+.col-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.col-card .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+code, .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88em;
+  background: var(--paper-shade);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.dialogue {
+  background: white;
+  border: 1px solid var(--rule);
+  padding: 20px 24px;
+  margin: 22px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+
+.dialogue .speaker {
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 8px;
+}
+
+.dialogue p { margin-bottom: 8px; }
+.dialogue p:last-child { margin-bottom: 0; }
+
+.fact-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.fact-row:last-child { border-bottom: none; }
+
+.fact-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  min-width: 110px;
+  padding-top: 4px;
+}
+
+/* ===== closing exam tips ===== */
+.exam-section {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 60px 48px;
+  margin: 80px -48px 0;
+}
+
+.exam-section h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 44px;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.exam-section .tagline { color: rgba(245,239,224,0.7); }
+
+.exam-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 36px;
+}
+
+.exam-card {
+  border: 1px solid rgba(245,239,224,0.2);
+  padding: 24px;
+  background: rgba(255,255,255,0.04);
+}
+
+.exam-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.exam-card p { font-size: 16px; color: rgba(245,239,224,0.85); }
+
+@media (max-width: 720px) {
+  .page { padding: 40px 24px 60px; }
+  .chapter-header { flex-direction: column; gap: 12px; }
+  .chapter-num { font-size: 80px; }
+  .chapter-title { font-size: 30px; }
+  .toc-grid, .two-col, .exam-grid { grid-template-columns: 1fr; }
+  .exam-section { margin: 80px -24px 0; padding: 40px 24px; }
+  h1.title { font-size: 56px; }
+}
+
+@media print {
+  body { background: var(--paper); }
+  .diagram, .sticky, .scenario, .callout, .dialogue, .col-card, .exam-card, .fact-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .chapter-header { break-inside: avoid; page-break-inside: avoid; break-after: avoid; }
+  h3.section-h { break-after: avoid; page-break-after: avoid; }
+  .chapter { break-inside: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <div class="cover-sticker">Your AI Cert<br>Survival Kit ✦</div>
+  <div class="kicker">A Field Notebook · Vol. 01 · 2026</div>
+  <h1 class="title">The AI&nbsp;Foundation<br><em>Field&nbsp;Notebook</em></h1>
+  <p class="tagline">12 chapters of analogies, diagrams &amp; memory hooks — built so you&nbsp;remember things, not just&nbsp;read them.</p>
+  <div class="byline">PREPARED FOR · AI ENGINEER CERTIFICATION · CHENNAI</div>
+</section>
+
+<!-- ============ TOC ============ -->
+<section class="toc">
+  <div class="toc-title">What's inside</div>
+  <div class="toc-grid">
+    <div class="toc-item"><span class="toc-num">01</span>The AI Family Tree<span class="toc-tag tag-med">MED</span></div>
+    <div class="toc-item"><span class="toc-num">02</span>Building Blocks of GenAI<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">03</span>Prompt Engineering Essentials<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">04</span>Prompt Patterns &amp; Practice<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">05</span>RAG — Retrieval Augmented Generation<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">06</span>LangChain<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">07</span>Foundations of Agentic AI<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">08</span>Agent Types, Lifecycle &amp; Architecture<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">09</span>The Agentic AI Loop<span class="toc-tag tag-high">HIGH</span></div>
+    <div class="toc-item"><span class="toc-num">10</span>Multi-Agent Systems<span class="toc-tag tag-med">MED</span></div>
+    <div class="toc-item"><span class="toc-num">11</span>Agentic Workflow &amp; Tech Stack<span class="toc-tag tag-med">MED</span></div>
+    <div class="toc-item"><span class="toc-num">12</span>Challenges, Ethics &amp; Future<span class="toc-tag tag-med">MED</span></div>
+  </div>
+</section>
+
+<!-- ============ CH 01: AI FAMILY TREE ============ -->
+<section class="chapter" style="--accent: var(--c-foundation);">
+  <div class="chapter-header">
+    <div class="chapter-num">01</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter One · Foundations</div>
+      <h2 class="chapter-title">The AI <em>Family Tree</em></h2>
+      <div class="subtitle">Who's the grandparent, who's the grandkid?</div>
+    </div>
+  </div>
+
+  <p class="lede">If AI were a Russian doll, GenAI would be the tiniest, shiniest one tucked deep inside. Everything else is the wood around it.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 1 · The nested hierarchy</div>
+    <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="dots1" patternUnits="userSpaceOnUse" width="8" height="8">
+          <circle cx="2" cy="2" r="0.8" fill="#2a6f7a" opacity="0.2"/>
+        </pattern>
+      </defs>
+      <!-- outer: AI -->
+      <rect x="40" y="40" width="620" height="280" rx="12" fill="url(#dots1)" stroke="#2a6f7a" stroke-width="2.5"/>
+      <text x="60" y="72" font-family="JetBrains Mono" font-size="13" fill="#2a6f7a" font-weight="600" letter-spacing="2">ARTIFICIAL INTELLIGENCE</text>
+      <text x="60" y="92" font-family="Newsreader" font-size="13" fill="#6b6557" font-style="italic">"Make machines do smart things"</text>
+
+      <!-- ML -->
+      <rect x="100" y="110" width="500" height="190" rx="10" fill="#f5efe0" stroke="#c43d3d" stroke-width="2"/>
+      <text x="120" y="140" font-family="JetBrains Mono" font-size="13" fill="#c43d3d" font-weight="600" letter-spacing="2">MACHINE LEARNING</text>
+      <text x="120" y="158" font-family="Newsreader" font-size="12" fill="#6b6557" font-style="italic">"Learn patterns from data, no hard-coded rules"</text>
+
+      <!-- DL -->
+      <rect x="160" y="178" width="380" height="110" rx="8" fill="#fdf6e3" stroke="#5b4ba8" stroke-width="2"/>
+      <text x="180" y="206" font-family="JetBrains Mono" font-size="13" fill="#5b4ba8" font-weight="600" letter-spacing="2">DEEP LEARNING</text>
+      <text x="180" y="222" font-family="Newsreader" font-size="12" fill="#6b6557" font-style="italic">"Neural networks with many layers"</text>
+
+      <!-- GenAI -->
+      <rect x="240" y="232" width="220" height="46" rx="6" fill="#c43d3d"/>
+      <text x="260" y="252" font-family="JetBrains Mono" font-size="13" fill="#f5efe0" font-weight="700" letter-spacing="2">GENERATIVE AI</text>
+      <text x="260" y="268" font-family="Newsreader" font-size="11" fill="#f5efe0" font-style="italic">"Creates new stuff: text, images, code"</text>
+
+      <!-- arrow callout -->
+      <path d="M 590 255 Q 640 220 615 175" stroke="#181820" stroke-width="1.5" fill="none" stroke-dasharray="3,3"/>
+      <text x="595" y="160" font-family="Caveat" font-size="18" fill="#181820">you are here →</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">The plain version</h3>
+  <p><strong>AI</strong> is the big idea: machines acting smart. <strong>Machine Learning</strong> is one way to do AI — instead of coding rules, you show it examples and it figures rules out itself. <strong>Deep Learning</strong> is ML done with neural networks deep enough to learn really fuzzy stuff (faces, voices, vibes). <strong>Generative AI</strong> is deep learning that doesn't just classify or predict — it <em>makes</em> things.</p>
+
+  <div class="sticky">
+    <span class="sticky-pin">MNEMONIC</span><br>
+    "<strong>A</strong>ll <strong>M</strong>onkeys <strong>D</strong>raw <strong>G</strong>raffiti" → AI ⊃ ML ⊃ DL ⊃ GenAI. The monkey gets weirder the deeper you go.
+  </div>
+
+  <h3 class="section-h">Where each one shows up in real life</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <div class="label">Classic ML</div>
+      <h4>Your email spam filter</h4>
+      <p>It learned from a million labeled emails. Doesn't write anything. Just sorts.</p>
+    </div>
+    <div class="col-card">
+      <div class="label">Deep Learning</div>
+      <h4>Face unlock on your phone</h4>
+      <p>Convolutional neural nets recognize the face it's seen before. Still classification, just deeper.</p>
+    </div>
+    <div class="col-card">
+      <div class="label">GenAI</div>
+      <h4>ChatGPT writing your resignation letter</h4>
+      <p>It didn't pick from a list. It wrote it, word by word.</p>
+    </div>
+    <div class="col-card">
+      <div class="label">All three together</div>
+      <h4>Netflix recommendations</h4>
+      <p>ML predicts what you'll like, DL learns subtle taste, GenAI writes the "Because you watched…" blurb.</p>
+    </div>
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-foundation);">
+    <p><strong>The interview question that trips people up:</strong> "Is ChatGPT machine learning?"</p>
+    <p>Answer: <em>Yes — it's all three.</em> It's AI (smart machine), it's ML (learned from data), it's DL (transformer = deep neural net), it's GenAI (generates new text). Don't pick one. They're nested, not rival.</p>
+  </div>
+</section>
+
+<!-- ============ CH 02: BUILDING BLOCKS ============ -->
+<section class="chapter" style="--accent: var(--c-blocks);">
+  <div class="chapter-header">
+    <div class="chapter-num">02</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Two · Building Blocks</div>
+      <h2 class="chapter-title">LLMs, Transformers &amp; <em>GANs</em></h2>
+      <div class="subtitle">Three superheroes powering all of GenAI</div>
+    </div>
+  </div>
+
+  <p class="lede">Meet the trio. The Librarian who's read everything. The Spotlight Operator who decides what matters. And the Forger-and-Detective duo locked in eternal rivalry.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 2 · The three building blocks as characters</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- LLM card -->
+      <g transform="translate(30,40)">
+        <rect x="0" y="0" width="200" height="240" rx="10" fill="#fdf6e3" stroke="#181820" stroke-width="2"/>
+        <text x="100" y="32" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#c43d3d" font-weight="700" letter-spacing="2">LLM</text>
+        <!-- librarian icon -->
+        <g transform="translate(60,55)">
+          <rect x="0" y="35" width="80" height="50" fill="#c43d3d"/>
+          <circle cx="40" cy="25" r="22" fill="#f5d4a8" stroke="#181820" stroke-width="1.5"/>
+          <rect x="20" y="0" width="40" height="14" fill="#181820"/>
+          <circle cx="32" cy="25" r="2" fill="#181820"/>
+          <circle cx="48" cy="25" r="2" fill="#181820"/>
+          <path d="M 32 35 Q 40 38 48 35" stroke="#181820" stroke-width="1.5" fill="none"/>
+          <rect x="-10" y="60" width="20" height="28" fill="#181820"/>
+          <text x="0" y="78" font-family="Fraunces" font-size="10" fill="#fff" font-weight="700">A-Z</text>
+        </g>
+        <text x="100" y="180" text-anchor="middle" font-family="Fraunces" font-size="18" font-weight="700" fill="#181820">The Librarian</text>
+        <text x="100" y="200" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557" font-style="italic">"I've read the internet."</text>
+        <text x="100" y="220" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820">Predicts next word.</text>
+      </g>
+
+      <!-- Transformer card -->
+      <g transform="translate(250,40)">
+        <rect x="0" y="0" width="200" height="240" rx="10" fill="#fdf6e3" stroke="#181820" stroke-width="2"/>
+        <text x="100" y="32" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#5b4ba8" font-weight="700" letter-spacing="2">TRANSFORMER</text>
+        <!-- spotlight icon -->
+        <g transform="translate(40,55)">
+          <path d="M 60 0 L 110 80 L 10 80 Z" fill="#fde047" stroke="#181820" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="60" cy="0" r="14" fill="#181820"/>
+          <circle cx="60" cy="0" r="6" fill="#fde047"/>
+          <text x="60" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#181820" font-weight="600">ATTENTION!</text>
+        </g>
+        <text x="100" y="180" text-anchor="middle" font-family="Fraunces" font-size="18" font-weight="700" fill="#181820">The Spotlight</text>
+        <text x="100" y="200" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557" font-style="italic">"This word matters most."</text>
+        <text x="100" y="220" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820">Decides what to focus on.</text>
+      </g>
+
+      <!-- GAN card -->
+      <g transform="translate(470,40)">
+        <rect x="0" y="0" width="200" height="240" rx="10" fill="#fdf6e3" stroke="#181820" stroke-width="2"/>
+        <text x="100" y="32" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#2a6f7a" font-weight="700" letter-spacing="2">GAN</text>
+        <!-- two faces -->
+        <g transform="translate(28,55)">
+          <circle cx="30" cy="32" r="22" fill="#a8d5e8" stroke="#181820" stroke-width="1.5"/>
+          <circle cx="22" cy="28" r="2" fill="#181820"/>
+          <circle cx="38" cy="28" r="2" fill="#181820"/>
+          <path d="M 22 40 Q 30 44 38 40" stroke="#181820" stroke-width="1.5" fill="none"/>
+          <text x="30" y="78" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#181820" font-weight="600">FORGER</text>
+          <text x="72" y="40" text-anchor="middle" font-family="Fraunces" font-size="24" fill="#c43d3d" font-weight="800">⚔</text>
+          <circle cx="114" cy="32" r="22" fill="#f8b4c0" stroke="#181820" stroke-width="1.5"/>
+          <path d="M 104 25 L 108 22 L 112 28" stroke="#181820" stroke-width="1.5" fill="none"/>
+          <path d="M 118 28 L 122 22 L 126 25" stroke="#181820" stroke-width="1.5" fill="none"/>
+          <path d="M 106 42 L 122 42" stroke="#181820" stroke-width="1.5" fill="none"/>
+          <text x="114" y="78" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#181820" font-weight="600">CRITIC</text>
+        </g>
+        <text x="100" y="180" text-anchor="middle" font-family="Fraunces" font-size="18" font-weight="700" fill="#181820">The Duel</text>
+        <text x="100" y="200" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557" font-style="italic">"Fake it 'til you fool me."</text>
+        <text x="100" y="220" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820">Generates realistic stuff.</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">LLM — The Librarian Who's Read Everything</h3>
+  <p>A <strong>Large Language Model</strong> is a giant neural network trained on enormous text — books, Wikipedia, code, Reddit fights, the works. Its one trick (and it's a wild one): <em>guess the next word</em>. Do that billions of times during training, and the network becomes weirdly good at conversation, code, summaries, jokes.</p>
+  <p>Think of it as a librarian who's memorized so many books they can finish your sentence before you've thought of it. Examples: GPT-4, Claude, Gemini, LLaMA, Mistral.</p>
+
+  <h3 class="section-h">Transformer — The Spotlight That Decides What Matters</h3>
+  <p>The <strong>Transformer</strong> is the architecture underneath every modern LLM. Before transformers (2017), models read text left-to-right, slowly, forgetting older words. Transformers said: "what if instead, every word looks at every other word at once and decides which ones matter?" That's <strong>attention</strong>.</p>
+
+  <div class="dialogue">
+    <p><span class="speaker">Sentence:</span> "The cat sat on the mat because <em>it</em> was warm."</p>
+    <p><span class="speaker">Transformer:</span> "Hmm, what does 'it' refer to — cat or mat?"</p>
+    <p><span class="speaker">Attention:</span> *shines spotlight on 'mat'* → mat. Cats aren't warm-by-default in this sentence.</p>
+  </div>
+
+  <h3 class="section-h">GAN — The Forger vs. The Critic</h3>
+  <p><strong>Generative Adversarial Networks</strong> are two neural nets stuck in a duel. The <strong>Generator</strong> tries to forge images. The <strong>Discriminator</strong> tries to spot the forgery. They train against each other — forger gets sneakier, critic gets sharper — until the forger produces images so real even the critic can't tell. That's how StyleGAN makes those "this person does not exist" faces.</p>
+
+  <div class="callout">
+    <div class="callout-kicker">When to use which</div>
+    <div class="callout-title">Text generation? LLM. Image generation? Originally GANs, now mostly diffusion models. Architecture under the LLM? Transformer.</div>
+    <p>Diffusion models (DALL·E, Midjourney, Stable Diffusion) have largely replaced GANs for images because they're more stable to train and produce higher-quality results. But GANs still come up in every certification.</p>
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-blocks);">
+    <p><strong>The scenario:</strong> A startup wants to build a fashion design tool that generates 100 new sneaker designs per day in their brand's exact style.</p>
+    <p><strong>Why it's hard:</strong> They have only ~300 in-house images. They need <em>new, realistic, brand-consistent</em> outputs, not text.</p>
+    <p><strong>Tool of choice:</strong> A GAN (or diffusion model) fine-tuned on their 300 images. The forger learns the brand's DNA; the critic enforces realism. By Day 30 → endless on-brand designs.</p>
+  </div>
+
+  <div class="sticky pink right">
+    <span class="sticky-pin">FUN FACT</span><br>
+    "GPT" stands for <strong>Generative Pre-trained Transformer</strong>. It's literally all three concepts in one acronym. You've been saying the answer to the exam question every time you say "GPT."
+  </div>
+</section>
+
+<!-- ============ CH 03: PROMPT ENG ESSENTIALS ============ -->
+<section class="chapter" style="--accent: var(--c-prompt);">
+  <div class="chapter-header">
+    <div class="chapter-num">03</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Three · The Craft</div>
+      <h2 class="chapter-title">Prompt Engineering <em>Essentials</em></h2>
+      <div class="subtitle">Talking to LLMs without sounding like a tourist</div>
+    </div>
+  </div>
+
+  <p class="lede">Prompting is just instructions. But great instructions to a literal genius are an art form. The model isn't lazy — it's eager. Give it more rope, it pulls more weight.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 3 · Anatomy of a strong prompt</div>
+    <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+      <rect x="40" y="20" width="620" height="300" rx="8" fill="#fdf6e3" stroke="#181820" stroke-width="2"/>
+
+      <!-- ROLE -->
+      <rect x="60" y="40" width="580" height="44" rx="4" fill="#fff" stroke="#d97706" stroke-width="1.5"/>
+      <text x="76" y="58" font-family="JetBrains Mono" font-size="10" fill="#d97706" font-weight="700" letter-spacing="2">① ROLE</text>
+      <text x="76" y="74" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">"You are a senior tax consultant in India..."</text>
+
+      <!-- TASK -->
+      <rect x="60" y="92" width="580" height="44" rx="4" fill="#fff" stroke="#d97706" stroke-width="1.5"/>
+      <text x="76" y="110" font-family="JetBrains Mono" font-size="10" fill="#d97706" font-weight="700" letter-spacing="2">② TASK</text>
+      <text x="76" y="126" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">"Explain Section 80C deductions to a freelancer..."</text>
+
+      <!-- CONTEXT -->
+      <rect x="60" y="144" width="580" height="44" rx="4" fill="#fff" stroke="#d97706" stroke-width="1.5"/>
+      <text x="76" y="162" font-family="JetBrains Mono" font-size="10" fill="#d97706" font-weight="700" letter-spacing="2">③ CONTEXT</text>
+      <text x="76" y="178" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">"They earn ₹12L/year, are single, and new to taxes..."</text>
+
+      <!-- FORMAT -->
+      <rect x="60" y="196" width="580" height="44" rx="4" fill="#fff" stroke="#d97706" stroke-width="1.5"/>
+      <text x="76" y="214" font-family="JetBrains Mono" font-size="10" fill="#d97706" font-weight="700" letter-spacing="2">④ FORMAT</text>
+      <text x="76" y="230" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">"Reply as a 5-row markdown table: instrument, limit, lock-in, risk, tip"</text>
+
+      <!-- EXAMPLES -->
+      <rect x="60" y="248" width="580" height="44" rx="4" fill="#fff" stroke="#d97706" stroke-width="1.5"/>
+      <text x="76" y="266" font-family="JetBrains Mono" font-size="10" fill="#d97706" font-weight="700" letter-spacing="2">⑤ EXAMPLES (optional)</text>
+      <text x="76" y="282" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">"Example row: | PPF | ₹1.5L | 15 yrs | Low | Best for long horizons |"</text>
+
+      <text x="350" y="312" text-anchor="middle" font-family="Caveat" font-size="20" fill="#d97706">Stack these → get pro-grade output</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Five ingredients of a good prompt</h3>
+  <ul class="bullets">
+    <li><strong>Role</strong> — who is the model pretending to be? ("You are a Linux sysadmin…")</li>
+    <li><strong>Task</strong> — what do you want done? Be specific, use verbs.</li>
+    <li><strong>Context</strong> — background the model needs to do this well (audience, goal, constraints).</li>
+    <li><strong>Format</strong> — how should the answer look? (JSON, table, bullet list, 3 paragraphs?)</li>
+    <li><strong>Examples</strong> — one or two demonstrations of what good output looks like. Game-changer.</li>
+  </ul>
+
+  <div class="sticky blue">
+    <span class="sticky-pin">RULE OF THUMB</span><br>
+    If you'd struggle to brief a brand-new human intern on the task, your prompt is too vague for the model too.
+  </div>
+
+  <h3 class="section-h">A bad prompt vs. a good prompt</h3>
+  <div class="two-col">
+    <div class="col-card" style="border-top-color: #c43d3d;">
+      <div class="label">❌ Lazy</div>
+      <h4>"Write an email."</h4>
+      <p style="font-style: italic; color: #6b6557;">Model has no idea: to whom, about what, what tone, what outcome. You'll get generic mush.</p>
+    </div>
+    <div class="col-card" style="border-top-color: #4a7c3a;">
+      <div class="label">✅ Tight</div>
+      <h4>"You're a polite Indian professional. Write a 90-word email to my landlord requesting one extra week to pay rent due to a delayed salary. Apologetic but not grovelling. Sign as Priya."</h4>
+      <p style="font-style: italic; color: #6b6557;">Role, task, length, tone, signature — all locked in.</p>
+    </div>
+  </div>
+
+  <h3 class="section-h">Best practices that always pay off</h3>
+  <ul class="bullets">
+    <li><strong>Be specific</strong> — "150 words" beats "short". "Bullet list" beats "concise".</li>
+    <li><strong>Use positive instructions</strong> — say what to do, not what not to do. "Use only British English" &gt; "Don't use Americanisms."</li>
+    <li><strong>Show, don't tell</strong> — one example does the work of three paragraphs of description.</li>
+    <li><strong>Ask for reasoning</strong> — "think step by step" or "explain your reasoning" → fewer mistakes on logic/math.</li>
+    <li><strong>Iterate</strong> — first answer rarely wins. Refine: "make it shorter", "more formal", "add one example".</li>
+  </ul>
+
+  <div class="scenario" style="--accent: var(--c-prompt);">
+    <p><strong>The scenario:</strong> A junior analyst keeps getting wishy-washy summaries from ChatGPT for board reports.</p>
+    <p><strong>The fix:</strong> Switch from "Summarize this quarterly report" → "You are a McKinsey partner. Summarize this 40-page quarterly report into <em>exactly</em> 6 bullets for a CEO who has 90 seconds. Each bullet starts with a verb and a number. End with one risk."</p>
+    <p>Same model, same input. <em>Specificity</em> is the entire upgrade.</p>
+  </div>
+</section>
+
+<!-- ============ CH 04: PROMPT PATTERNS ============ -->
+<section class="chapter" style="--accent: var(--c-patterns);">
+  <div class="chapter-header">
+    <div class="chapter-num">04</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Four · Power Moves</div>
+      <h2 class="chapter-title">Prompt Patterns &amp; <em>Practice</em></h2>
+      <div class="subtitle">The named tricks every cert asks about</div>
+    </div>
+  </div>
+
+  <p class="lede">Once you know the patterns, you stop guessing. These are the karate katas of prompting — recognizable moves, each with its own job.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 4 · The pattern menu</div>
+    <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+      <!-- Zero-shot -->
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="195" height="130" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <rect x="0" y="0" width="195" height="22" fill="#b8860b"/>
+        <text x="10" y="16" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700" letter-spacing="1">ZERO-SHOT</text>
+        <text x="14" y="48" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Classify this tweet as</text>
+        <text x="14" y="64" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">positive or negative."</text>
+        <text x="14" y="92" font-family="Newsreader" font-size="11" fill="#6b6557">No examples given.</text>
+        <text x="14" y="108" font-family="Newsreader" font-size="11" fill="#6b6557">Model figures it out.</text>
+      </g>
+
+      <!-- Few-shot -->
+      <g transform="translate(245,30)">
+        <rect x="0" y="0" width="195" height="130" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <rect x="0" y="0" width="195" height="22" fill="#b8860b"/>
+        <text x="10" y="16" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700" letter-spacing="1">FEW-SHOT</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Yum → 😋"</text>
+        <text x="14" y="60" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Boring → 😴"</text>
+        <text x="14" y="76" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Pizza → ?"</text>
+        <text x="14" y="104" font-family="Newsreader" font-size="11" fill="#6b6557">Show 2-3 examples.</text>
+        <text x="14" y="120" font-family="Newsreader" font-size="11" fill="#6b6557">Model mimics pattern.</text>
+      </g>
+
+      <!-- CoT -->
+      <g transform="translate(460,30)">
+        <rect x="0" y="0" width="195" height="130" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <rect x="0" y="0" width="195" height="22" fill="#b8860b"/>
+        <text x="10" y="16" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700" letter-spacing="1">CHAIN OF THOUGHT</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Solve step by step."</text>
+        <text x="14" y="62" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">→ thinks out loud</text>
+        <text x="14" y="78" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">→ arrives at answer</text>
+        <text x="14" y="104" font-family="Newsreader" font-size="11" fill="#6b6557">Best for math, logic,</text>
+        <text x="14" y="120" font-family="Newsreader" font-size="11" fill="#6b6557">multi-step reasoning.</text>
+      </g>
+
+      <!-- Role -->
+      <g transform="translate(30,180)">
+        <rect x="0" y="0" width="195" height="130" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <rect x="0" y="0" width="195" height="22" fill="#b8860b"/>
+        <text x="10" y="16" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700" letter-spacing="1">ROLE / PERSONA</text>
+        <text x="14" y="48" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"You are a 5th-grade</text>
+        <text x="14" y="64" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">science teacher..."</text>
+        <text x="14" y="92" font-family="Newsreader" font-size="11" fill="#6b6557">Sets tone, vocab,</text>
+        <text x="14" y="108" font-family="Newsreader" font-size="11" fill="#6b6557">depth instantly.</text>
+      </g>
+
+      <!-- ReAct -->
+      <g transform="translate(245,180)">
+        <rect x="0" y="0" width="195" height="130" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <rect x="0" y="0" width="195" height="22" fill="#b8860b"/>
+        <text x="10" y="16" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700" letter-spacing="1">REACT</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">Thought → Action →</text>
+        <text x="14" y="60" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">Observation → loop</text>
+        <text x="14" y="92" font-family="Newsreader" font-size="11" fill="#6b6557">Used by agents to</text>
+        <text x="14" y="108" font-family="Newsreader" font-size="11" fill="#6b6557">use tools mid-task.</text>
+      </g>
+
+      <!-- Self-consistency -->
+      <g transform="translate(460,180)">
+        <rect x="0" y="0" width="195" height="130" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <rect x="0" y="0" width="195" height="22" fill="#b8860b"/>
+        <text x="10" y="16" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700" letter-spacing="1">SELF-CONSISTENCY</text>
+        <text x="14" y="48" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Solve it 5 ways,</text>
+        <text x="14" y="64" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">pick majority answer."</text>
+        <text x="14" y="92" font-family="Newsreader" font-size="11" fill="#6b6557">Boosts accuracy on</text>
+        <text x="14" y="108" font-family="Newsreader" font-size="11" fill="#6b6557">tricky math problems.</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">The big six, demystified</h3>
+
+  <div class="fact-row">
+    <div class="fact-label">Zero-shot</div>
+    <div><p>Ask the model to do a task with <em>no examples</em>. Works when the task is obvious or the model has seen it a million times in training. "Translate this to Tamil." Done.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Few-shot</div>
+    <div><p>Show 2–5 examples of input → output before asking your real question. Best when the task has a specific style or format you want copied. The model is a brilliant mimic.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Chain-of-Thought</div>
+    <div><p>Add "<em>think step by step</em>" or "<em>explain your reasoning before answering</em>." The model writes out its working, which makes it less likely to skip logic. Big win on math, coding, and logic puzzles.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Role / Persona</div>
+    <div><p>"You are a sceptical investor." "You are a kindergarten teacher." Instantly shifts vocabulary, tone, and depth. Cheap and ridiculously effective.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">ReAct</div>
+    <div><p><strong>Re</strong>asoning + <strong>Act</strong>ing. The model thinks, then calls a tool (search, calculator, API), observes the result, thinks again. This is the pattern behind every modern AI agent. Burn this name into memory — exams love it.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Self-consistency</div>
+    <div><p>Run the same prompt multiple times, then take the majority answer. Useful for tricky problems where the model sometimes slips. Costs more tokens but boosts reliability.</p></div>
+  </div>
+
+  <div class="sticky green">
+    <span class="sticky-pin">EXAM HOOK</span><br>
+    "<strong>Z</strong>ero, <strong>F</strong>ew, <strong>C</strong>hain, <strong>R</strong>ole, <strong>R</strong>eAct, <strong>S</strong>elf-consistency" — say it like a chant. <em>Zee-Few-Chain-Role-React-Self.</em> Six patterns, sixty percent of any prompt-engineering quiz.
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-patterns);">
+    <p><strong>The scenario:</strong> You're building a customer-support bot. It needs to read complaints, decide the category (refund / tech / abuse / praise), and reply appropriately — sometimes calling an order-lookup API.</p>
+    <p><strong>The combo:</strong> <em>Role</em> (you are a calm support agent) + <em>Few-shot</em> (3 example complaints with correct categories) + <em>ReAct</em> (call order API when refund is needed) + <em>Chain-of-Thought</em> (briefly explain why before replying). One prompt, four patterns, production-grade output.</p>
+  </div>
+</section>
+
+<!-- ============ CH 05: RAG ============ -->
+<section class="chapter" style="--accent: var(--c-rag);">
+  <div class="chapter-header">
+    <div class="chapter-num">05</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Five · Memory On Demand</div>
+      <h2 class="chapter-title">RAG — <em>Retrieval Augmented Generation</em></h2>
+      <div class="subtitle">Open-book exams for LLMs</div>
+    </div>
+  </div>
+
+  <p class="lede">An LLM knows a lot, but not <em>your stuff</em> — not your company's wiki, not yesterday's news, not the 400-page policy PDF. RAG fixes that by handing the model a relevant page right when it needs it.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 5 · How a RAG system answers a question</div>
+    <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg">
+      <!-- User -->
+      <g transform="translate(20,30)">
+        <circle cx="40" cy="40" r="28" fill="#a8d5e8" stroke="#181820" stroke-width="1.5"/>
+        <circle cx="32" cy="36" r="2.5" fill="#181820"/>
+        <circle cx="48" cy="36" r="2.5" fill="#181820"/>
+        <path d="M 32 50 Q 40 56 48 50" stroke="#181820" stroke-width="1.5" fill="none"/>
+        <text x="40" y="92" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#181820" font-weight="600">USER</text>
+        <text x="40" y="108" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6b6557" font-style="italic">"What's our</text>
+        <text x="40" y="120" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6b6557" font-style="italic">return policy?"</text>
+      </g>
+
+      <!-- Arrow -->
+      <path d="M 95 70 L 135 70" stroke="#181820" stroke-width="1.5" marker-end="url(#arr5)"/>
+      <defs>
+        <marker id="arr5" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#181820"/>
+        </marker>
+      </defs>
+
+      <!-- Embedder -->
+      <g transform="translate(140,40)">
+        <rect x="0" y="0" width="110" height="60" rx="6" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+        <text x="55" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4a7c3a" font-weight="700">EMBEDDER</text>
+        <text x="55" y="40" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820">turns text into</text>
+        <text x="55" y="52" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">[0.12, 0.84, ...]</text>
+      </g>
+
+      <path d="M 255 70 L 295 70" stroke="#181820" stroke-width="1.5" marker-end="url(#arr5)"/>
+
+      <!-- Vector DB -->
+      <g transform="translate(300,30)">
+        <rect x="0" y="0" width="120" height="80" rx="6" fill="#fff" stroke="#4a7c3a" stroke-width="2"/>
+        <text x="60" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4a7c3a" font-weight="700">VECTOR DB</text>
+        <g transform="translate(15,32)">
+          <rect x="0" y="0" width="90" height="8" fill="#4a7c3a" opacity="0.3"/>
+          <rect x="0" y="12" width="90" height="8" fill="#4a7c3a" opacity="0.5"/>
+          <rect x="0" y="24" width="90" height="8" fill="#4a7c3a" opacity="0.9"/>
+          <rect x="0" y="36" width="90" height="8" fill="#4a7c3a" opacity="0.4"/>
+        </g>
+        <text x="60" y="98" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6b6557" font-style="italic">find similar chunks</text>
+      </g>
+
+      <path d="M 425 70 L 465 70" stroke="#181820" stroke-width="1.5" marker-end="url(#arr5)"/>
+
+      <!-- Retrieved chunks -->
+      <g transform="translate(470,30)">
+        <rect x="0" y="0" width="120" height="80" rx="6" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+        <text x="60" y="20" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#4a7c3a" font-weight="700">TOP 3 CHUNKS</text>
+        <text x="10" y="38" font-family="Newsreader" font-size="9" fill="#181820">📄 returns.pdf p.4</text>
+        <text x="10" y="52" font-family="Newsreader" font-size="9" fill="#181820">📄 faq.md L23</text>
+        <text x="10" y="66" font-family="Newsreader" font-size="9" fill="#181820">📄 policy.docx p.2</text>
+      </g>
+
+      <!-- Down arrow to LLM -->
+      <path d="M 530 115 L 530 175" stroke="#181820" stroke-width="1.5" marker-end="url(#arr5)"/>
+
+      <!-- LLM -->
+      <g transform="translate(420,180)">
+        <rect x="0" y="0" width="220" height="80" rx="6" fill="#c43d3d" stroke="#181820" stroke-width="1.5"/>
+        <text x="110" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700">LLM</text>
+        <text x="110" y="42" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#fff" font-style="italic">Question + Retrieved chunks</text>
+        <text x="110" y="58" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#fff" font-style="italic">+ "Answer using only this"</text>
+        <text x="110" y="74" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#fff" font-style="italic">→ grounded reply</text>
+      </g>
+
+      <!-- Reply -->
+      <path d="M 420 220 L 200 220" stroke="#181820" stroke-width="1.5" marker-end="url(#arr5)"/>
+      <g transform="translate(40,190)">
+        <rect x="0" y="0" width="150" height="60" rx="6" fill="#b8d8a8" stroke="#181820" stroke-width="1.5"/>
+        <text x="75" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#181820" font-weight="700">ANSWER</text>
+        <text x="75" y="40" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">"You can return within</text>
+        <text x="75" y="52" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">30 days, per policy p.2"</text>
+      </g>
+
+      <text x="350" y="320" text-anchor="middle" font-family="Caveat" font-size="20" fill="#4a7c3a">Question goes in → real document chunks come back → grounded answer comes out</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">The whole thing in one analogy</h3>
+  <p>Imagine asking a brilliant doctor a question. Without RAG, she answers from memory — fast, but maybe outdated. With RAG, before she answers she <em>flips open the relevant page in the medical textbook</em>, reads it, and then responds. Same doctor. Way better answer.</p>
+
+  <h3 class="section-h">How it actually works (5 steps)</h3>
+  <ul class="bullets">
+    <li><strong>Chunking</strong> — break your documents into bite-sized pieces (a paragraph or two each).</li>
+    <li><strong>Embedding</strong> — convert each chunk into a vector (a long list of numbers) that captures its meaning.</li>
+    <li><strong>Indexing</strong> — store those vectors in a <strong>vector database</strong> (Pinecone, Weaviate, FAISS, Chroma).</li>
+    <li><strong>Retrieval</strong> — when a question comes in, embed it too, and find the chunks with the most similar vectors.</li>
+    <li><strong>Generation</strong> — feed those top chunks + the question to the LLM, with instructions like "Answer using only this context."</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-kicker">What's an embedding, really?</div>
+    <div class="callout-title">A point on a giant map of meaning.</div>
+    <p>"Dog" and "puppy" land near each other. "Dog" and "stapler" land far apart. The math doesn't understand language — it just knows distance. RAG works because <em>similar meaning = nearby vector</em>.</p>
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-rag);">
+    <p><strong>The scenario:</strong> A pharma company wants employees to ask questions like "What's the dosage protocol for Drug X in patients over 65?" — but the answer lives in a 1,200-page PDF.</p>
+    <p><strong>Without RAG:</strong> The LLM hallucinates dosages. Patients die. Lawsuits. Bad day.</p>
+    <p><strong>With RAG:</strong> The system retrieves page 847 of the protocol, hands it to the LLM, says "answer only from this." The LLM quotes it verbatim. Doctor checks the citation. Audit trail intact.</p>
+  </div>
+
+  <div class="sticky right">
+    <span class="sticky-pin">REMEMBER THIS</span><br>
+    RAG is <strong>not</strong> training. You're not changing the model — you're just giving it a cheat sheet right before it answers. That's why RAG is faster, cheaper, and updatable in seconds.
+  </div>
+</section>
+
+<!-- ============ CH 06: LANGCHAIN ============ -->
+<section class="chapter" style="--accent: var(--c-langchain);">
+  <div class="chapter-header">
+    <div class="chapter-num">06</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Six · The Glue</div>
+      <h2 class="chapter-title">LangChain — <em>the duct tape of LLM apps</em></h2>
+      <div class="subtitle">Connecting models, prompts, data and tools into real apps</div>
+    </div>
+  </div>
+
+  <p class="lede">An LLM by itself is a brain in a jar. LangChain is the body, the limbs, the memory, the access to the outside world. It turns a chatbot into an app.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 6 · LangChain as a connector</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Center LLM -->
+      <circle cx="350" cy="160" r="55" fill="#5b4ba8" stroke="#181820" stroke-width="2"/>
+      <text x="350" y="155" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#fff" font-weight="700">LLM</text>
+      <text x="350" y="172" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#fff" font-style="italic">the brain</text>
+
+      <!-- Chain links around it -->
+      <!-- Prompts -->
+      <g>
+        <rect x="60" y="50" width="120" height="50" rx="6" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+        <text x="120" y="70" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#5b4ba8" font-weight="700">PROMPTS</text>
+        <text x="120" y="88" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6b6557" font-style="italic">templates &amp; vars</text>
+        <line x1="180" y1="80" x2="295" y2="150" stroke="#181820" stroke-width="1.5" stroke-dasharray="3,3"/>
+      </g>
+
+      <!-- Memory -->
+      <g>
+        <rect x="60" y="220" width="120" height="50" rx="6" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+        <text x="120" y="240" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#5b4ba8" font-weight="700">MEMORY</text>
+        <text x="120" y="258" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6b6557" font-style="italic">chat history</text>
+        <line x1="180" y1="240" x2="295" y2="180" stroke="#181820" stroke-width="1.5" stroke-dasharray="3,3"/>
+      </g>
+
+      <!-- Document loaders -->
+      <g>
+        <rect x="520" y="50" width="140" height="50" rx="6" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+        <text x="590" y="70" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#5b4ba8" font-weight="700">DOCS / RAG</text>
+        <text x="590" y="88" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6b6557" font-style="italic">PDFs, sites, DBs</text>
+        <line x1="520" y1="80" x2="405" y2="150" stroke="#181820" stroke-width="1.5" stroke-dasharray="3,3"/>
+      </g>
+
+      <!-- Tools -->
+      <g>
+        <rect x="520" y="220" width="140" height="50" rx="6" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+        <text x="590" y="240" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#5b4ba8" font-weight="700">TOOLS</text>
+        <text x="590" y="258" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#6b6557" font-style="italic">search, APIs, code</text>
+        <line x1="520" y1="240" x2="405" y2="180" stroke="#181820" stroke-width="1.5" stroke-dasharray="3,3"/>
+      </g>
+
+      <!-- Output -->
+      <g>
+        <rect x="290" y="270" width="120" height="40" rx="6" fill="#5b4ba8" stroke="#181820" stroke-width="1.5"/>
+        <text x="350" y="295" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700">YOUR APP</text>
+      </g>
+      <line x1="350" y1="215" x2="350" y2="265" stroke="#181820" stroke-width="2"/>
+
+      <text x="350" y="30" text-anchor="middle" font-family="Caveat" font-size="20" fill="#5b4ba8">LangChain links the pieces. The LLM stays the brain; everything else plugs in.</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">What LangChain actually gives you</h3>
+  <p>LangChain is an open-source Python (and JS) framework. Think of it like Lego pieces for building anything LLM-powered: a chatbot that remembers past conversations, a research assistant that searches the web, a Q&amp;A bot that reads your PDFs. Without LangChain, you'd write hundreds of lines of glue code. With it, dozens.</p>
+
+  <h3 class="section-h">The big components, in plain English</h3>
+  <ul class="bullets">
+    <li><strong>Models</strong> — wrappers that work with OpenAI, Anthropic, Cohere, local models. Swap with one line.</li>
+    <li><strong>Prompts</strong> — reusable templates with variables, so your app sends consistent instructions.</li>
+    <li><strong>Chains</strong> — link steps together: "first summarize, then translate, then format as email."</li>
+    <li><strong>Memory</strong> — keeps track of conversation history so the bot doesn't forget your name mid-chat.</li>
+    <li><strong>Document Loaders + Retrievers</strong> — the RAG plumbing. Read a PDF, chunk it, embed it, search it.</li>
+    <li><strong>Tools &amp; Agents</strong> — let the LLM call a calculator, search engine, database, your custom function.</li>
+  </ul>
+
+  <div class="sticky pink">
+    <span class="sticky-pin">ANALOGY</span><br>
+    The LLM is a chef. <strong>LangChain is the entire kitchen</strong> — the fridge (data), the pantry (tools), the sous-chef (memory), the recipe cards (prompts). Without it, the chef is making toast in a fancy hat.
+  </div>
+
+  <h3 class="section-h">A tiny LangChain example, decoded</h3>
+  <div class="dialogue">
+    <p><span class="speaker">Step 1:</span> Load a PDF → <code>PyPDFLoader("report.pdf")</code></p>
+    <p><span class="speaker">Step 2:</span> Split into chunks → <code>RecursiveCharacterTextSplitter</code></p>
+    <p><span class="speaker">Step 3:</span> Embed + store → <code>Chroma.from_documents(...)</code></p>
+    <p><span class="speaker">Step 4:</span> Build a Q&amp;A chain → <code>RetrievalQA.from_chain_type(llm, retriever)</code></p>
+    <p><span class="speaker">Step 5:</span> Ask → <code>chain.run("What was Q3 revenue?")</code></p>
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-langchain);">
+    <p><strong>The scenario:</strong> A legal firm wants a chatbot that reads 4,000 contract PDFs, remembers what each junior associate has previously asked, and can also <em>look up current case law</em> via web search.</p>
+    <p><strong>Why LangChain:</strong> Three needs at once — RAG (contracts), memory (per-user history), tools (web search). Building this from scratch would take weeks. With LangChain, it's an afternoon of wiring components.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-kicker">Cert-relevant cousins</div>
+    <div class="callout-title">LlamaIndex, Semantic Kernel, Haystack</div>
+    <p>LangChain is the most famous, but exams sometimes mention alternatives. <strong>LlamaIndex</strong> focuses harder on RAG. <strong>Semantic Kernel</strong> is Microsoft's flavor. <strong>Haystack</strong> is older, more enterprise-y. Same idea: connect LLMs to your stuff.</p>
+  </div>
+</section>
+
+<!-- ============ CH 07: AGENTIC AI FOUNDATIONS ============ -->
+<section class="chapter" style="--accent: var(--c-agentic);">
+  <div class="chapter-header">
+    <div class="chapter-num">07</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Seven · The Awakening</div>
+      <h2 class="chapter-title">Foundations of <em>Agentic AI</em></h2>
+      <div class="subtitle">When the LLM stops answering and starts doing</div>
+    </div>
+  </div>
+
+  <p class="lede">A chatbot answers. An agent <em>acts</em>. Same LLM underneath, but now it has goals, tools, and the ability to take steps on its own until the job is done.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 7 · Chatbot vs Agent</div>
+    <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+      <!-- Chatbot side -->
+      <g transform="translate(40,40)">
+        <rect x="0" y="0" width="280" height="200" rx="8" fill="#fdf6e3" stroke="#181820" stroke-width="2"/>
+        <text x="140" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#6b6557" font-weight="700" letter-spacing="2">CHATBOT</text>
+        <text x="140" y="48" text-anchor="middle" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">"Tell me a joke."</text>
+        <text x="140" y="68" text-anchor="middle" font-family="Newsreader" font-size="13" fill="#181820">↓</text>
+        <text x="140" y="88" text-anchor="middle" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">"Why did the chicken..."</text>
+        <text x="140" y="120" text-anchor="middle" font-family="Caveat" font-size="20" fill="#6b6557">one question</text>
+        <text x="140" y="142" text-anchor="middle" font-family="Caveat" font-size="20" fill="#6b6557">one answer</text>
+        <text x="140" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6b6557">REACTIVE</text>
+      </g>
+
+      <!-- Agent side -->
+      <g transform="translate(370,40)">
+        <rect x="0" y="0" width="290" height="200" rx="8" fill="#fff" stroke="#9c2c7e" stroke-width="2.5"/>
+        <text x="145" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#9c2c7e" font-weight="700" letter-spacing="2">AGENT</text>
+        <text x="145" y="48" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#181820" font-style="italic">"Book me a Chennai → Goa trip"</text>
+        <text x="145" y="64" text-anchor="middle" font-family="Newsreader" font-size="12" fill="#181820">↓</text>
+        <text x="20" y="82" font-family="Newsreader" font-size="11" fill="#181820">→ checks flights (tool)</text>
+        <text x="20" y="98" font-family="Newsreader" font-size="11" fill="#181820">→ filters by budget (reason)</text>
+        <text x="20" y="114" font-family="Newsreader" font-size="11" fill="#181820">→ books cheapest (act)</text>
+        <text x="20" y="130" font-family="Newsreader" font-size="11" fill="#181820">→ books hotel (act)</text>
+        <text x="20" y="146" font-family="Newsreader" font-size="11" fill="#181820">→ emails confirmation (act)</text>
+        <text x="145" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#9c2c7e" font-weight="700">PROACTIVE · GOAL-DRIVEN</text>
+      </g>
+
+      <text x="350" y="270" text-anchor="middle" font-family="Caveat" font-size="20" fill="#9c2c7e">Same brain. Different job description.</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">What makes something "agentic"</h3>
+  <p>An <strong>AI agent</strong> is an LLM-powered system that can:</p>
+  <ul class="bullets">
+    <li><strong>Set or receive a goal</strong> (not just answer a question).</li>
+    <li><strong>Plan</strong> a sequence of steps to reach it.</li>
+    <li><strong>Use tools</strong> — APIs, search, databases, calculators, even other agents.</li>
+    <li><strong>Observe</strong> what happens after each step.</li>
+    <li><strong>Adapt</strong> the plan when something goes sideways.</li>
+    <li><strong>Continue</strong> until the goal is done — without you pressing "go" between every step.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-kicker">The big shift</div>
+    <div class="callout-title">From "answer engine" to "doing engine."</div>
+    <p>2023 was about giving LLMs better answers. 2024–2026 is about giving them <em>hands</em>. Agentic AI is that hands era.</p>
+  </div>
+
+  <div class="sticky blue">
+    <span class="sticky-pin">ANALOGY</span><br>
+    A chatbot is like asking a librarian where the book is.<br>
+    An agent is asking the librarian to <strong>read the book, summarize chapter 4, email it to your boss, and schedule a meeting to discuss it.</strong>
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-agentic);">
+    <p><strong>The scenario:</strong> A founder says: "Research our top 5 competitors, find their pricing, build a comparison table, and post a Slack summary to the marketing channel."</p>
+    <p><strong>A chatbot:</strong> Gives you a long answer that you then have to copy into 4 different tools.</p>
+    <p><strong>An agent:</strong> Searches the web → scrapes 5 sites → extracts pricing → builds a table → calls Slack API → posts the summary → DMs you when done. You poured coffee in the meantime.</p>
+  </div>
+</section>
+
+<!-- ============ CH 08: AGENT TYPES, LIFECYCLE, ARCHITECTURE ============ -->
+<section class="chapter" style="--accent: var(--c-types);">
+  <div class="chapter-header">
+    <div class="chapter-num">08</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Eight · The Zoo</div>
+      <h2 class="chapter-title">Agent Types, Lifecycle &amp; <em>Architecture</em></h2>
+      <div class="subtitle">Not all agents are built the same — meet the family</div>
+    </div>
+  </div>
+
+  <p class="lede">Some agents are reflexes. Some are planners. Some keep diaries of the past. Knowing which kind you need is half the design job.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 8 · The five classic agent types</div>
+    <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Simple Reflex -->
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="200" height="100" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <text x="100" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1f5b88" font-weight="700">① SIMPLE REFLEX</text>
+        <text x="100" y="46" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"If hot → turn AC on"</text>
+        <text x="100" y="66" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557">no memory · no thinking</text>
+        <text x="100" y="84" text-anchor="middle" font-family="Caveat" font-size="16" fill="#6b6557">🦠 amoeba</text>
+      </g>
+
+      <!-- Model-based reflex -->
+      <g transform="translate(250,30)">
+        <rect x="0" y="0" width="200" height="100" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <text x="100" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1f5b88" font-weight="700">② MODEL-BASED</text>
+        <text x="100" y="46" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">tracks state of world</text>
+        <text x="100" y="66" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557">remembers what just happened</text>
+        <text x="100" y="84" text-anchor="middle" font-family="Caveat" font-size="16" fill="#6b6557">🐭 mouse</text>
+      </g>
+
+      <!-- Goal-based -->
+      <g transform="translate(470,30)">
+        <rect x="0" y="0" width="200" height="100" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <text x="100" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1f5b88" font-weight="700">③ GOAL-BASED</text>
+        <text x="100" y="46" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"reach destination X"</text>
+        <text x="100" y="66" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557">plans steps to a goal</text>
+        <text x="100" y="84" text-anchor="middle" font-family="Caveat" font-size="16" fill="#6b6557">🐕 dog fetching ball</text>
+      </g>
+
+      <!-- Utility-based -->
+      <g transform="translate(140,150)">
+        <rect x="0" y="0" width="200" height="100" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <text x="100" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1f5b88" font-weight="700">④ UTILITY-BASED</text>
+        <text x="100" y="46" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"pick the BEST goal"</text>
+        <text x="100" y="66" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557">scores outcomes, optimizes</text>
+        <text x="100" y="84" text-anchor="middle" font-family="Caveat" font-size="16" fill="#6b6557">🧮 trading bot</text>
+      </g>
+
+      <!-- Learning -->
+      <g transform="translate(360,150)">
+        <rect x="0" y="0" width="200" height="100" rx="6" fill="#fff" stroke="#9c2c7e" stroke-width="2"/>
+        <text x="100" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#9c2c7e" font-weight="700">⑤ LEARNING</text>
+        <text x="100" y="46" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">improves over time</text>
+        <text x="100" y="66" text-anchor="middle" font-family="Newsreader" font-size="11" fill="#6b6557">feedback → better actions</text>
+        <text x="100" y="84" text-anchor="middle" font-family="Caveat" font-size="16" fill="#9c2c7e">🧠 the future</text>
+      </g>
+
+      <text x="350" y="290" text-anchor="middle" font-family="Caveat" font-size="22" fill="#1f5b88">Each row up the ladder = more memory, more planning, more autonomy</text>
+
+      <!-- Architecture mini -->
+      <g transform="translate(80,310)">
+        <text x="0" y="0" font-family="JetBrains Mono" font-size="10" fill="#1f5b88" font-weight="700">CORE ARCHITECTURE</text>
+        <rect x="0" y="10" width="100" height="40" rx="4" fill="#fdf6e3" stroke="#181820"/>
+        <text x="50" y="35" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#181820" font-weight="600">PERCEPTION</text>
+        <text x="125" y="34" font-family="JetBrains Mono" font-size="14">→</text>
+        <rect x="145" y="10" width="100" height="40" rx="4" fill="#fdf6e3" stroke="#181820"/>
+        <text x="195" y="35" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#181820" font-weight="600">REASONING</text>
+        <text x="270" y="34" font-family="JetBrains Mono" font-size="14">→</text>
+        <rect x="290" y="10" width="80" height="40" rx="4" fill="#fdf6e3" stroke="#181820"/>
+        <text x="330" y="35" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#181820" font-weight="600">ACTION</text>
+        <text x="395" y="34" font-family="JetBrains Mono" font-size="14">→</text>
+        <rect x="415" y="10" width="100" height="40" rx="4" fill="#fdf6e3" stroke="#181820"/>
+        <text x="465" y="35" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#181820" font-weight="600">FEEDBACK</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="section-h">The five classic types (the Russell &amp; Norvig ladder)</h3>
+  <div class="fact-row">
+    <div class="fact-label">Simple Reflex</div>
+    <div><p>Pure if-then. A thermostat. No memory, no thinking. Sees a condition, fires a rule.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Model-based</div>
+    <div><p>Holds an internal picture of the world. Roomba that remembers which corners it already cleaned.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Goal-based</div>
+    <div><p>Has an objective and plans actions to reach it. Google Maps routing you to Marina Beach.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Utility-based</div>
+    <div><p>Multiple possible goals — picks the one with highest score. A trading bot weighing risk vs reward.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Learning</div>
+    <div><p>Gets better with experience. Every modern LLM-based agent is some flavor of this.</p></div>
+  </div>
+
+  <h3 class="section-h">The lifecycle of an agent task</h3>
+  <ul class="bullets">
+    <li><strong>Initiation</strong> — user gives a goal or trigger fires.</li>
+    <li><strong>Perception</strong> — agent reads input + checks tools, memory, environment.</li>
+    <li><strong>Reasoning / Planning</strong> — LLM thinks through steps.</li>
+    <li><strong>Action</strong> — calls a tool, sends a message, writes a file.</li>
+    <li><strong>Feedback / Reflection</strong> — observes result, decides if done or needs another loop.</li>
+    <li><strong>Termination</strong> — goal met, error caught, or token budget exhausted.</li>
+  </ul>
+
+  <h3 class="section-h">Core architecture in plain English</h3>
+  <p>Every agent — fancy or simple — has these four parts: <strong>Perception</strong> (sense the world), <strong>Reasoning</strong> (decide what to do), <strong>Action</strong> (do it), <strong>Feedback</strong> (learn from what happened). Cert questions love asking you to map a real example onto these four. Practice it.</p>
+
+  <div class="sticky green right">
+    <span class="sticky-pin">EXAM TIP</span><br>
+    The four-part architecture (perceive → reason → act → feedback) is the agent equivalent of the four-stroke engine. Every diagram, every question, every test comes back to this loop.
+  </div>
+</section>
+
+<!-- ============ CH 09: AGENTIC LOOP ============ -->
+<section class="chapter" style="--accent: var(--c-loop);">
+  <div class="chapter-header">
+    <div class="chapter-num">09</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Nine · The Heartbeat</div>
+      <h2 class="chapter-title">The <em>Agentic AI Loop</em></h2>
+      <div class="subtitle">Round and round until the job is done</div>
+    </div>
+  </div>
+
+  <p class="lede">The Loop is the heartbeat of every agent. Four beats: perceive, reason, act, feedback. Then again. And again. Until the goal is met or it knows to stop.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 9 · The Agentic AI Loop</div>
+    <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Center -->
+      <circle cx="350" cy="190" r="60" fill="#7a3e1d" stroke="#181820" stroke-width="2"/>
+      <text x="350" y="185" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700">GOAL</text>
+      <text x="350" y="202" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#fff" font-style="italic">until done</text>
+
+      <!-- Top: Perceive -->
+      <g>
+        <circle cx="350" cy="60" r="42" fill="#fff" stroke="#7a3e1d" stroke-width="2"/>
+        <text x="350" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a3e1d" font-weight="700">PERCEIVE</text>
+        <text x="350" y="72" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">read inputs</text>
+      </g>
+
+      <!-- Right: Reason -->
+      <g>
+        <circle cx="520" cy="190" r="42" fill="#fff" stroke="#7a3e1d" stroke-width="2"/>
+        <text x="520" y="186" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a3e1d" font-weight="700">REASON</text>
+        <text x="520" y="202" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">plan steps</text>
+      </g>
+
+      <!-- Bottom: Act -->
+      <g>
+        <circle cx="350" cy="320" r="42" fill="#fff" stroke="#7a3e1d" stroke-width="2"/>
+        <text x="350" y="316" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a3e1d" font-weight="700">ACT</text>
+        <text x="350" y="332" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">call tool / do thing</text>
+      </g>
+
+      <!-- Left: Feedback -->
+      <g>
+        <circle cx="180" cy="190" r="42" fill="#fff" stroke="#7a3e1d" stroke-width="2"/>
+        <text x="180" y="186" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#7a3e1d" font-weight="700">FEEDBACK</text>
+        <text x="180" y="202" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">observe result</text>
+      </g>
+
+      <!-- arrows clockwise -->
+      <path d="M 392 60 Q 480 80 510 150" stroke="#7a3e1d" stroke-width="2" fill="none" marker-end="url(#arr9)"/>
+      <path d="M 510 230 Q 480 300 392 320" stroke="#7a3e1d" stroke-width="2" fill="none" marker-end="url(#arr9)"/>
+      <path d="M 308 320 Q 220 300 190 230" stroke="#7a3e1d" stroke-width="2" fill="none" marker-end="url(#arr9)"/>
+      <path d="M 190 150 Q 220 80 308 60" stroke="#7a3e1d" stroke-width="2" fill="none" marker-end="url(#arr9)"/>
+      <defs>
+        <marker id="arr9" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#7a3e1d"/>
+        </marker>
+      </defs>
+
+      <text x="350" y="370" text-anchor="middle" font-family="Caveat" font-size="20" fill="#7a3e1d">Loop until the goal is met (or the agent gives up smartly)</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Walk through one heartbeat</h3>
+  <div class="dialogue">
+    <p><span class="speaker">Goal:</span> "Find me a vegetarian restaurant in T. Nagar open after 10 PM."</p>
+    <p><span class="speaker">Perceive:</span> Reads the goal. Notes: location = T. Nagar, cuisine = veg, constraint = open after 10 PM.</p>
+    <p><span class="speaker">Reason:</span> "I need real-time data → I'll use a maps API."</p>
+    <p><span class="speaker">Act:</span> Calls Google Maps API with filters.</p>
+    <p><span class="speaker">Feedback:</span> Got 12 results. Three are still open. Best rated → "Saravana Bhavan, T. Nagar".</p>
+    <p><span class="speaker">Loop again?</span> Goal met → exit. Reply user.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-kicker">Where it can go wrong</div>
+    <div class="callout-title">Infinite loops, tool failures, hallucinated steps</div>
+    <p>Good agents have <strong>stop conditions</strong>: max iterations, time limits, "if same action repeats 3x → escalate to human." Without these, an agent can burn through your API budget at 4 AM thinking it's helping.</p>
+  </div>
+
+  <div class="sticky pink">
+    <span class="sticky-pin">MEMORY HOOK</span><br>
+    "<strong>P</strong>retty <strong>R</strong>obots <strong>A</strong>ct <strong>F</strong>ast" → Perceive, Reason, Act, Feedback. Or if you prefer dark humour: "<strong>P</strong>roblem, <strong>R</strong>ecipe, <strong>A</strong>ction, <strong>F</strong>iasco."
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-loop);">
+    <p><strong>The scenario:</strong> An agent is told "Get me the latest BSE Sensex value and email it to my boss."</p>
+    <p><strong>Loop 1:</strong> Perceive (goal). Reason (need price → use Yahoo Finance API). Act (calls API). Feedback (got value: 78,432).</p>
+    <p><strong>Loop 2:</strong> Perceive (have number, need email). Reason (compose + send). Act (calls SMTP / Gmail tool). Feedback (sent ID returned).</p>
+    <p><strong>Done.</strong> Two loops, four heartbeats each. Clean.</p>
+  </div>
+</section>
+
+<!-- ============ CH 10: MULTI-AGENT ============ -->
+<section class="chapter" style="--accent: var(--c-multi);">
+  <div class="chapter-header">
+    <div class="chapter-num">10</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Ten · Teamwork</div>
+      <h2 class="chapter-title">Multi-Agent <em>Systems</em></h2>
+      <div class="subtitle">When one agent isn't enough — assemble the crew</div>
+    </div>
+  </div>
+
+  <p class="lede">One brilliant generalist or three sharp specialists who talk to each other? Sometimes the second wins. Multi-agent systems are how AI teams form, debate, and ship work.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 10 · A multi-agent newsroom</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Manager -->
+      <g transform="translate(290,30)">
+        <rect x="0" y="0" width="120" height="50" rx="6" fill="#386641" stroke="#181820" stroke-width="2"/>
+        <text x="60" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#fff" font-weight="700">EDITOR (orchestrator)</text>
+        <text x="60" y="40" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#fff" font-style="italic">assigns &amp; reviews</text>
+      </g>
+
+      <!-- Researcher -->
+      <g transform="translate(60,150)">
+        <rect x="0" y="0" width="140" height="60" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <text x="70" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#386641" font-weight="700">RESEARCHER</text>
+        <text x="70" y="40" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">web search + sources</text>
+        <text x="70" y="54" text-anchor="middle" font-family="Caveat" font-size="14" fill="#6b6557">🔍</text>
+      </g>
+
+      <!-- Writer -->
+      <g transform="translate(280,150)">
+        <rect x="0" y="0" width="140" height="60" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <text x="70" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#386641" font-weight="700">WRITER</text>
+        <text x="70" y="40" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">drafts the article</text>
+        <text x="70" y="54" text-anchor="middle" font-family="Caveat" font-size="14" fill="#6b6557">✒️</text>
+      </g>
+
+      <!-- Fact-checker -->
+      <g transform="translate(500,150)">
+        <rect x="0" y="0" width="140" height="60" rx="6" fill="#fff" stroke="#181820" stroke-width="1.5"/>
+        <text x="70" y="22" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#386641" font-weight="700">FACT-CHECKER</text>
+        <text x="70" y="40" text-anchor="middle" font-family="Newsreader" font-size="10" fill="#181820" font-style="italic">verifies claims</text>
+        <text x="70" y="54" text-anchor="middle" font-family="Caveat" font-size="14" fill="#6b6557">🧐</text>
+      </g>
+
+      <!-- Arrows from editor to each -->
+      <line x1="320" y1="80" x2="130" y2="148" stroke="#181820" stroke-width="1.5" marker-end="url(#arr10)"/>
+      <line x1="350" y1="80" x2="350" y2="148" stroke="#181820" stroke-width="1.5" marker-end="url(#arr10)"/>
+      <line x1="380" y1="80" x2="570" y2="148" stroke="#181820" stroke-width="1.5" marker-end="url(#arr10)"/>
+      <defs>
+        <marker id="arr10" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#181820"/>
+        </marker>
+      </defs>
+
+      <!-- Arrows back -->
+      <line x1="160" y1="148" x2="310" y2="82" stroke="#386641" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="380" y1="148" x2="370" y2="82" stroke="#386641" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="540" y1="148" x2="390" y2="82" stroke="#386641" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <!-- Final output -->
+      <rect x="280" y="250" width="140" height="40" rx="6" fill="#386641" stroke="#181820" stroke-width="1.5"/>
+      <text x="350" y="275" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#fff" font-weight="700">PUBLISHED ARTICLE</text>
+      <line x1="350" y1="80" x2="350" y2="245" stroke="#181820" stroke-width="0" stroke-dasharray="3,3"/>
+
+      <text x="350" y="310" text-anchor="middle" font-family="Caveat" font-size="18" fill="#386641">Solid lines = task delegation · Dashed lines = results returned</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">Why multiple agents instead of one big one?</h3>
+  <ul class="bullets">
+    <li><strong>Specialization</strong> — each agent has a narrow role, narrower prompt, better focus.</li>
+    <li><strong>Parallelism</strong> — researcher and fact-checker can work simultaneously.</li>
+    <li><strong>Debate &amp; cross-check</strong> — a critic agent catches mistakes a single agent would miss.</li>
+    <li><strong>Modularity</strong> — swap out the writer agent without rebuilding everything.</li>
+    <li><strong>Scale</strong> — complex projects (a whole codebase, a research report) split naturally into roles.</li>
+  </ul>
+
+  <h3 class="section-h">Common collaboration patterns</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <div class="label">Hierarchical</div>
+      <h4>Manager + Workers</h4>
+      <p>A "supervisor" agent breaks down a task, delegates to specialist agents, and reviews their work.</p>
+    </div>
+    <div class="col-card">
+      <div class="label">Sequential</div>
+      <h4>Assembly line</h4>
+      <p>Agent A → Agent B → Agent C. Each adds something. Output of one is input to the next.</p>
+    </div>
+    <div class="col-card">
+      <div class="label">Debate</div>
+      <h4>Pro vs Con</h4>
+      <p>Two agents argue opposite sides; a third judges. Great for tough decisions.</p>
+    </div>
+    <div class="col-card">
+      <div class="label">Mesh / Swarm</h4>
+      <p>Many agents, no boss. They self-organize, claim tasks, share status. Powerful but tricky.</p>
+    </div>
+  </div>
+
+  <div class="sticky blue right">
+    <span class="sticky-pin">FRAMEWORKS</span><br>
+    Tools that make multi-agent easy: <strong>CrewAI</strong> (role-based teams), <strong>AutoGen</strong> (Microsoft, conversational agents), <strong>LangGraph</strong> (LangChain's stateful multi-agent), <strong>OpenAI Swarm</strong>.
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-multi);">
+    <p><strong>The scenario:</strong> A travel startup wants an AI that plans a 7-day European trip including flights, hotels, daily activities, restaurant bookings, and a packing list.</p>
+    <p><strong>One mega-agent:</strong> Forgets the budget by day 4. Hallucinates a museum that closed in 2019.</p>
+    <p><strong>Multi-agent crew:</strong> Flight Agent · Hotel Agent · Itinerary Agent · Budget Watcher · Cultural Advisor · Packing Helper, all coordinated by a Trip Manager. Each tiny, focused, accurate. Together: magical.</p>
+  </div>
+</section>
+
+<!-- ============ CH 11: AGENTIC WORKFLOW + TECH STACK ============ -->
+<section class="chapter" style="--accent: var(--c-tools);">
+  <div class="chapter-header">
+    <div class="chapter-num">11</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Eleven · The Toolbox</div>
+      <h2 class="chapter-title">Agentic Workflow &amp; <em>Tech Stack</em></h2>
+      <div class="subtitle">The full assembly line and the tools that build it</div>
+    </div>
+  </div>
+
+  <p class="lede">Building an agent isn't one tool — it's a stack. Know the layers, know what plugs into what, and the entire field stops looking like alphabet soup.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 11 · The agentic AI tech stack</div>
+    <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg">
+      <!-- Layer 1: UI -->
+      <rect x="60" y="30" width="580" height="40" rx="4" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+      <text x="80" y="48" font-family="JetBrains Mono" font-size="10" fill="#6b4226" font-weight="700">UI / INTERFACE</text>
+      <text x="80" y="62" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">Streamlit · React · Slack · WhatsApp · Voice</text>
+
+      <!-- Layer 2: Orchestration -->
+      <rect x="60" y="80" width="580" height="40" rx="4" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+      <text x="80" y="98" font-family="JetBrains Mono" font-size="10" fill="#6b4226" font-weight="700">ORCHESTRATION</text>
+      <text x="80" y="112" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">LangChain · LangGraph · CrewAI · AutoGen · LlamaIndex</text>
+
+      <!-- Layer 3: Model -->
+      <rect x="60" y="130" width="580" height="40" rx="4" fill="#6b4226" stroke="#181820" stroke-width="1.5"/>
+      <text x="80" y="148" font-family="JetBrains Mono" font-size="10" fill="#fff" font-weight="700">LLM (BRAIN)</text>
+      <text x="80" y="162" font-family="Newsreader" font-size="11" fill="#fff" font-style="italic">GPT-4 · Claude · Gemini · LLaMA · Mistral · open-source local</text>
+
+      <!-- Layer 4: Memory -->
+      <rect x="60" y="180" width="580" height="40" rx="4" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+      <text x="80" y="198" font-family="JetBrains Mono" font-size="10" fill="#6b4226" font-weight="700">MEMORY &amp; KNOWLEDGE</text>
+      <text x="80" y="212" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">Pinecone · Weaviate · Chroma · FAISS · Redis (short-term) · Postgres</text>
+
+      <!-- Layer 5: Tools -->
+      <rect x="60" y="230" width="580" height="40" rx="4" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+      <text x="80" y="248" font-family="JetBrains Mono" font-size="10" fill="#6b4226" font-weight="700">TOOLS &amp; APIS</text>
+      <text x="80" y="262" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">Web search · Calculator · Code exec · Gmail · Slack · custom APIs</text>
+
+      <!-- Layer 6: Monitoring -->
+      <rect x="60" y="280" width="580" height="40" rx="4" fill="#fdf6e3" stroke="#181820" stroke-width="1.5"/>
+      <text x="80" y="298" font-family="JetBrains Mono" font-size="10" fill="#6b4226" font-weight="700">MONITORING &amp; EVAL</text>
+      <text x="80" y="312" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">LangSmith · Helicone · Arize · custom logging</text>
+
+      <text x="350" y="345" text-anchor="middle" font-family="Caveat" font-size="18" fill="#6b4226">Six layers — every production agent sits on this stack</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">The end-to-end workflow</h3>
+  <ul class="bullets">
+    <li><strong>1. Define goal &amp; constraints</strong> — what is success? what shouldn't the agent do?</li>
+    <li><strong>2. Choose model</strong> — GPT-4 for top quality, smaller models for speed/cost.</li>
+    <li><strong>3. Design prompts</strong> — system prompt, role definitions, tool descriptions.</li>
+    <li><strong>4. Wire up tools</strong> — APIs the agent can call. Each needs name, description, input schema.</li>
+    <li><strong>5. Add memory</strong> — short-term (conversation buffer) and/or long-term (vector store).</li>
+    <li><strong>6. Build the loop</strong> — perception → reasoning → action → feedback, with stop conditions.</li>
+    <li><strong>7. Test &amp; observe</strong> — log every step, measure success rate, watch for runaway behavior.</li>
+    <li><strong>8. Deploy with guardrails</strong> — rate limits, human approval for sensitive actions, budgets.</li>
+  </ul>
+
+  <div class="sticky green">
+    <span class="sticky-pin">CHEAT SHEET</span><br>
+    Memorize the stack top-to-bottom: <strong>UI · Orchestration · LLM · Memory · Tools · Monitoring</strong>. Every architecture question maps onto this. Pretend it's a six-floor building.
+  </div>
+
+  <h3 class="section-h">The tools you'll see on every cert exam</h3>
+  <div class="fact-row">
+    <div class="fact-label">LLMs</div>
+    <div><p>GPT-4 / GPT-4o, Claude (Anthropic), Gemini (Google), LLaMA (Meta, open-source), Mistral.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Frameworks</div>
+    <div><p>LangChain (most popular), LlamaIndex (RAG-focused), CrewAI (multi-agent), AutoGen (Microsoft), Semantic Kernel.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Vector DBs</div>
+    <div><p>Pinecone (managed), Weaviate (open-source + managed), Chroma (lightweight), FAISS (Facebook, in-memory), Milvus.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Observability</div>
+    <div><p>LangSmith, Helicone, Arize, Langfuse — they log every prompt, tool call, and token to help you debug.</p></div>
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-tools);">
+    <p><strong>The scenario:</strong> Interview question — "Walk me through the stack you'd use for a customer-support agent that reads our wiki and can refund orders."</p>
+    <p><strong>Strong answer:</strong> "Streamlit UI on the frontend. LangChain for orchestration. Claude or GPT-4 as the model. Pinecone for the wiki embeddings. Tools: a <code>search_wiki</code> retriever and a <code>process_refund</code> API call wrapped with human-approval. LangSmith for monitoring. Stop condition: 5 loops or escalate to human."</p>
+    <p>That answer hits every layer of the stack. Win.</p>
+  </div>
+</section>
+
+<!-- ============ CH 12: CHALLENGES, ETHICS, FUTURE ============ -->
+<section class="chapter" style="--accent: var(--c-ethics);">
+  <div class="chapter-header">
+    <div class="chapter-num">12</div>
+    <div class="chapter-meta">
+      <div class="chapter-kicker">Chapter Twelve · The Hard Part</div>
+      <h2 class="chapter-title">Challenges, Ethics &amp; the <em>Future</em></h2>
+      <div class="subtitle">Where it breaks, what it costs us, where it's heading</div>
+    </div>
+  </div>
+
+  <p class="lede">A model that's 95% right is also 5% wrong — and that 5% can be lethal in medicine, hateful in hiring, or financial ruin in trading. Knowing the failure modes is half of being an AI engineer.</p>
+
+  <div class="diagram">
+    <div class="diagram-label">Fig. 12 · The risk landscape</div>
+    <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Six risk cards -->
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="200" height="80" rx="6" fill="#fff" stroke="#6e2c2c" stroke-width="1.5"/>
+        <text x="14" y="22" font-family="JetBrains Mono" font-size="10" fill="#6e2c2c" font-weight="700">HALLUCINATION</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Confidently invents facts."</text>
+        <text x="14" y="62" font-family="Newsreader" font-size="10" fill="#6b6557">Fix: RAG, citations, evals</text>
+      </g>
+
+      <g transform="translate(250,30)">
+        <rect x="0" y="0" width="200" height="80" rx="6" fill="#fff" stroke="#6e2c2c" stroke-width="1.5"/>
+        <text x="14" y="22" font-family="JetBrains Mono" font-size="10" fill="#6e2c2c" font-weight="700">BIAS</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Learned the world's prejudices."</text>
+        <text x="14" y="62" font-family="Newsreader" font-size="10" fill="#6b6557">Fix: diverse data, audits</text>
+      </g>
+
+      <g transform="translate(470,30)">
+        <rect x="0" y="0" width="200" height="80" rx="6" fill="#fff" stroke="#6e2c2c" stroke-width="1.5"/>
+        <text x="14" y="22" font-family="JetBrains Mono" font-size="10" fill="#6e2c2c" font-weight="700">PRIVACY</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Memorizes your data."</text>
+        <text x="14" y="62" font-family="Newsreader" font-size="10" fill="#6b6557">Fix: PII filters, on-prem</text>
+      </g>
+
+      <g transform="translate(30,130)">
+        <rect x="0" y="0" width="200" height="80" rx="6" fill="#fff" stroke="#6e2c2c" stroke-width="1.5"/>
+        <text x="14" y="22" font-family="JetBrains Mono" font-size="10" fill="#6e2c2c" font-weight="700">PROMPT INJECTION</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Ignore previous, do X."</text>
+        <text x="14" y="62" font-family="Newsreader" font-size="10" fill="#6b6557">Fix: input sanitization</text>
+      </g>
+
+      <g transform="translate(250,130)">
+        <rect x="0" y="0" width="200" height="80" rx="6" fill="#fff" stroke="#6e2c2c" stroke-width="1.5"/>
+        <text x="14" y="22" font-family="JetBrains Mono" font-size="10" fill="#6e2c2c" font-weight="700">COST &amp; LATENCY</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Each call costs tokens + time."</text>
+        <text x="14" y="62" font-family="Newsreader" font-size="10" fill="#6b6557">Fix: caching, smaller models</text>
+      </g>
+
+      <g transform="translate(470,130)">
+        <rect x="0" y="0" width="200" height="80" rx="6" fill="#fff" stroke="#6e2c2c" stroke-width="1.5"/>
+        <text x="14" y="22" font-family="JetBrains Mono" font-size="10" fill="#6e2c2c" font-weight="700">AGENTIC RUNAWAY</text>
+        <text x="14" y="44" font-family="Newsreader" font-size="11" fill="#181820" font-style="italic">"Loops forever, drains budget."</text>
+        <text x="14" y="62" font-family="Newsreader" font-size="10" fill="#6b6557">Fix: stop conditions, HITL</text>
+      </g>
+
+      <text x="350" y="260" text-anchor="middle" font-family="Caveat" font-size="22" fill="#6e2c2c">For every risk, there's a known mitigation. Cert exams love this pairing.</text>
+      <text x="350" y="290" text-anchor="middle" font-family="Newsreader" font-size="13" fill="#181820" font-style="italic">HITL = Human-In-The-Loop · the safety net of agentic systems</text>
+    </svg>
+  </div>
+
+  <h3 class="section-h">The six failures every AI engineer must respect</h3>
+  <div class="fact-row">
+    <div class="fact-label">Hallucination</div>
+    <div><p>The model invents plausible-sounding nonsense. Fixes: ground it with RAG, require citations, run evals against truth sets.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Bias</div>
+    <div><p>Training data reflects history's prejudices — so the model does too. Fixes: diverse data, fairness audits, bias-aware evals.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Privacy</div>
+    <div><p>Models can leak training data; user data can leak into prompts. Fixes: PII redaction, local/on-prem models, no training on user data.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Prompt injection</div>
+    <div><p>Attackers hide instructions inside documents or user input. Fixes: sanitize input, separate trusted from untrusted prompts, sandboxes.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Cost &amp; latency</div>
+    <div><p>Every token costs money and time. Fixes: cache aggressively, use smaller models when possible, batch requests.</p></div>
+  </div>
+  <div class="fact-row">
+    <div class="fact-label">Agentic runaway</div>
+    <div><p>Agents can loop, retry, spawn sub-agents, and rack up bills. Fixes: max iterations, budget caps, human approval gates.</p></div>
+  </div>
+
+  <h3 class="section-h">The ethical principles every cert mentions</h3>
+  <ul class="bullets">
+    <li><strong>Transparency</strong> — users should know they're talking to AI.</li>
+    <li><strong>Accountability</strong> — somebody human is responsible for the output.</li>
+    <li><strong>Fairness</strong> — outcomes shouldn't disadvantage any group.</li>
+    <li><strong>Privacy</strong> — data must be protected and consented to.</li>
+    <li><strong>Human-in-the-loop</strong> — for high-stakes decisions, humans approve before action.</li>
+    <li><strong>Explainability</strong> — be able to explain <em>why</em> the model decided what it did.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-kicker">The future, in three lines</div>
+    <div class="callout-title">Smaller specialized models · multimodal everything · agents that compose</div>
+    <p>Expect tiny powerful models running on your phone, a single model handling text+vision+audio together, and agents that hire other agents like a recursive workforce. Regulation will lag for a while, then catch up fast.</p>
+  </div>
+
+  <div class="sticky pink right">
+    <span class="sticky-pin">CERT GIFT</span><br>
+    When in doubt on an ethics question, the safe answer almost always involves: <strong>human oversight</strong>, <strong>transparency</strong>, and <strong>diverse / representative training data</strong>. Those three phrases score points everywhere.
+  </div>
+
+  <div class="scenario" style="--accent: var(--c-ethics);">
+    <p><strong>The scenario:</strong> Your team's AI loan-approval system shows a 14% lower approval rate for women applicants with identical financial profiles.</p>
+    <p><strong>The right response:</strong> Pause deployment. Audit training data for historical bias. Add fairness metrics to your eval suite. Introduce human review for any decision the model isn't &gt;95% confident on. Document everything. <em>That's</em> ethical AI engineering in action — not deleting the model, but governing it.</p>
+  </div>
+</section>
+
+<!-- ============ EXAM SECTION ============ -->
+<div class="exam-section">
+  <div class="kicker" style="color: rgba(245,239,224,0.6);">FINAL PAGE · EXAM SURVIVAL</div>
+  <h2>The night-before checklist</h2>
+  <p class="tagline">Twelve memory hooks for twelve chapters. Skim these in the elevator.</p>
+
+  <div class="exam-grid">
+    <div class="exam-card">
+      <h4>01 · Family Tree</h4>
+      <p>AI ⊃ ML ⊃ DL ⊃ GenAI. "All Monkeys Draw Graffiti."</p>
+    </div>
+    <div class="exam-card">
+      <h4>02 · Building Blocks</h4>
+      <p>LLM = librarian. Transformer = attention spotlight. GAN = forger + critic.</p>
+    </div>
+    <div class="exam-card">
+      <h4>03 · Prompt Essentials</h4>
+      <p>Role · Task · Context · Format · Examples. Brief like an intern.</p>
+    </div>
+    <div class="exam-card">
+      <h4>04 · Prompt Patterns</h4>
+      <p>Zero-shot · Few-shot · CoT · Role · ReAct · Self-consistency.</p>
+    </div>
+    <div class="exam-card">
+      <h4>05 · RAG</h4>
+      <p>Chunk → Embed → Store → Retrieve → Generate. Open-book exam for LLMs.</p>
+    </div>
+    <div class="exam-card">
+      <h4>06 · LangChain</h4>
+      <p>Models · Prompts · Chains · Memory · Retrievers · Tools · Agents. Lego for LLM apps.</p>
+    </div>
+    <div class="exam-card">
+      <h4>07 · Agentic AI</h4>
+      <p>Chatbot answers. Agent acts. Goals + Tools + Loop = autonomy.</p>
+    </div>
+    <div class="exam-card">
+      <h4>08 · Agent Types</h4>
+      <p>Reflex → Model-based → Goal → Utility → Learning. Ladder of autonomy.</p>
+    </div>
+    <div class="exam-card">
+      <h4>09 · Agentic Loop</h4>
+      <p>Perceive · Reason · Act · Feedback. "Pretty Robots Act Fast."</p>
+    </div>
+    <div class="exam-card">
+      <h4>10 · Multi-Agent</h4>
+      <p>Hierarchical · Sequential · Debate · Mesh. CrewAI, AutoGen, LangGraph.</p>
+    </div>
+    <div class="exam-card">
+      <h4>11 · Stack</h4>
+      <p>UI · Orchestration · LLM · Memory · Tools · Monitoring. Six-floor building.</p>
+    </div>
+    <div class="exam-card">
+      <h4>12 · Ethics</h4>
+      <p>Hallucination · Bias · Privacy · Injection · Cost · Runaway. Each has a fix.</p>
+    </div>
+  </div>
+
+  <p style="margin-top: 40px; font-family: 'Caveat', cursive; font-size: 28px; color: rgba(245,239,224,0.9); text-align: center;">Go ace it. You've got the map. 🗺️</p>
+</div>
+
+</div>
+</body>
+</html>
