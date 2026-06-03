@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks Certified Gen AI Engineer – Associate — Practice Quiz</title>
+<style>
+  :root{
+    --bg:#0f1117; --panel:#1a1d24; --panel2:#12141a; --border:#2a2f3a;
+    --text:#e6e9ef; --muted:#9aa4b6; --accent:#ff6b3d;
+    --ok-bg:#13351f; --ok-bd:#2ea043; --ok-tx:#7ee29b;
+    --no-bg:#3a1416; --no-bd:#e5534b; --no-tx:#ff9b95;
+    --chip:#222734;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:80px}
+
+  header{position:sticky;top:0;z-index:50;background:rgba(15,17,23,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 16px}
+  h1{font-size:1.12rem;padding:14px 0 4px}
+  h1 .accent{color:var(--accent)}
+  .sub{color:var(--muted);font-size:.8rem;padding-bottom:10px}
+
+  .scorebar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 0 12px}
+  .stat{background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.82rem;font-weight:600}
+  .stat b{color:var(--accent)}
+  .stat.good b{color:var(--ok-tx)}
+  .progress{flex:1;min-width:140px;height:8px;background:var(--panel2);border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+  .progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#ffb37e);transition:width .3s}
+  .resetbtn{background:var(--no-bg);color:var(--no-tx);border:1px solid var(--no-bd);border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer}
+  .resetbtn:hover{filter:brightness(1.15)}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;padding:0 0 12px}
+  .tab{background:var(--panel);border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:7px 14px;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap}
+  .tab .cnt{opacity:.7;font-weight:500}
+  .tab:hover{border-color:var(--accent)}
+  .tab.active{background:var(--accent);color:#1a0e08;border-color:var(--accent)}
+
+  /* weightage panel */
+  .weightage{max-width:920px;margin:16px auto 0;padding:0 16px}
+  .wbox{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .whead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;font-weight:800;font-size:.9rem}
+  .whead .wsmall{color:var(--muted);font-weight:600;font-size:.78rem}
+  .whead .wtoggle{color:var(--accent);font-size:.78rem;font-weight:700;white-space:nowrap}
+  .wbody{padding:6px 16px 16px}
+  .wbody.collapsed{display:none}
+  .wrow{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.8rem}
+  .wrow .wlabel{flex:0 0 auto;width:185px;font-weight:700}
+  .wrow .wbar{flex:1;height:15px;background:var(--panel2);border-radius:7px;overflow:hidden;border:1px solid var(--border);min-width:60px}
+  .wrow .wbar>span{display:block;height:100%;border-radius:7px;transition:width .4s}
+  .wrow .wval{flex:0 0 auto;width:84px;text-align:right;color:var(--muted);font-weight:700}
+  .wsubtitle{font-size:.8rem;font-weight:800;margin:16px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+  .wsubgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:5px 18px}
+  .wsub{display:flex;justify-content:space-between;gap:8px;font-size:.76rem;padding:3px 2px;border-bottom:1px dashed #20242e}
+  .wsub .ws-n{color:var(--accent);font-weight:700;flex:0 0 auto}
+  @media(max-width:600px){ .wrow .wlabel{width:120px;font-size:.74rem} .wrow .wval{width:72px;font-size:.74rem} }
+
+  main{max-width:920px;margin:18px auto 0;padding:0 16px}
+  .domain-title{font-size:1rem;font-weight:800;margin:26px 0 4px;padding-bottom:6px;border-bottom:2px solid var(--border);letter-spacing:.3px}
+  .domain-title .dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;vertical-align:middle}
+  .d-rag{color:#7ec8ff}.bg-rag{background:#2d7dd2}
+  .d-agent{color:#7effc0}.bg-agent{background:#2d9e5f}
+  .d-eval{color:#ffc87e}.bg-eval{background:#d27d2d}
+  .d-deploy{color:#d97eff}.bg-deploy{background:#9e2db5}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0}
+  .qhead{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:9px}
+  .qnum{font-size:.7rem;font-weight:800;color:var(--accent);background:var(--chip);border-radius:6px;padding:3px 8px;white-space:nowrap}
+  .domchip{font-size:.68rem;font-weight:800;border-radius:6px;padding:3px 9px;background:#0d0f14;border:1px solid var(--border);white-space:nowrap}
+  .subchip{font-size:.68rem;font-weight:600;border-radius:6px;padding:3px 9px;background:#0d0f14;border:1px dashed var(--border);color:var(--muted)}
+  .subchip .arr{opacity:.6;margin-right:3px}
+  .qflag{font-size:.66rem;font-weight:700;color:#ffd27e;background:#3a2c10;border:1px solid #6b5012;border-radius:6px;padding:3px 7px;white-space:nowrap}
+  .qtext{font-size:.95rem;font-weight:600;white-space:pre-wrap}
+  pre.code{background:#0b0d12;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:10px 0;overflow-x:auto;font-family:'Cascadia Code',Consolas,Monaco,monospace;font-size:.78rem;color:#cdd6e6;white-space:pre}
+
+  .opts{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--panel2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;padding:11px 13px;font-size:.88rem;cursor:pointer;transition:border-color .15s,background .15s;font-family:inherit;line-height:1.45}
+  .opt:hover:not(.locked){border-color:var(--accent);background:#171b22}
+  .opt .lab{font-weight:800;flex:0 0 auto;width:20px;color:var(--muted)}
+  .opt .body{flex:1;min-width:0;overflow-wrap:anywhere}
+  .opt .body.mono{font-family:'Cascadia Code',Consolas,Monaco,monospace;font-size:.8rem;white-space:pre-wrap;word-break:break-word}
+  .opt .mark{flex:0 0 auto;font-weight:900;font-size:1rem;opacity:0;width:18px;text-align:center}
+  .opts.locked .opt{cursor:default}
+  .opt.correct{background:var(--ok-bg);border-color:var(--ok-bd)}
+  .opt.correct .lab{color:var(--ok-tx)}
+  .opt.correct .mark{opacity:1;color:var(--ok-tx)}
+  .opt.wrong{background:var(--no-bg);border-color:var(--no-bd)}
+  .opt.wrong .lab{color:var(--no-tx)}
+  .opt.wrong .mark{opacity:1;color:var(--no-tx)}
+
+  .checkbtn{align-self:flex-start;margin-top:4px;background:var(--accent);color:#1a0e08;border:none;border-radius:8px;padding:8px 16px;font-weight:800;font-size:.82rem;cursor:pointer}
+  .checkbtn:disabled{opacity:.45;cursor:not-allowed}
+  .multi-note{font-size:.74rem;color:var(--muted);margin-top:8px;font-style:italic}
+
+  .explain{margin-top:12px;border-radius:9px;padding:11px 13px;font-size:.85rem;display:none;border-left:4px solid var(--ok-bd);background:#101c14}
+  .explain.show{display:block}
+  .explain .et{font-weight:800;color:var(--ok-tx);margin-right:6px}
+  .explain .ans{font-weight:800;color:var(--ok-tx)}
+  .explain.flagwarn{border-left-color:#caa23a;background:#1d1809}
+  .explain.flagwarn .et{color:#ffd27e}
+  .explain .fnote{display:block;margin-top:6px;color:#ffd27e;font-size:.78rem}
+
+  .empty{color:var(--muted);text-align:center;padding:40px 0;font-size:.9rem}
+  footer{max-width:920px;margin:30px auto;padding:18px 16px;color:var(--muted);font-size:.76rem;border-top:1px solid var(--border)}
+  .totop{position:fixed;right:16px;bottom:18px;background:var(--accent);color:#1a0e08;border:none;width:44px;height:44px;border-radius:50%;font-size:1.2rem;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:60}
+
+  @media(max-width:600px){
+    h1{font-size:1rem}
+    .qtext{font-size:.9rem}
+    .opt{font-size:.86rem}
+    .stat{font-size:.76rem;padding:5px 9px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1><span class="accent">Databricks</span> Certified Gen AI Engineer – Associate · Practice Quiz</h1>
+    <div class="sub">Click an option to answer. Correct ✓ green · wrong ✗ red. Each question shows its topic + subtopic. Questions lock once answered.</div>
+    <div class="scorebar">
+      <div class="stat">Answered <b id="s-ans">0</b>/<b id="s-tot">0</b></div>
+      <div class="stat good">Correct <b id="s-cor">0</b></div>
+      <div class="stat">Score <b id="s-pct">0%</b></div>
+      <div class="progress"><span id="s-bar"></span></div>
+      <button class="resetbtn" id="resetBtn">Reset all</button>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+</header>
+
+<section class="weightage">
+  <div class="wbox">
+    <div class="whead" id="whead">
+      <span>📊 Exam Weightage <span class="wsmall">(auto-calculated from <b id="wcount">0</b> questions — updates when you add questions)</span></span>
+      <span class="wtoggle" id="wtoggle">Hide ▲</span>
+    </div>
+    <div class="wbody" id="wbody"></div>
+  </div>
+</section>
+
+<main id="quiz"></main>
+<footer id="footer"></footer>
+<button class="totop" id="toTop" title="Back to top">↑</button>
+
+<script>
+/* ============================================================
+   DATA — 27 questions (source DBX_Gen_AI_Exam.txt, numbered 1-27, no gaps).
+   Domains taken from Gen_ai_topics_flowchart.html (the 4 courses).
+   Each item: n=number, d=domain key, t=subtopic, q=text, code=optional code,
+   opts=[...], c=[correct 0-based idx], multi=true for choose-many,
+   e=explanation, f=true to flag a low-confidence answer.
+
+   TO ADD A QUESTION: copy an object below, e.g.
+     {n:28, d:"rag", t:"Chunking Strategy", q:"...?",
+      opts:[`A ...`,`B ...`,`C ...`,`D ...`], c:[2], e:`why...`}
+   (d must be one of: rag, agent, eval, deploy). Reload — all counters,
+   tabs and the weightage panel recalculate automatically.
+   ============================================================ */
+const DOMAINS = {
+  rag:   {name:"Retrieval Agents (RAG)",     cls:"d-rag",   bg:"bg-rag"},
+  agent: {name:"Single-Agent Applications",  cls:"d-agent", bg:"bg-agent"},
+  eval:  {name:"Agent Evaluation",           cls:"d-eval",  bg:"bg-eval"},
+  deploy:{name:"Deployment & Monitoring",    cls:"d-deploy",bg:"bg-deploy"}
+};
+
+const DATA = [
+{n:1,d:"rag",t:"Chunking Strategy",multi:true,q:"A Generative AI Engineer has created a RAG application over fantasy-novel texts (chunked and embedded into a vector store with metadata, retrieved with the user query and passed to an LLM). They picked the chunking strategy by intuition but now want to choose the best values methodically. Which TWO strategies should they take to optimize their chunking strategy and parameters? (Choose two.)",
+opts:[`Change embedding models and compare performance.`,`Add a classifier for user queries that predicts which book will best contain the answer. Use this to filter retrieval.`,`Choose an appropriate evaluation metric (such as recall or NDCG) and experiment with changes in the chunking strategy, such as splitting chunks by paragraphs or chapters. Choose the strategy that gives the best performance metric.`,`Pass known questions and best answers to an LLM and instruct the LLM to provide the best token count. Use a summary statistic (mean, median, etc.) of the best token counts to choose chunk size.`,`Create an LLM-as-a-judge metric to evaluate how well previous questions are answered by the most appropriate chunk. Optimize the chunking parameters based upon the values of the metric.`],
+c:[2,4],e:`Methodical chunking tuning means defining a measurable retrieval/answer-quality metric and experimenting: a retrieval metric like recall/NDCG (C) and an LLM-as-judge metric (E) both let you compare chunking configurations objectively. Changing embedding models or adding a classifier doesn't tune chunking.`},
+
+{n:2,d:"rag",t:"RAG Pipeline & Workflow",q:"A Generative AI Engineer is designing a RAG application for answering user questions on technical regulations for a new sport. What are the steps needed to build this RAG application and deploy it?",
+opts:[`Ingest documents from a source → Index and save to Vector Search → User submits queries against an LLM → LLM retrieves relevant documents → Evaluate model → LLM generates a response → Deploy it using Model Serving`,`Ingest documents from a source → Index and save to Vector Search → User submits queries against an LLM → LLM retrieves relevant documents → LLM generates a response → Evaluate model → Deploy it using Model Serving`,`Ingest documents from a source → Index and save to Vector Search → Evaluate model → Deploy it using Model Serving`,`User submits queries against an LLM → Ingest documents from a source → Index and save to Vector Search → LLM retrieves relevant documents → LLM generates a response → Evaluate model → Deploy it using Model Serving`],
+c:[1],e:`The correct order ingests/indexes data first, then at query time retrieves and generates a response, and only then evaluates the full pipeline before deploying with Model Serving. Evaluation must come after response generation (so A is wrong), and ingestion must precede queries (so D is wrong).`},
+
+{n:3,d:"deploy",t:"Production Monitoring Metrics",q:"A Generative AI Engineer just deployed an LLM application at a digital marketing company that assists with answering customer service inquiries. Which metric should they monitor for their customer service LLM application in production?",
+opts:[`Number of customer inquiries processed per unit of time`,`Energy usage per query`,`Final perplexity scores for the training of the model`,`HuggingFace Leaderboard values for the base LLM`],
+c:[0],e:`Throughput (inquiries handled per unit time) is a meaningful operational production metric. Training perplexity and base-model leaderboard scores are not production signals, and energy per query isn't the business concern here.`},
+
+{n:4,d:"rag",t:"Vector Search & Retrieval",f:true,q:"A Generative AI system suggests the best-matched employee from a very large team for newly scoped projects, based on project date availability and how well the employee profile matches the project scope. Both profile and scope are unstructured text. How should the engineer architect their system?",
+opts:[`Create a tool for finding available team members given project dates. Embed all project scopes into a vector store, perform a retrieval using team member profiles to find the best team member.`,`Create a tool for finding team member availability given project dates, and another tool that uses an LLM to extract keywords from project scopes. Iterate through available team members' profiles and perform keyword matching to find the best available team member.`,`Create a tool to find available team members given project dates. Create a second tool that can calculate a similarity score for a combination of team member profile and the project scope. Iterate through the team members and rank by best score to select a team member.`,`Create a tool for finding available team members given project dates. Embed team profiles into a vector store and use the project scope and filtering to perform retrieval to find the available best matched team members.`],
+c:[3],e:`Embedding the (stable) employee profiles into a vector store and retrieving with the project scope as the query — while filtering by availability — scales to a very large team and captures semantic match. (C also works but iterating over every member doesn't scale; verify against official keys.)`},
+
+{n:5,d:"deploy",t:"Real-time Feature Serving",q:"A Generative AI Engineer is designing an LLM-powered live sports commentary platform that provides real-time updates and LLM-generated analyses. Which tool will give the platform access to real-time data for generating game analyses based on the latest game scores?",
+opts:[`DatabricksIQ`,`Foundation Model APIs`,`Feature Serving`,`AutoML`],
+c:[2],e:`Feature Serving exposes fresh feature values (e.g. latest scores) through a low-latency real-time endpoint the app can query. Foundation Model APIs serve models (not live data), and AutoML/DatabricksIQ don't provide real-time data feeds.`},
+
+{n:6,d:"deploy",t:"Inference Tables & Logging",q:"A Generative AI Engineer has a provisioned-throughput model serving endpoint in a RAG application and wants to monitor the endpoint's incoming requests and outgoing responses. They currently use a micro-service between the endpoint and UI to write logs to a remote server. Which Databricks feature should they use instead to perform the same task?",
+opts:[`Vector Search`,`Lakeview`,`DBSQL`,`Inference Tables`],
+c:[3],e:`Inference Tables automatically capture and log a serving endpoint's requests and responses to a Delta table — removing the need for a custom logging micro-service.`},
+
+{n:7,d:"eval",t:"Safety & Content Curation",q:"A Generative AI Engineer is tasked with improving RAG quality by addressing its inflammatory outputs. Which action would be most effective in mitigating the problem of offensive text outputs?",
+opts:[`Increase the frequency of upstream data updates`,`Inform the user of the expected RAG behavior`,`Restrict access to the data sources to a limited number of users`,`Curate upstream data properly that includes manual review before it is fed into the RAG system`],
+c:[3],e:`Offensive outputs usually originate from offensive source content, so curating and manually reviewing the upstream data before ingestion is the most effective mitigation. Update frequency, user notices, and access limits don't remove the offensive content itself.`},
+
+{n:8,d:"rag",t:"Embedding Model Selection",q:"A Generative AI Engineer's retriever documents are chunked to a maximum of 512 tokens each. Cost and latency are more important than quality for this application. They have several context-length levels to choose from. Which will fulfill their need?",
+opts:[`context length 514; smallest model is 0.44GB and embedding dimension 768`,`context length 2048; smallest model is 11GB and embedding dimension 2560`,`context length 32768; smallest model is 14GB and embedding dimension 4096`,`context length 512; smallest model is 0.13GB and embedding dimension 384`],
+c:[3],e:`With 512-token chunks and cost/latency prioritized, the smallest model (0.13GB) and smallest embedding dimension (384) with a 512 context length is the cheapest, fastest fit that still covers the chunk size.`},
+
+{n:9,d:"rag",t:"Model Selection & Cost",q:"A small, cost-conscious startup in cancer research wants to build a RAG application using Foundation Model APIs. Which strategy would allow them to build a good-quality RAG application while being cost-conscious and able to cater to customer needs?",
+opts:[`Limit the number of relevant documents available for the RAG application to retrieve from`,`Pick a smaller LLM that is domain-specific`,`Limit the number of queries a customer can send per day`,`Use the largest LLM possible because that gives the best performance for any general queries`],
+c:[1],e:`A smaller, domain-specific LLM delivers good quality on the niche (cancer research) domain at much lower cost than a large general model, without degrading the user experience by limiting documents or queries.`},
+
+{n:10,d:"rag",t:"Data Source Selection",multi:true,q:"A HelpDesk chatbot must help find related tickets and provide resolution. Candidate sources: call_rep_history (Delta, for rep call-resolution metrics); transcript Volume (UC Volume of .wav recordings and .txt transcripts); call_cust_history (Delta, for chargeback usage); call_detail (Delta, hourly snapshot incl. root_cause and resolution fields, possibly empty for active calls); maintenance_schedule (Delta, outages/planned downtime). They need sources that add context to best identify ticket root cause and resolution. Which TWO sources do that? (Choose two.)",
+opts:[`call_cust_history`,`maintenance_schedule`,`call_rep_history`,`call_detail`,`transcript Volume`],
+c:[3,4],e:`call_detail explicitly contains root_cause and resolution fields, and the call transcripts provide rich textual context about the issue and its fix. The other tables track billing/usage, rep metrics, or outage schedules — not per-ticket root cause/resolution.`},
+
+{n:11,d:"agent",t:"Orchestration Frameworks",q:"What is the most suitable library for building a multi-step LLM-based workflow?",
+opts:[`Pandas`,`TensorFlow`,`PySpark`,`LangChain`],
+c:[3],e:`LangChain is purpose-built for composing multi-step LLM workflows (chains, prompts, retrievers, agents, tools). The others are general data/ML libraries.`},
+
+{n:12,d:"eval",t:"Licensing & Governance",q:"When developing an LLM application, data used for training must comply with licensing requirements to avoid legal risks. Which action is NOT appropriate to avoid legal risks?",
+opts:[`Reach out to the data curators directly before you have started using the trained model to let them know.`,`Use any available data you personally created which is completely original and you can decide what license to use.`,`Only use data explicitly labeled with an open license and ensure the license terms are followed.`,`Reach out to the data curators directly after you have started using the trained model to let them know.`],
+c:[3],e:`Contacting curators AFTER you've already started using the model is too late to avoid legal risk — permission/licensing must be settled beforehand. The other actions (prior outreach, original data, open-licensed data) are appropriate.`},
+
+{n:13,d:"agent",t:"LangChain Development",q:"A Generative AI Engineer is testing a simple LangChain prompt template with the code below but is getting an error. Assuming the API key was properly defined, what change is needed to fix the chain?",
+code:`from langchain.chains import LLMChain
+from langchain_community.llms import OpenAI
+from langchain_core.prompts import PromptTemplate
+
+prompt_template = "Tell me a {adjective} joke"
+prompt = PromptTemplate(input_variables=["adjective"], template=prompt_template)
+
+llm = LLMChain(prompt=prompt)
+llm.generate([{"adjective": "funny"}])`,
+opts:[`prompt = PromptTemplate(input_variables=["adjective"], template=prompt_template)
+llm = LLMChain(prompt=prompt)
+llm.generate("funny")`,`llm = LLMChain(prompt=prompt.format("funny"))
+llm.generate()`,`prompt = PromptTemplate(input_variables=["adjective"], template=prompt_template)
+llm = OpenAI()`,`prompt = PromptTemplate(input_variables=["adjective"], template=prompt_template)
+llm = LLMChain(llm=OpenAI(), prompt=prompt)
+llm.generate([{"adjective": "funny"}])`],
+c:[3],e:`LLMChain requires an llm argument; the original omitted it. Passing llm=OpenAI() alongside the prompt fixes the chain so it can actually call a model.`},
+
+{n:14,d:"agent",t:"Prompt Engineering",q:"A Generative AI Engineer's LLM system retrieves and summarizes 1918 news articles, but the summaries often also include an explanation of how the summary was generated, which is undesirable. Which change could mitigate this issue?",
+opts:[`Split the LLM output by newline characters to truncate away the summarization explanation.`,`Tune the chunk size of news articles or experiment with different embedding models.`,`Revisit their document ingestion logic, ensuring that the news articles are being ingested properly.`,`Provide few shot examples of desired output format to the system and/or user prompt.`],
+c:[3],e:`Few-shot examples that show only the desired summary format steer the model to omit the meta-explanation. Splitting on newlines is brittle, and chunking/ingestion changes don't address output formatting.`},
+
+{n:15,d:"eval",t:"Hallucination & Data Leakage",q:"A Generative AI Engineer built an LLM app for internal company policies and must ensure it doesn't hallucinate or leak confidential data. Which approach should NOT be used to mitigate hallucination or confidential data leakage?",
+opts:[`Add guardrails to filter outputs from the LLM before it is shown to the user`,`Fine-tune the model on your data, hoping it will learn what is appropriate and not`,`Limit the data available based on the user's access level`,`Use a strong system prompt to ensure the model aligns with your needs.`],
+c:[1],e:`Fine-tuning "hoping" the model learns what's appropriate is unreliable and can even memorize/leak confidential data. Guardrails, access control, and strong system prompts are sound mitigations.`},
+
+{n:16,d:"agent",t:"Prompt Engineering",q:"An LLM is designed to output \"In Stock\" if a product is available or only \"Out of Stock\" if not, based on customer call transcripts. Which prompt will work to allow the engineer to respond to call classification labels correctly?",
+opts:[`Respond with "In Stock" if the customer asks for a product.`,`You will be given a customer call transcript where the customer asks about product availability. The outputs are either "In Stock" or "Out of Stock". Format the output in JSON, for example: {"call_id": "123", "label": "In Stock"}.`,`Respond with "Out of Stock" if the customer asks for a product.`,`You will be given a customer call transcript where the customer inquires about product availability. Respond with "In Stock" if the product is available or "Out of Stock" if not.`],
+c:[3],e:`Option D gives a clear, complete instruction that yields exactly the two required labels. A and C hard-code a single label regardless of availability, and B forces JSON output which conflicts with the requirement to emit only the term.`},
+
+{n:17,d:"rag",t:"Model Selection & Privacy",q:"A RAG application for a small internal expert group needs the best possible answer quality (latency/throughput are not concerns), but the data is highly confidential and, due to regulatory requirements, none of it may be transmitted to third parties. Which model meets all the engineer's needs?",
+opts:[`Dolly 1.5B`,`OpenAI GPT-4`,`BGE-large`,`Llama2-70B`],
+c:[3],e:`Llama2-70B can be self-hosted on Databricks (no third-party data transmission) and is large enough for top quality. GPT-4 would send data to a third party, BGE-large is an embedding model (not a generator), and Dolly 1.5B is too small for best quality.`},
+
+{n:18,d:"agent",t:"Prompt Engineering",q:"A Generative AI Engineer wants an LLM to extract order ID, date, and sender email from emails and output formatted JSON with the highest accuracy. Sample email shown below. Which prompt will do that?",
+code:`Date: April 23, 2024
+Time: 4:22 PM
+From: anjali.thayer@computex.org
+To: cust_service@realtek.com
+Subject: Shipment details
+
+Hey there,
+I have a shipment (order ID is CD34RFT) can you please send me an update?
+Thank you, Anjali`,
+opts:[`You will receive customer emails and need to extract date, sender email, and order ID. You should return the date, sender email, and order ID information in JSON format.`,`You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in JSON format. Here's an example: {"date": "April 16, 2024", "sender_email": "sarah.lee925@gmail.com", "order_id": "RE987D"}`,`You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in a human-readable format.`,`You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in JSON format.`],
+c:[1],e:`Adding a concrete few-shot example of the exact JSON structure gives the model a template to follow, maximizing output-format accuracy. The other options ask for JSON without an example (less reliable) or the wrong format.`},
+
+{n:19,d:"rag",t:"RAG Architecture",q:"A Generative AI Engineer must build an LLM question-answering application that accounts for frequently published new documents, with the least cost and least development effort and lowest operating cost. Which combination of chaining components and configuration meets these requirements?",
+opts:[`For the application a prompt, a retriever, and an LLM are required. The retriever output is inserted into the prompt which is given to the LLM to generate answers.`,`The LLM needs to be frequently fine-tuned with the new documents in order to provide most up-to-date answers.`,`For the question-answering application, prompt engineering and an LLM are required to generate answers.`,`For the application a prompt, an agent and a fine-tuned LLM are required. The agent is used by the LLM to retrieve relevant content that is inserted into the prompt which is given to the LLM to generate answers.`],
+c:[0],e:`A simple RAG chain (prompt + retriever + LLM) incorporates newly published documents just by updating the index — no costly retraining — making it the lowest-cost, lowest-effort option. Fine-tuning approaches are expensive and slow to update.`},
+
+{n:20,d:"agent",t:"Agent Design & Tools",q:"A Generative AI Engineer is creating an agent-based LLM system that can answer text questions about a monster-truck team, look up event dates via an API call, or query tables on the team's latest standings. How could they best design these capabilities into their system?",
+opts:[`Ingest PDF documents about the monster truck team into a vector store and query it in a RAG architecture.`,`Write a system prompt for the agent listing available tools and bundle it into an agent system that runs a number of calls to solve a query.`,`Instruct the LLM to respond with "RAG", "API", or "TABLE" depending on the query, then use text parsing and conditional statements to resolve the query.`,`Build a system prompt with all possible event dates and table information in the system prompt. Use a RAG architecture to lookup generic text questions and otherwise leverage the information in the system prompt.`],
+c:[1],e:`An agent that is given a set of tools (retrieval, API call, table query) via its system prompt can dynamically decide which tool(s) to call to satisfy each query — the idiomatic design for mixed capabilities. Manual parsing or stuffing everything into the prompt is brittle and doesn't scale.`},
+
+{n:21,d:"rag",t:"RAG Architecture",q:"A Generative AI Engineer must design an LLM-based application to answer employee HR questions using HR PDF documentation. Which set of high-level tasks should the system perform?",
+opts:[`Calculate averaged embeddings for each HR document, compare embeddings to user query to find the best document. Pass the best document with the user query into an LLM with a large context window to generate a response.`,`Use an LLM to summarize HR documentation. Provide summaries of documentation and user query into an LLM with a large context window to generate a response.`,`Create an interaction matrix of historical employee questions and HR documentation. Use ALS to factorize the matrix and create embeddings. Calculate embeddings of new queries and use them to find the best HR documentation. Use an LLM to generate a response.`,`Split HR documentation into chunks and embed into a vector store. Use the employee question to retrieve best matched chunks of documentation, and use the LLM to generate a response based upon the documentation retrieved.`],
+c:[3],e:`This is standard RAG: chunk and embed the docs, retrieve the most relevant chunks for the question, then generate a grounded answer. Averaging whole-document embeddings or ALS matrix factorization are poorer fits for document QA.`},
+
+{n:22,d:"rag",t:"Retrieval Quality",f:true,q:"A RAG application for product questions often returns information about an irrelevant product. What can the engineer do to improve the relevance of the RAG's response?",
+opts:[`Assess the quality of the retrieved context`,`Implement caching for frequently asked questions`,`Use a different LLM to improve the generated response`,`Use a different semantic similarity search algorithm`],
+c:[0],e:`Irrelevant answers point to the retrieval step pulling the wrong context, so the first/most effective step is to assess and improve the quality of the retrieved context. (Caching and swapping the LLM don't fix retrieval relevance; verify against official keys.)`},
+
+{n:23,d:"eval",t:"Guardrails",f:true,q:"An insurance chatbot built on an LLM must not answer questions about politics; for political inquiries it should reply with a standard message restricting it to insurance topics. Which framework type should be implemented to solve this?",
+opts:[`Safety Guardrail`,`Security Guardrail`,`Contextual Guardrail`,`Compliance Guardrail`],
+c:[2],e:`Keeping the assistant on-topic (refusing off-topic political questions and returning a scoped message) is a contextual guardrail. Safety guardrails target harmful content, security guardrails target attacks/data exfiltration, and compliance guardrails target regulatory rules. (Verify against official material.)`},
+
+{n:24,d:"rag",t:"Vector Search Setup",q:"A Generative AI Engineer is setting up a vector store with the code below and intends to use Databricks managed embeddings with the default embedding model. What should be the next logical function call?",
+code:`from databricks.vector_search.client import VectorSearchClient
+
+vsc = VectorSearchClient()
+vsc.create_endpoint(name="vector_search_test", endpoint_type="STANDARD")`,
+opts:[`vsc.get_index()`,`vsc.create_delta_sync_index()`,`vsc.create_direct_access_index()`,`vsc.similarity_search()`],
+c:[1],e:`After creating the endpoint, you create the index. With Databricks managed embeddings synced from a Delta table, create_delta_sync_index() is the right call; direct-access indexes are for self-managed embeddings.`},
+
+{n:25,d:"deploy",t:"Model Serving & Secrets",q:"A Generative AI Engineer is deploying an application that uses a custom MLflow PyFunc model to return interim results. How should they configure the endpoint to pass the secrets and credentials?",
+opts:[`Use spark.conf.set()`,`Pass variables using the Databricks Feature Store API`,`Add credentials using environment variables`,`Pass the secrets in plain text`],
+c:[2],e:`Model Serving endpoints receive secrets via environment variables (backed by Databricks secret scopes), keeping credentials out of code. Plain text is insecure, and spark.conf/Feature Store aren't the mechanism for endpoint secrets.`},
+
+{n:26,d:"agent",t:"Application Design",f:true,q:"A Generative AI Engineer wants an LLM-based solution to improve a restaurant's online booking experience by automatically handling common customer inquiries, minimizing escalations to humans while staying personalized. They must define the input data to the LLM and the task it should perform. Which input/output pair will support their goal?",
+opts:[`Input: Online chat logs; Output: Group the chat logs by users, followed by summarizing each user's interactions`,`Input: Online chat logs; Output: Buttons that represent choices for booking details`,`Input: Customer reviews; Output: Classify review sentiment`,`Input: Online chat logs; Output: Cancellation options`],
+c:[1],e:`Using live chat logs as input and generating interactive booking-choice buttons lets the assistant guide customers through common booking inquiries automatically (reducing escalations) while staying personalized. Summarization, sentiment, or cancellation-only outputs don't handle booking inquiries. (Verify against official keys.)`},
+
+{n:27,d:"deploy",t:"MLflow PyFunc",q:"What is an effective method to preprocess prompts using custom code before sending them to an LLM?",
+opts:[`Directly modify the LLM's internal architecture to include preprocessing steps`,`It is better not to introduce custom code to preprocess prompts as the LLM has not been trained with examples of the preprocessed prompts`,`Rather than preprocessing prompts, it's more effective to postprocess the LLM outputs to align the outputs to desired outcomes`,`Write a MLflow PyFunc model that has a separate function to process the prompts`],
+c:[3],e:`Wrapping the logic in an MLflow PyFunc model with a dedicated preprocessing function lets you run custom prompt-processing code in a portable, deployable way before the LLM call. Modifying model internals is impractical, and the other options avoid the task.`},
+
+{n:28,d:"eval",t:"Safety & Guardrails",q:"A Generative AI Engineer is developing an LLM application that lets users generate personalized birthday poems based on their names. Which technique would be most effective in safeguarding the application, given the potential for malicious user inputs?",
+opts:[`Implement a safety filter that detects any harmful inputs and ask the LLM to respond that it is unable to assist`,`Reduce the time that the users can interact with the LLM`,`Ask the LLM to remind the user that the input is malicious but continue the conversation with the user`,`Increase the amount of compute that powers the LLM to process input faster`],
+c:[0],e:`A safety/guardrail filter that detects harmful inputs and refuses to assist is the effective defense against malicious inputs. Limiting time/compute or merely warning while continuing don't actually block abuse.`},
+
+{n:29,d:"eval",t:"Output Safety & Quality",q:"Which indicator should be considered to evaluate the safety of the LLM outputs when qualitatively assessing LLM responses for a translation use case?",
+opts:[`The ability to generate responses in code`,`The similarity to the previous language`,`The latency of the response and the length of text generated`,`The accuracy and relevance of the responses`],
+c:[3],e:`When qualitatively assessing LLM outputs for a translation use case, the accuracy and relevance of the responses is the meaningful indicator of safe, trustworthy output. Code-generation ability, "similarity to the previous language", and latency/length don't reflect output safety or quality.`},
+
+{n:30,d:"agent",t:"Chatbot Response Design",f:true,q:"A patient-facing healthcare chatbot should, for non-emergencies, solicit more information to pass to the doctor's office and suggest pre-approved articles; for urgent cases it should direct the patient to local emergency services. Given the user input: \"I have been experiencing severe headaches and dizziness for the past two days.\" Which response is most appropriate for the chatbot to generate?",
+opts:[`Here are a few relevant articles for your browsing. Let me know if you have questions after reading them.`,`Please call your local emergency services.`,`Headaches can be tough. Hope you feel better soon!`,`Please provide your age, recent activities, and any other symptoms you have noticed along with your headaches and dizziness.`],
+c:[3],e:`Symptoms present over two days (not an acute, sudden emergency) fall under the non-emergency path, so the bot should solicit more information to pass to the doctor. (If judged urgent, B would apply — verify against official keys.)`},
+
+{n:31,d:"rag",t:"Context Window Management",multi:true,q:"After changing the response-generating LLM in a RAG pipeline from GPT-4 to a self-hosted model with a shorter context length, the engineer gets the error: prompt token count (4595) cannot exceed 4096. What TWO solutions should they implement WITHOUT changing the response-generating model? (Choose two.)",
+code:`{"error_code": "BAD_REQUEST", "message": "Bad request: rpc error:
+code = InvalidArgument desc = prompt token count (4595) cannot
+exceed 4096.."}`,
+opts:[`Use a smaller embedding model to generate embeddings`,`Reduce the maximum output tokens of the new model`,`Decrease the chunk size of embedded documents`,`Reduce the number of records retrieved from the vector database`,`Retrain the response generating model using ALiBi`],
+c:[2,3],e:`The prompt is too long, so shrink what gets inserted into it: smaller chunks (C) and fewer retrieved records (D) both reduce prompt tokens. Embedding-model size doesn't change prompt length, and retraining changes the model.`},
+
+{n:32,d:"eval",t:"Output Relevance",q:"A Generative AI Engineer is building a system to answer questions on the latest stock-news articles. Which will NOT help with ensuring the outputs are relevant to financial news?",
+opts:[`Implement a comprehensive guardrail framework that includes policies for content filters tailored to the finance sector.`,`Increase the compute to improve processing speed of questions to allow greater relevancy analysis`,`Implement a profanity filter to screen out offensive language.`,`Incorporate manual reviews to correct any problematic outputs prior to sending to the users`],
+c:[1],e:`Adding compute only speeds up processing — it does nothing to make outputs more relevant to financial news. Finance-tuned guardrails and manual review do improve relevance/quality.`},
+
+{n:33,d:"rag",t:"Content Filtering",f:true,q:"A RAG application for the company SnoPen AI draws from source documents that contain significant irrelevant content (ads, sports/entertainment news, content about other companies). Which approach is advisable when building the RAG application to filter irrelevant information?",
+opts:[`Keep all articles because the RAG application needs to understand non-company content to avoid answering questions about them.`,`Include in the system prompt that any information it sees will be about SnoPenAI, even if no data filtering is performed.`,`Include in the system prompt that the application is not supposed to answer any questions unrelated to SnoPen AI.`,`Consolidate all SnoPen AI related documents into a single chunk in the vector database.`],
+c:[2],e:`Instructing the model (via system prompt) to refuse questions unrelated to SnoPen AI is the advisable guardrail here. Keeping all content, falsely asserting everything is relevant, or single-chunk consolidation are poor practices. (Verify against official keys.)`},
+
+{n:34,d:"rag",t:"Vector Search Data Prep",q:"A Generative AI Engineer ingested unstructured documents chunked by section and wants to store the chunks in a Vector Search index. The dataframe has two columns: (i) original document file name and (ii) an array of text chunks for each document. What is the most performant way to store this dataframe?",
+opts:[`Split the data into train and test set, create a unique identifier for each document, then save to a Delta table`,`Flatten the dataframe to one chunk per row, create a unique identifier for each row, and save to a Delta table`,`First create a unique identifier for each document, then save to a Delta table`,`Store each chunk as an independent JSON file in Unity Catalog Volume. For each JSON file, the key is the document section name and the value is the array of text chunks for that section`],
+c:[1],e:`Vector Search indexes one embedding per row, so flatten to one chunk per row with a unique row id and save as Delta — the idiomatic, performant layout. Keeping arrays per document or JSON files doesn't map to per-chunk indexing.`},
+
+{n:35,d:"eval",t:"RAG Evaluation",q:"A RAG application retrieves answers from an internal knowledge base (Confluence, Google Drive). The prototype works with positive tester feedback, and the engineer now wants to formally evaluate the system's performance and find where to improve. How should they evaluate the system?",
+opts:[`Use cosine similarity score to comprehensively evaluate the quality of the final generated answers.`,`Curate a dataset that can test the retrieval and generation components of the system separately. Use MLflow's built in evaluation metrics to perform the evaluation on the retrieval and generation components.`,`Benchmark multiple LLMs with the same data and pick the best LLM for the job.`,`Use an LLM-as-a-judge to evaluate the quality of the final answers generated.`],
+c:[1],e:`Evaluating retrieval and generation separately on a curated dataset (with MLflow's metrics) pinpoints which component to improve, unlike a single end-to-end score.`},
+
+{n:36,d:"deploy",t:"Model Deployment",q:"A Generative AI Engineer has trained an LLM on Databricks and it is ready to deploy. Which steps correctly outline the easiest process for deploying a model on Databricks?",
+opts:[`Log the model as a pickle object, upload the object to Unity Catalog Volume, register it to Unity Catalog using MLflow, and start a serving endpoint`,`Log the model using MLflow during training, directly register the model to Unity Catalog using the MLflow API, and start a serving endpoint`,`Save the model along with its dependencies in a local directory, build the Docker image, and run the Docker container`,`Wrap the LLM's prediction function into a Flask application and serve using Gunicorn`],
+c:[1],e:`Logging with MLflow, registering to Unity Catalog via the MLflow API, and starting a serving endpoint is the streamlined native Databricks path. Pickle/Docker/Flask approaches are more manual and error-prone.`},
+
+{n:37,d:"deploy",t:"Model Serving & Cost",q:"A Generative AI Engineer developed an LLM application using provisioned-throughput Foundation Model APIs, but realizes their request volume isn't high enough to justify a provisioned-throughput endpoint. They want the best cost-effectiveness. What strategy should they use?",
+opts:[`Switch to using External Models instead`,`Deploy the model using pay-per-token throughput as it comes with cost guarantees`,`Change to a model with a fewer number of parameters in order to reduce hardware constraint issues`,`Throttle the incoming batch of requests manually to avoid rate limiting issues`],
+c:[1],e:`For low/variable volume, pay-per-token billing only charges for what you use, making it the most cost-effective option versus paying for reserved provisioned throughput.`},
+
+{n:38,d:"agent",t:"Prompt Engineering & Tuning",q:"A Generative AI Engineer is building an LLM to generate article summaries as a poem (e.g. a haiku) given article content, but the initial output doesn't match the desired tone/style. Which approach will NOT improve the LLM's response to achieve the desired response?",
+opts:[`Provide the LLM with a prompt that explicitly instructs it to generate text in the desired tone and style`,`Use a neutralizer to normalize the tone and style of the underlying documents`,`Include few-shot examples in the prompt to the LLM`,`Fine-tune the LLM on a dataset of desired tone and style`],
+c:[1],e:`Normalizing the tone/style of the source documents doesn't steer the generated output's style. Explicit style prompts, few-shot examples, and fine-tuning all directly shape the output tone.`},
+
+{n:39,d:"agent",t:"Agent Design & Tools",q:"A Generative AI Engineer is creating an LLM-powered application needing up-to-date news articles (search the internet) and stock prices (stored in Delta tables). How should they architect their LLM system?",
+opts:[`Use an LLM to summarize the latest news articles and lookup stock tickers from the summaries to find stock prices.`,`Query the Delta table for volatile stock prices and use an LLM to generate a search query to investigate potential causes of the stock volatility.`,`Download and store news articles and stock price information in a vector store. Use a RAG architecture to retrieve and generate at runtime.`,`Create an agent with tools for SQL querying of Delta tables and web searching, provide retrieved values to an LLM for generation of response.`],
+c:[3],e:`An agent equipped with a SQL tool (for the Delta-table stock prices) and a web-search tool (for fresh news) can fetch both real-time sources and pass them to the LLM — the right design for mixed live data.`},
+
+{n:40,d:"eval",t:"Engagement Metrics",q:"A Generative AI Engineer is designing a chatbot for a gaming company to engage users while they play online games. Which metric would help them increase user engagement and retention for their platform?",
+opts:[`Randomness`,`Diversity of responses`,`Lack of relevance`,`Repetition of responses`],
+c:[1],e:`Diverse, varied responses keep interactions fresh and engaging, supporting retention. Randomness, irrelevance, and repetition degrade the experience.`},
+
+{n:41,d:"rag",t:"RAG Pipeline & Workflow",q:"A company has a typical RAG-enabled, customer-facing chatbot. Select the correct sequence of components a user's question goes through before the final output is returned.",
+opts:[`1.embedding model, 2.vector search, 3.context-augmented prompt, 4.response-generating LLM`,`1.context-augmented prompt, 2.vector search, 3.embedding model, 4.response-generating LLM`,`1.response-generating LLM, 2.vector search, 3.context-augmented prompt, 4.embedding model`,`1.response-generating LLM, 2.context-augmented prompt, 3.vector search, 4.embedding model`],
+c:[0],e:`The query is first embedded, used for vector search to retrieve context, that context is assembled into an augmented prompt, and finally the response-generating LLM produces the answer.`},
+
+{n:42,d:"agent",t:"Model Selection",q:"A team wants to serve a code-generation model as an assistant for software developers, supporting multiple programming languages, with quality as the primary objective. Which Databricks Foundation Model API or Marketplace model is the best fit?",
+opts:[`Llama2-70b`,`BGE-large`,`MPT-7b`,`CodeLlama-34B`],
+c:[3],e:`CodeLlama-34B is purpose-built for high-quality multi-language code generation. BGE-large is an embedding model, and the general Llama2/MPT models aren't code-specialized.`},
+
+{n:43,d:"rag",t:"Document Parsing",q:"A RAG application relies on context from source PDFs that contain both text and images. They want a solution using the least amount of lines of code. Which Python package should be used to extract the text from the source documents?",
+opts:[`flask`,`beautifulsoup`,`unstructured`,`numpy`],
+c:[2],e:`The unstructured library extracts text from many document types (including PDFs with mixed content) in very few lines. flask/numpy are unrelated, and beautifulsoup is for HTML/XML.`},
+
+{n:44,d:"agent",t:"Multi-step Workflow & Routing",q:"A chatbot must know what type of question the user asks and route to the appropriate model (e.g. upcoming event details vs purchasing tickets). What is an ideal workflow for such a chatbot?",
+opts:[`The chatbot should only look at previous event information`,`There should be two different chatbots handling different types of user queries.`,`The chatbot should be implemented as a multi-step LLM workflow. First, identify the type of question asked, then route the question to the appropriate model. If it's an upcoming event question, send the query to a text-to-SQL model. If it's about ticket purchasing, the customer should be redirected to a payment platform.`,`The chatbot should only process payments`],
+c:[2],e:`A multi-step workflow that first classifies the question and then routes it (text-to-SQL for event data, payment platform for purchases) handles the varied intents in a single assistant.`},
+
+{n:45,d:"agent",t:"Model Selection",f:true,q:"A Generative AI Engineer needs an open-source foundation LLM with a large context window for their application. Which model fits this need?",
+opts:[`DistilBERT`,`MPT-30B`,`Llama2-70B`,`DBRX`],
+c:[1],e:`MPT-30B is known for its large context window (8K, with ALiBi enabling extrapolation), the historically cited answer here. (DBRX also offers a large 32K context window, so verify against the current official key.)`},
+
+{n:46,d:"agent",t:"Model Selection",q:"A Generative AI Engineer is building an LLM-based application with an important transcription (speech-to-text) task, where speed is essential. Which open Generative AI model should be used?",
+opts:[`DBRX`,`MPT-30B-Instruct`,`Llama-2-70b-chat-hf`,`whisper-large-v3 (1.6B)`],
+c:[3],e:`Whisper is a speech-to-text model, and the 1.6B variant is fast — the right choice for transcription. The others are text LLMs, not transcription models.`},
+
+{n:47,d:"deploy",t:"Inference Tables & Logging",q:"A Generative AI Engineer has a provisioned-throughput model serving endpoint in a RAG application and wants to monitor the endpoint's incoming requests and outgoing responses. Which Databricks feature should they use?",
+opts:[`AutoML`,`Vector Search`,`Inference Tables`,`Feature Serving`],
+c:[2],e:`Inference Tables automatically log a serving endpoint's requests and responses to a Delta table for monitoring.`},
+
+{n:48,d:"rag",t:"Vector Search Evaluation",q:"A Generative AI Engineer is deciding between LSH (Locality Sensitive Hashing) and HNSW (Hierarchical Navigable Small World) for indexing their vector database, with semantic accuracy as the top priority. Which approach should they use to evaluate these two techniques?",
+opts:[`Compare the cosine similarities of the embeddings of returned results against those of a representative sample of test inputs`,`Compare the Bilingual Evaluation Understudy (BLEU) scores of returned results for a representative sample of test inputs`,`Compare the Recall-Oriented-Understudy for Gisting Evaluation (ROUGE) scores of returned results for a representative sample of test inputs`,`Compare the Levenshtein distances of returned results against a representative sample of test inputs`],
+c:[0],e:`Semantic accuracy of retrieval is best measured by cosine similarity between the embeddings of returned results and test inputs. BLEU/ROUGE are text-generation metrics and Levenshtein is character edit distance — none capture semantic retrieval quality.`},
+
+{n:49,d:"eval",t:"Licensing & Governance",q:"When developing an LLM application, the data used for training must comply with licensing requirements to avoid legal risks. Which action is most appropriate to avoid legal risks?",
+opts:[`Only use data explicitly labeled with an open license and ensure the license terms are followed.`,`Any LLM outputs are reasonable to use because they do not reveal the original sources of data directly.`,`Reach out to the data curators directly to gain written consent for using their data.`,`Use any publicly available data as public data does not have legal restrictions.`],
+c:[0],e:`Using only data with an explicit open license and following its terms is the safest, most appropriate practice. "Publicly available" does not mean unrestricted, and assuming outputs are safe is incorrect.`},
+
+{n:50,d:"agent",t:"Prompt Engineering",q:"An LLM with instruction-following capabilities should output \"Success\" if a product is available or \"Fail\" if not, based on customer call transcripts. Which prompt allows the engineer to receive call classification labels correctly?",
+opts:[`You are a helpful assistant that reads customer call transcripts. Walk through the transcript and think step-by-step if the customer's inquiries are addressed successfully. Answer "Success" if yes; otherwise, answer "Fail".`,`You will be given a customer call transcript where the customer asks about product availability. Classify the call as "Success" if the product is available and "Fail" if the product is unavailable.`,`You will be given a customer call transcript where the customer asks about product availability. The outputs are either "Success" or "Fail". Format the output in JSON, for example: {"call_id": "123", "label": "Succes"}.`,`You will be given a customer call transcript. Answer "Success" if the customer call has been resolved successfully. Answer "Fail" if the call is redirected or if the question is not resolved.`],
+c:[1],e:`Option B maps the exact business rule (product available → "Success", unavailable → "Fail") to the two required labels. A and D classify the wrong thing (resolution), and C forces JSON (and even has a typo) which conflicts with emitting just the label.`},
+
+{n:51,d:"agent",t:"Chain Components",multi:true,q:"Which TWO chain components are required for building a basic LLM-enabled chat application that includes conversational capabilities, knowledge retrieval, and contextual memory? (Choose two.)",
+opts:[`Vector Stores`,`Conversation Buffer Memory`,`External tools`,`Chat loaders`,`React Components`],
+c:[0,1],e:`Knowledge retrieval needs a Vector Store (A), and contextual/conversational memory needs Conversation Buffer Memory (B). External tools, chat loaders, and React components aren't required for this basic capability set.`},
+
+{n:52,d:"rag",t:"Vector Search Data Prep",q:"A Generative AI Engineer has scalable PySpark code to ingest unstructured PDFs and chunk them for a Databricks Vector Search index. The dataframe has the original filename (string) and an array of text chunks. What steps should they perform to store the chunks ready-to-ingest for Vector Search?",
+opts:[`Use PySpark's autoloader to apply a UDF across all chunks, formatting them in a JSON structure for Vector Search ingestion.`,`Flatten the dataframe to one chunk per row, create a unique identifier for each row, and enable change feed on the output Delta table.`,`Utilize the original filename as the unique identifier and save the dataframe as is.`,`Create a unique identifier for each document, flatten the dataframe to one chunk per row and save to an output Delta table.`],
+c:[1],e:`Vector Search Delta Sync needs one chunk per row, a unique per-row id, and Change Data Feed enabled on the Delta table so the index can sync incrementally. Using the filename as id or a per-document id (option D) breaks per-chunk uniqueness.`},
+
+{n:53,d:"agent",t:"Model Selection",q:"A Generative AI Engineer must select a model specifically trained to generate code, to build an LLM application that excels at code generation. Which model would likely produce the best results out of the box?",
+opts:[`CodeLlama-34b-Instruct-hf`,`Mixtral-8x7B-v0.1`,`Llama-2-70b-hf`,`mpt-7b-8k-instruct`],
+c:[0],e:`CodeLlama-34b-Instruct is specifically trained/instruction-tuned for code generation, so it performs best out of the box. The others are general-purpose models.`},
+
+{n:54,d:"agent",t:"Agent Design & Tools",q:"A Generative AI Engineer needs an LLM pipeline for multi-stage reasoning that leverages external tools, where the LLM must plan and adapt actions while performing complex reasoning. Which approach will do this?",
+opts:[`Train the LLM to generate a single, comprehensive response without interacting with any external tools, relying solely on its pre-trained knowledge.`,`Use a Chain-of-Thought (CoT) prompting technique to guide the LLM through a series of reasoning steps, then manually input the results from external tools for the final answer.`,`Implement a framework like ReAct, which allows the LLM to generate reasoning traces and perform task-specific actions that leverage external tools if necessary.`,`Encourage the LLM to make multiple API calls in sequence without planning or structuring the calls, allowing the LLM to decide when and how to use external tools spontaneously.`],
+c:[2],e:`ReAct interleaves reasoning traces with tool-using actions, letting the LLM plan and adapt across multiple stages — exactly the requirement. CoT alone with manual tool input, or unstructured calls, don't provide adaptive tool-driven reasoning.`},
+
+{n:55,d:"rag",t:"RAG Components",q:"A Generative AI Engineer at an automotive company is building a Q&A chatbot over a database of documents about vehicle makes, hardware parts, and maintenance info. Which of the following components will NOT be useful in building such a chatbot?",
+opts:[`Invite users to submit long, rather than concise, questions`,`Response-generating LLM`,`Embedding model`,`Vector database`],
+c:[0],e:`Encouraging long, rambling questions doesn't help (concise queries retrieve better). The response-generating LLM, embedding model, and vector database are all core RAG components.`},
+
+{n:56,d:"agent",t:"Prompt Engineering",q:"A Generative AI Engineer is building an LLM to generate article headlines given article content, but the initial output doesn't match the desired tone or style. Which approach would be most effective for adjusting the LLM's response to achieve the desired response?",
+opts:[`Exclude any article headlines that do not match the desired output`,`Fine-tune the LLM on a dataset of desired tone and style`,`Provide the LLM with a prompt that explicitly instructs it to generate text in the desired tone and style`,`All of the above`],
+c:[2],e:`An explicit prompt specifying the desired tone and style is the most effective and lowest-effort way to steer headline generation. Excluding outputs isn't an adjustment method, and fine-tuning is heavier than needed.`},
+
+{n:57,d:"agent",t:"Multi-step Workflow & Routing",q:"A customer-support bot should respond differently based on the sentiment in the user's initial message (e.g. de-escalate an angry message). Following best practices, which approach will do this?",
+opts:[`Use an encoder-only LLM model to both detect sentiment and generate replies based upon the detected sentiment.`,`Implement a RAG architecture for how to respond to users depending on detected sentiment.`,`Use linear regression model to classify sentiment and feed the result to a system prompt for the LLM to respond.`,`Create a chain which first uses an LLM to classify sentiment, then changes system prompt for the customer interaction LLM based upon the initial customer query sentiment.`],
+c:[3],e:`A chain that first classifies sentiment with an LLM, then adapts the customer-facing LLM's system prompt accordingly, cleanly delivers sentiment-aware responses. Encoder-only models can't generate, RAG isn't a sentiment mechanism, and linear regression is a poor fit for text sentiment here.`},
+
+{n:58,d:"deploy",t:"Authentication & Security",f:true,q:"A Generative AI Engineer is ready to deploy an LLM application written using Foundation Model APIs and wants to follow security best practices for production. Which authentication method should they choose?",
+opts:[`Use OAuth machine-to-machine authentication`,`Use an access token belonging to service principals`,`Use an access token belonging to any workspace user`,`Use a frequently rotated access token belonging to either a workspace user or a service principal`],
+c:[1],e:`Production apps should authenticate as a service principal (not a personal user), so its access token is the recommended choice. (OAuth M2M is the underlying mechanism for service principals — verify which form the official key expects.)`},
+
+{n:59,d:"rag",t:"Chunking Strategy",multi:true,q:"A RAG system for internal HR-policy Q&A returns incomplete, unstructured answers; the retriever isn't returning all relevant context. Experimenting with different embedding and response-generating LLMs didn't help. Which TWO options could improve the response quality? (Choose two.)",
+opts:[`Add the section header as a prefix to chunks`,`Split the document by sentence`,`Use a larger embedding model`,`Increase the document chunk size`,`Fine tune the response generation model`],
+c:[0,3],e:`Prefixing each chunk with its section header (A) adds structural context, and increasing chunk size (D) captures more complete context per retrieval — both address incomplete answers. Sentence splitting makes chunks smaller, and embedding/LLM changes were already tried.`},
+
+{n:60,d:"eval",t:"Safety & Guardrails",q:"A production-ready LLM system replies directly to customers via the Foundation Model API (provisioned throughput). The engineer is concerned the LLM could respond in a toxic or unsafe way and wants to do this with the least amount of effort. Which approach will do this?",
+opts:[`Ask users to report unsafe responses`,`Host Llama Guard on Foundation Model API and use it to detect unsafe responses.`,`Add some LLM calls to their chain to detect unsafe content before returning text`,`Add a regex expression on inputs and outputs to detect unsafe responses.`],
+c:[1],e:`Llama Guard is a purpose-built safety model you can host on the Foundation Model API to detect unsafe content with minimal effort. User reporting is reactive, and custom LLM/regex checks are more work and less reliable.`},
+
+{n:61,d:"agent",t:"Prompt Engineering",q:"A Generative AI Engineer wants an LLM to parse and extract date, sender email, and order ID from emails, formatted into JSON, with the highest level of output accuracy. (Sample email shown.) Which prompt will do that?",
+code:`Date: April 16, 2024
+Time: 3:45 PM
+From: sarah.lee925@gmail.com
+To: customer_service@smart_thermostat.com
+Subject: Order update
+
+Hi, Can I get a status update on my order? The order ID is RE987D.
+Thank you, Sarah`,
+opts:[`You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in a human-readable format.`,`You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in JSON format.`,`You will receive customer emails and need to extract date, sender email, and order ID. Return the extracted information in JSON format. Here's an example: {"date": "April 16, 2024", "sender_email": "sarah.lee925@gmail.com", "order_id": "RE987D"}`,`You will receive customer emails and need to extract date, sender email, and order ID. You should return the date, sender email, and order ID information in JSON format.`],
+c:[2],e:`Providing a concrete JSON example (few-shot) gives the model an exact template, maximizing output-format accuracy. The other options request JSON without an example, or the wrong format.`},
+
+{n:62,d:"eval",t:"Evaluation Metrics",q:"A Generative AI Engineer built a system that automatically translates user text between two languages and wants to benchmark multiple LLMs and pick the best one, using an evaluation set with known high-quality translation examples and a performant metric. Which metric should they choose?",
+opts:[`BLEU metric`,`NDCG metric`,`ROUGE metric`,`RECALL metric`],
+c:[0],e:`BLEU is the standard, performant metric for machine-translation quality against reference translations. NDCG/Recall are retrieval metrics and ROUGE targets summarization.`},
+
+{n:63,d:"agent",t:"Prompt Engineering",q:"A Generative AI Engineer uses an LLM to classify edible-mushroom species from text descriptions. The model is accurate and the label list is correct, but the output frequently contains additional reasoning when only the label is wanted. Which action should they take to elicit the desired behavior?",
+opts:[`Use few shot prompting to instruct the model on expected output format`,`Use zero shot prompting to instruct the model on expected output format`,`Use zero shot chain-of-thought prompting to prevent a verbose output format`,`Use a system prompt to instruct the model to be succinct in its answer`],
+c:[0],e:`Few-shot examples that show input → label only (no reasoning) most reliably constrain the output format. CoT would add more reasoning, and a generic "be succinct" instruction is less precise than concrete examples.`},
+
+{n:64,d:"agent",t:"Application Design",q:"A retail company wants to automatically handle common customer inquiries to improve response times while maintaining personalized interaction. They want to define the appropriate input and LLM task. Which input/output pair will do this?",
+opts:[`Input: Customer service chat logs; Output: Group the chat logs by users, followed by summarizing each user's interactions, then respond`,`Input: Customer service chat logs; Output: Find the answers to similar questions and respond with a summary`,`Input: Customer reviews; Output: Classify review sentiment`,`Input: Customer reviews; Output: Group the reviews by users and aggregate per-user average rating, then respond`],
+c:[1],e:`Using chat logs as input and answering by finding responses to similar questions directly automates handling of common inquiries with fast, relevant replies. Summaries, sentiment, and rating aggregation don't answer customer questions.`},
+
+{n:65,d:"rag",t:"Embedding Model Selection",q:"A Generative AI Engineer is developing a RAG application and wants to experiment with different embedding models to improve performance. Which strategy for picking an embedding model should they choose?",
+opts:[`Pick an embedding model with multilingual support to support potential multilingual user questions`,`Pick the most recent and most performant open LLM released at the time`,`Pick an embedding model trained on related domain knowledge`,`Pick the embedding model ranked highest on the Massive Text Embedding Benchmark (MTEB) leaderboard hosted by HuggingFace`],
+c:[2],e:`An embedding model trained on the relevant domain produces representations best aligned with your content, improving retrieval. A generic leaderboard rank or an LLM (not an embedding model) doesn't guarantee domain fit.`},
+
+{n:66,d:"deploy",t:"Model Registry & UC",q:"A Generative AI Engineer wants their finetuned LLMs in the prod Databricks workspace to be available for testing in the dev workspace too. All workspaces are Unity Catalog enabled and they log models to the MLflow Model Registry. What is the most cost-effective and secure option?",
+opts:[`Use an external model registry which can be accessed from all workspaces.`,`Use MLflow to log the model directly into Unity Catalog, and enable READ access in the dev workspace to the model.`,`Setup a duplicate training pipeline in dev, so that an identical model is available in dev.`,`Setup a script to export the model from prod and import it to dev.`],
+c:[1],e:`Logging into Unity Catalog (which spans workspaces) and granting READ access to dev shares the same model securely with no duplication — the cost-effective, governed approach.`},
+
+{n:67,d:"deploy",t:"Production Monitoring Metrics",q:"A Generative AI Engineer deployed an LLM application that assists with customer service inquiries and needs to identify key enterprise metrics to monitor in production. Which is NOT a metric they will implement for their customer service LLM application in production?",
+opts:[`Massive Multi-task Language Understanding (MMLU) score`,`Number of customer inquiries processed per unit of time`,`Factual accuracy of the response`,`Time taken for LLM to generate a response`],
+c:[0],e:`MMLU is an academic benchmark for base-model capabilities, not a production application metric. Throughput, factual accuracy, and latency are all relevant production metrics.`},
+
+{n:68,d:"deploy",t:"Real-time Feature Serving",q:"A cinema wants its chatbot to answer questions about specific showtimes for movies currently playing at the user's local theater. They have the user's location and a Delta table continually updated with the latest showtime information by location. They want to implement this in their RAG application with the least effort and most performant way. Which option will do this?",
+opts:[`Create a Feature Serving Endpoint from a FeatureSpec that references an online store synced from the Delta table. Query the Feature Serving Endpoint as part of the agent logic / tool implementation.`,`Query the Delta table directly via a SQL query constructed from the user's input using a text-to-SQL LLM in the agent logic / tool implementation.`,`Set up a task in Databricks Workflows to write the information in the Delta table periodically to an external database such as MySQL and query the information from there as part of the agent logic / tool implementation.`,`Write the Delta table contents to a text column, then embed those texts using an embedding model and store these in the vector index. Look up the information based on the embedding as part of the agent logic / tool implementation.`],
+c:[0],e:`A Feature Serving Endpoint backed by an online store synced from the Delta table gives low-latency, always-fresh structured lookups with minimal setup — ideal for rapidly changing showtime data. Text-to-SQL, external DBs, or embedding structured data are more effort and less performant.`},
+
+{n:69,d:"agent",t:"Model Selection",q:"A Generative AI Engineer needs an LLM that can understand medical documents (including recently published ones) and wants an open model from HuggingFace's model hub. Which step is most appropriate for selecting an LLM?",
+opts:[`Pick any model in the Mistral family, as Mistral models are good with all types of use cases`,`Select a model based on the highest number of downloads, as this indicates popularity, reliability, and general suitability`,`Select a model that is most recently uploaded, as this indicates the model is the newest and highly likely to be the most performant`,`Check for the model and training data description to identify if the model is trained on any medical data.`],
+c:[3],e:`Checking the model card/training-data description for medical-domain coverage directly determines fitness for understanding medical documents. Popularity, recency, or model family alone don't guarantee domain knowledge.`},
+
+{n:70,d:"rag",t:"Content Filtering",q:"A RAG application answers questions about technology-related news, but the source documents contain irrelevant content (ads, sports, entertainment). Which approach is NOT advisable for building a RAG application focused on answering technology-only questions?",
+opts:[`Include in the system prompt that the application is not supposed to answer any questions unrelated to technology.`,`Filter out irrelevant news articles in the retrieval process.`,`Keep all news articles because the RAG application needs to understand non-technological content to avoid answering questions about them.`,`Filter out irrelevant news articles in the upstream document database.`],
+c:[2],e:`Keeping all irrelevant content (hoping the model "understands" it) is not advisable — it adds noise and degrades retrieval. Filtering at retrieval/upstream and scoping via system prompt are the right practices.`},
+
+{n:71,d:"rag",t:"Document Parsing",q:"A RAG application relies on context from source documents currently in HTML format and wants a solution using the least amount of lines of code. Which Python package should be used to extract the text from the source documents?",
+opts:[`pytesseract`,`numpy`,`pypdf2`,`beautifulsoup`],
+c:[3],e:`BeautifulSoup parses HTML and extracts text concisely. pytesseract is for OCR on images, pypdf2 is for PDFs, and numpy is numerical computing.`},
+
+{n:72,d:"rag",t:"RAG Pipeline & Workflow",q:"A Generative AI Engineer is building a RAG application for answering employee questions on company policies. What are the steps needed to build this RAG application and deploy it?",
+opts:[`Ingest documents from a source → Index and save to Vector Search → User submits queries against an LLM → LLM retrieves relevant documents → Evaluate model → LLM generates a response → Deploy it using Model Serving`,`User submits queries against an LLM → Ingest documents from a source → Index and save to Vector Search → LLM retrieves relevant documents → LLM generates a response → Evaluate model → Deploy it using Model Serving`,`Ingest documents from a source → Index and save to Vector Search → Evaluate model → Deploy it using Model Serving → User submits queries against an LLM → LLM retrieves relevant documents → LLM generates a response`,`Ingest documents from a source → Index and save to Vector Search → User submits queries against an LLM → LLM retrieves relevant documents → LLM generates a response → Evaluate model → Deploy it using Model Serving`],
+c:[3],e:`Correct flow: ingest → index to Vector Search → query → retrieve → generate → evaluate the full pipeline → deploy with Model Serving. Evaluation must follow generation (so A is wrong) and ingestion must precede queries (so B is wrong).`},
+
+{n:73,d:"deploy",t:"Rate Limiting & Cost Control",q:"A Generative AI Engineer prototyping an LLM system accidentally ran thousands of inference queries against a Foundation Model endpoint over the weekend. They want to prevent this from unintentionally happening again. What action should they take?",
+opts:[`Use prompt engineering to instruct the LLM endpoints to refuse too many subsequent queries.`,`Require that all development code which interfaces with a Foundation Model endpoint must be reviewed by a Staff level engineer before execution.`,`Build a pyfunc model which proxies to the Foundation Model endpoint and add throttling within the pyfunc model.`,`Configure rate limiting on the Foundation Model endpoints.`],
+c:[3],e:`Configuring rate limiting directly on the endpoint enforces a hard cap on request volume regardless of how the code behaves. Prompt instructions, code reviews, and custom proxies are weaker or higher-effort.`},
+
+{n:74,d:"rag",t:"Vector Search Setup",q:"A Generative AI Engineer is setting up a Databricks Vector Search to look up news articles by topic within 10 days of a specified date (e.g. \"Tell me about monster truck news around January 5th 1992\"), with the least amount of effort. How can they set up their Vector Search index to support this use case?",
+opts:[`Create separate indexes by topic and add a classifier model to appropriately pick the best index.`,`Include metadata columns for article date and topic to support metadata filtering.`,`Pass the query directly to the vector search index and return the best articles.`,`Split articles by 10 day blocks and return the block closest to the query.`],
+c:[1],e:`Adding date and topic metadata columns lets you combine semantic search with metadata filtering (date range, topic) in one index — minimal effort. Separate indexes/classifiers or time-block splitting are more complex and brittle.`},
+
+{n:75,d:"deploy",t:"Model Serving & Scaling",q:"A Generative AI Engineer developed an LLM application using the pay-per-token Foundation Model API and wants to ensure the model endpoint can serve high incoming volumes of requests in production. What should they consider?",
+opts:[`Switch to using External Models instead`,`Throttle the incoming batch of requests manually to avoid rate limiting issues`,`Change to a model with a fewer number of parameters in order to reduce hardware constraint issues`,`Deploy the model using provisioned throughput as it comes with performance guarantees`],
+c:[3],e:`Provisioned throughput reserves capacity with performance guarantees, making it the right choice for sustained high request volumes (pay-per-token can hit rate limits at scale).`},
+
+{n:76,d:"rag",t:"RAG Architecture",q:"A Generative AI Engineer at a home-appliance company must design an LLM-based application that answers customer questions on home appliances using the associated instruction manuals. Which set of high-level tasks should the system perform?",
+opts:[`Split instruction manuals into chunks and embed into a vector store. Use the question to retrieve best matched chunks of manual, and use the LLM to generate a response to the user based upon the manual retrieved.`,`Create an interaction matrix of historical user questions and appliance instruction manuals. Use ALS to factorize the matrix and create embeddings. Calculate the embeddings of new queries and use them to find the best manual. Use an LLM to generate a response to the question based upon the manual retrieved.`,`Calculate averaged embeddings for each instruction manual, compare embeddings to user query to find the best manual. Pass the best manual with user query into an LLM with a large context window to generate a response to the employee.`,`Use an LLM to summarize all of the instruction manuals. Provide summaries of each manual and user query into an LLM with a large context window to generate a response to the user.`],
+c:[0],e:`Standard RAG — chunk and embed the manuals, retrieve the best-matched chunks for the question, and generate a grounded answer. Averaged-document embeddings, ALS matrices, or summarizing everything are weaker fits for precise manual Q&A.`},
+
+{n:77,d:"eval",t:"Safety & Guardrails",q:"A Generative AI Engineer is developing an LLM application to provide personalized movie recommendations. Given the potential for malicious user inputs, which technique would be most effective in safeguarding the application?",
+opts:[`Reduce the time that the users can interact with the LLM`,`Increase the amount of compute that powers the LLM to process input faster`,`Ask the LLM to remind the user that the input is malicious but continue the conversation with the user`,`Implement a safety filter that detects any harmful inputs and ask the LLM to respond that it is unable to assist`],
+c:[3],e:`A safety filter that detects harmful inputs and refuses is the effective safeguard. Limiting interaction time/compute or warning-but-continuing don't block malicious use.`},
+
+{n:78,d:"agent",t:"Multi-step Workflow & Routing",q:"An internal chatbot must know the type of question and route to the appropriate model — e.g. historical failure rates of an electrical part vs how to troubleshoot equipment. Available data: a database of electrical-equipment PDF manuals and a table of part failure information. Which workflow supports such a chatbot?",
+opts:[`Parse the electrical equipment PDF manuals into a table of question and response pairs. That way, the same chatbot can query tables easily to answer questions about both historical failure rates and equipment troubleshooting.`,`The chatbot should be implemented as a multi-step LLM workflow. First, identify the type of question asked, then route the question to the appropriate model. If it's a historical failure rate question, send the query to a text-to-SQL model. If it's a troubleshooting question, then send the query to another model that summarizes the equipment-specific document and generates the response.`,`There should be two different chatbots handling different types of user queries.`,`The table with electrical part failures should be converted into a text document first. That way, the same chatbot can use the same document retrieval process to generate answers regardless of question types.`],
+c:[1],e:`A multi-step workflow that classifies intent then routes — text-to-SQL for failure-rate data, a doc-summarization/RAG path for troubleshooting manuals — uses each data source appropriately within one assistant.`},
+
+{n:79,d:"eval",t:"Safety & Guardrails",q:"A Generative AI Engineer is building a system answering questions on currently unfolding news, pulling from articles and social media posts. They are concerned about toxic social-media posts causing toxic outputs. Which guardrail will limit toxic outputs?",
+opts:[`Reduce the amount of context items the system will include in consideration for its response.`,`Use only approved social media and news accounts to prevent unexpected toxic data from getting to the LLM.`,`Log all LLM system responses and perform a batch toxicity analysis monthly.`,`Implement rate limiting.`],
+c:[1],e:`Restricting ingestion to approved, vetted sources keeps toxic content out of the pipeline, limiting toxic outputs at the source. Reducing context count, monthly batch analysis, or rate limiting don't prevent toxicity.`},
+
+{n:80,d:"eval",t:"RAG Evaluation",q:"A RAG application helps employees interpret HR documentation. The prototype works with positive tester feedback, and the engineer now wants to formally evaluate the system's performance and find where to focus improvements. How should they evaluate the system?",
+opts:[`Use ROUGE score to comprehensively evaluate the quality of the final generated answers.`,`Use an LLM-as-a-judge to evaluate the quality of the final answers generated.`,`Curate a dataset that can test the retrieval and generation components of the system separately. Use MLflow's built in evaluation metrics to perform the evaluation on the retrieval and generation components.`,`Benchmark multiple LLMs with the same data and pick the best LLM for the job.`],
+c:[2],e:`Evaluating retrieval and generation separately on a curated dataset (with MLflow metrics) identifies which component limits performance, guiding where to improve — more diagnostic than a single end-to-end score.`},
+
+{n:81,d:"agent",t:"LangChain Development",q:"A Generative AI Engineer is using LangChain to classify museum documents with the code below, which results in an error. What do they need to change to fix this template?",
+code:`from langchain import PromptTemplate
+
+template_text = """You are an automated archeological assistant...
+return "relevant" or "irrelevant". Document: {document_input}"""
+
+prompt_template = PromptTemplate(
+    input_variables=["document_input"]
+)
+completed_prompt = prompt_template.format(document_input=document_input)`,
+opts:[`Provide an LLM argument to PromptTemplate()`,`Provide template and LLM arguments to PromptTemplate()`,`Omit PromptTemplate(), it is only used for multi-part templates`,`Provide a template argument to PromptTemplate()`],
+c:[3],e:`PromptTemplate requires the template string; the code declared input_variables but never passed template=template_text. PromptTemplate doesn't take an llm argument, so D is the fix.`},
+
+{n:82,d:"agent",t:"Prompt Chaining",q:"A Generative AI Engineer believes prompt chaining could help their LLM question-answering assistant and must explain to their team how it works and how it benefits the assistant. Which explanation do they communicate to the team?",
+opts:[`It allows you to break down complex tasks into multiple independent subtasks. This enables the assistant to generate more comprehensive and accurate responses.`,`It allows you to reduce the latency of your applications. By having multiple chains participating in the response as a chain, you increase the rate at which the response is generated.`,`It allows you to decrease the effort involved in crafting a prompt. Chains make it possible to reuse prompt text across multiple different use cases.`,`It reduces the average cost of a typical request. Chains make more efficient use of the tokens produced to generate higher quality responses with fewer tokens.`],
+c:[0],e:`Prompt chaining decomposes a complex task into smaller subtasks handled in sequence, yielding more comprehensive, accurate answers. It generally adds calls (so it doesn't inherently reduce latency or cost).`},
+
+{n:83,d:"agent",t:"Model Selection",multi:true,q:"An AI developer team wants to fine-tune an open-weight model for exceptional code-generation performance while minimizing model hosting costs, using HuggingFace model cards and spaces to explore models. Which TWO model attributes and metrics should the team focus on to make their selection? (Choose two.)",
+opts:[`Big Code Models Leaderboard`,`Number of model parameters`,`MTEB Leaderboard`,`Chatbot Arena Leaderboard`,`Number of model downloads last month`],
+c:[0,1],e:`The Big Code Models Leaderboard (A) ranks code-generation quality, and the number of parameters (B) drives hosting cost — both directly serve the goal. MTEB is for embeddings, and Chatbot Arena/downloads don't measure code performance or cost.`},
+
+{n:84,d:"rag",t:"Chunking Strategy",f:true,q:"An automotive company is building a Q&A chatbot with a catalog of hundreds of thousands of cars (since the 1960s), historical searches with successful matches, and car descriptions in multiple languages. They've selected an open-source LLM and a test set, and must discard techniques that will NOT help. Which do they discard?",
+opts:[`Setting chunk size to match the model's context window to maximize coverage`,`Implementing metadata filtering based on car models and years`,`Fine-tuning an embedding model on automotive terminology`,`Adding few-shot examples for response generation`],
+c:[0],e:`Sizing chunks to fill the whole context window hurts retrieval precision (huge, unfocused chunks) rather than helping, so it's the technique to discard. Metadata filtering, domain-tuned embeddings, and few-shot examples all help. (Verify against official keys.)`},
+
+{n:85,d:"rag",t:"Chunking Strategy",f:true,q:"A legal firm's RAG system must process millions of court opinions and legal documents (already organized by time and topic, all plain-text) to track how interpretations of specific laws have evolved over time. The engineer must choose a chunking method that most effectively preserves continuity and the temporal nature of the cases. Which method do they choose?",
+opts:[`Implement windowed summarization with overlapping chunks.`,`Implement a hierarchical tree structure, like RAPTOR, to group similar legal concepts.`,`Implement paragraph level embeddings with each chunk.`,`Implement sentence level embeddings with each chunk tagged with the time to enable metadata filtering.`],
+c:[3],e:`Tagging chunks with time and enabling metadata filtering directly supports tracking how interpretations evolved over time. (Windowed summarization with overlap, option A, is the strongest alternative for pure continuity — verify against the official key.)`},
+
+{n:86,d:"eval",t:"Agent Tracing & Debugging",q:"A Generative AI Engineer is developing an agent system (multiple parallel and sequential chains) using a popular agent-authoring library. The agent fails at one step, making it difficult to debug the root cause. Which approach do they choose to research the issue and discover the cause of failure?",
+opts:[`Enable MLflow tracing to gain visibility into each agent's behavior and execution step.`,`Run MLflow.evaluate to determine root cause of failed step.`,`Implement structured logging within the agent's code to capture detailed execution information.`,`Deconstruct the agent into independent steps to simplify debugging.`],
+c:[0],e:`MLflow Tracing captures each step/span of the agent's execution (inputs, outputs, tool calls), giving the visibility needed to find where and why it failed. mlflow.evaluate measures quality, not step-level failures, and custom logging/deconstruction are more effort.`},
+
+{n:87,d:"agent",t:"Agent Configuration",q:"A Generative AI Engineer is configuring an agent in Mosaic Agent Framework with the config below, but the agent struggles to respond with relevant information. Which error is causing the problem?",
+code:`config_dict = {
+  "prompt_template": "You are a trivia bot. Generate a trivia question based on the user's input.",
+  "prompt_template_input_vars": ["user_input"],
+  "model_serving_endpoint": "databricks-dbrx-instruct",
+  "llm_parameters": {"temperature": 0.01, "max_tokens": 500},
+}`,
+opts:[`The prompt does not parse the user's input vars`,`The prompt does not set the retriever schema`,`The prompt does not list available agents for the LLM to call`,`The prompt is not wrapped in ChatModel`],
+c:[0],e:`The template declares prompt_template_input_vars=["user_input"] but the prompt_template string never references that variable (no placeholder), so the user's input is never injected — making responses irrelevant.`},
+
+{n:88,d:"agent",t:"Agent Design & Tools",f:true,q:"A Generative AI Engineer uses LangGraph to define multiple tools in a single agentic application and wants the main orchestrator LLM to decide on its own which tools to call for a given prompt. Which sequence of code flow will do this?",
+opts:[`1. Define or import the tools 2. Add tools and LLM to the agent 3. Create the ReAct agent`,`1. Define or import the tools 2. Define the agent 3. Initialize the agent with ReAct, the LLM, and the tools`,`1. Define the tools 2. Load each tool into a separate agent 3. Instruct the LLM to use ReAct to call the appropriate agent`,`1. Define the tools inside the agents 2. Load the agents into the LLM 3. Instruct the LLM to use CoT reasoning to determine the appropriate agent`],
+c:[0],e:`You define/import the tools, give the LLM access to those tools, and create a ReAct agent that lets the LLM reason about which tool to call. (Option B is a close paraphrase of the same flow — verify which wording the official key uses.)`},
+
+{n:89,d:"deploy",t:"Authentication & SDKs",q:"All of the following are Python APIs used to query Databricks foundation models. When running in an interactive notebook, which of the following libraries does NOT automatically use the current session credentials?",
+opts:[`OpenAI client`,`REST API via requests library`,`MLflow Deployments SDK`,`Databricks Python SDK`],
+c:[1],e:`Calling the REST API directly via requests requires you to manually supply the host and token — it doesn't pick up the notebook's session credentials, unlike the OpenAI client, MLflow Deployments SDK, and Databricks SDK.`},
+
+{n:90,d:"eval",t:"AI Security (DASF)",f:true,q:"A Generative AI Engineer is deploying a customer-facing, fine-tuned LLM on a public website. Given the large investment in fine-tuning and the proprietary tuning data, they are concerned about model inversion attacks. Which Databricks AI Security Framework (DASF) risk mitigation strategy is most relevant?",
+opts:[`Implement AI guardrails to allow users to configure and enforce compliance`,`Leverage Databricks access control lists (ACLs) to configure permissions for accessing models`,`Use secure model features with Databricks Feature Store`,`Apply attribute-based access controls (ABAC) to limit unauthorized access`],
+c:[1],e:`Model inversion attacks try to reconstruct training data from a model, so restricting who/what can access the model via ACLs is the most directly relevant DASF mitigation. (Access-control answers B and D are close — verify which the official key expects.)`},
+
+{n:91,d:"rag",t:"Reranking",q:"A team uses Mosaic AI Vector Search for their RAG pipeline. The search returns five relevant documents and the first three are added to the prompt as context. Agent Evaluation shows some lower-ranked retrieved documents have higher context-relevancy scores than higher-ranked ones. Which option should the team consider to optimize this workflow?",
+opts:[`Use a reranker to order the documents based on the relevance scores.`,`Modify the prompt to instruct the LLM to order the documents based on the relevance scores.`,`Use a different embedding model for computing document embeddings.`,`Increase the number of documents added to the prompt to improve context relevance.`],
+c:[0],e:`A reranker reorders retrieved candidates by true relevance so the most relevant documents end up in the top-3 added to the prompt — exactly the mismatch observed. The other options don't fix ranking order.`},
+
+{n:92,d:"deploy",t:"Production Monitoring Metrics",f:true,q:"A Generative AI Engineer is deploying an AI agent (authored with MLflow's ChatAgent interface) for a retail customer-support system on Databricks, handling thousands of inquiries daily, and needs to track performance and quality in real-time. Which metrics are automatically captured by default and made available for monitoring when the agent is deployed using the Mosaic AI Agent Framework?",
+opts:[`Operational metrics like request volume, latency, and errors`,`Quality metrics like correctness and guideline adherence`,`Both operational and quality metrics`,`No metrics are automatically captured`],
+c:[0],e:`Deploying through the Agent Framework automatically captures operational metrics (request volume, latency, errors) via the serving endpoint; quality metrics like correctness require configuring Agent Evaluation/judges. (Some sources answer C — verify against the official key.)`}
+];
+</script>
+
+<script>
+/* ============================================================
+   RENDER + INTERACTION  (all state in memory, no storage)
+   ============================================================ */
+const LETTERS = ["A","B","C","D","E","F"];
+let currentFilter = "all";
+const state = {}; // n -> {answered, correct, picks:[idx]}
+
+const elQuiz = document.getElementById("quiz");
+const elTabs = document.getElementById("tabs");
+const elFooter = document.getElementById("footer");
+
+function domainCounts(){
+  const c = {all:DATA.length}; Object.keys(DOMAINS).forEach(k=>c[k]=0);
+  DATA.forEach(q=>c[q.d]=(c[q.d]||0)+1);
+  return c;
+}
+function buildTabs(){
+  const c = domainCounts();
+  const tabs = [["all","All Topics"]].concat(Object.keys(DOMAINS).map(k=>[k,DOMAINS[k].name]));
+  elTabs.innerHTML = "";
+  tabs.forEach(([key,label])=>{
+    const b = document.createElement("button");
+    b.className = "tab"+(key===currentFilter?" active":"");
+    b.innerHTML = label+' <span class="cnt">('+(c[key]||0)+')</span>';
+    b.onclick = ()=>{ currentFilter=key; buildTabs(); render(); window.scrollTo({top:0,behavior:"smooth"}); };
+    elTabs.appendChild(b);
+  });
+}
+
+function isCodey(s){ return s.indexOf("\n")>=0; }
+
+function makeCard(q){
+  const card = document.createElement("section");
+  card.className = "card"; card.id = "q"+q.n;
+  const dom = DOMAINS[q.d] || {name:q.d, cls:""};
+
+  const head = document.createElement("div");
+  head.className = "qhead";
+  head.innerHTML = '<span class="qnum">Q'+q.n+'</span>'+
+    '<span class="domchip '+dom.cls+'">'+escapeHtml(dom.name)+'</span>'+
+    '<span class="subchip '+dom.cls+'"><span class="arr">↳</span>'+escapeHtml(q.t||"")+'</span>'+
+    (q.f?'<span class="qflag" title="Answer not fully certain — verify">⚠ verify</span>':'');
+  card.appendChild(head);
+
+  const qt = document.createElement("div");
+  qt.className = "qtext"; qt.textContent = q.q;
+  card.appendChild(qt);
+
+  if(q.code){
+    const pre = document.createElement("pre");
+    pre.className = "code"; pre.textContent = q.code;
+    card.appendChild(pre);
+  }
+  if(q.multi){
+    const mn = document.createElement("div");
+    mn.className="multi-note";
+    mn.textContent = "Select "+q.c.length+" answers, then press Check.";
+    card.appendChild(mn);
+  }
+
+  const opts = document.createElement("div");
+  opts.className = "opts";
+  const st = state[q.n] || {answered:false, correct:false, picks:[]};
+  q.opts.forEach((text,idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "opt"; btn.setAttribute("data-idx",idx);
+    const bodyCls = isCodey(text) ? "body mono" : "body";
+    btn.innerHTML = '<span class="lab">'+LETTERS[idx]+'</span><span class="'+bodyCls+'"></span><span class="mark"></span>';
+    btn.querySelector(".body").textContent = text;
+    if(!q.multi) btn.onclick = ()=>answerSingle(q,idx,opts);
+    else btn.onclick = ()=>toggleMulti(q,idx,opts,btn);
+    opts.appendChild(btn);
+  });
+  card.appendChild(opts);
+
+  let checkBtn=null;
+  if(q.multi){
+    checkBtn = document.createElement("button");
+    checkBtn.className="checkbtn"; checkBtn.textContent="Check answer"; checkBtn.disabled=true;
+    checkBtn.onclick=()=>answerMulti(q,opts,checkBtn);
+    card.appendChild(checkBtn);
+    opts._checkBtn = checkBtn;
+  }
+
+  const exp = document.createElement("div");
+  exp.className = "explain"+(q.f?" flagwarn":"");
+  card.appendChild(exp); card._exp = exp;
+
+  if(st.answered){
+    if(q.multi) lockMulti(q,opts,st); else lockSingle(q,opts,st);
+    showExplain(q,exp);
+    if(checkBtn){checkBtn.disabled=true; checkBtn.textContent="Answered";}
+  }
+  return card;
+}
+
+function answerSingle(q,idx,opts){
+  if(state[q.n] && state[q.n].answered) return;
+  state[q.n] = {answered:true, correct:q.c[0]===idx, picks:[idx]};
+  lockSingle(q,opts,state[q.n]); showExplain(q,opts.parentNode._exp); updateScore();
+}
+function lockSingle(q,opts,st){
+  opts.classList.add("locked");
+  [...opts.children].forEach(btn=>{
+    const i=+btn.getAttribute("data-idx"); btn.classList.add("locked");
+    if(q.c.includes(i)){ btn.classList.add("correct"); btn.querySelector(".mark").textContent="✓"; }
+    if(st.picks.includes(i)&&!q.c.includes(i)){ btn.classList.add("wrong"); btn.querySelector(".mark").textContent="✗"; }
+  });
+}
+function toggleMulti(q,idx,opts,btn){
+  if(state[q.n] && state[q.n].answered) return;
+  btn._sel=!btn._sel;
+  btn.style.borderColor=btn._sel?"var(--accent)":""; btn.style.background=btn._sel?"#171b22":"";
+  const sel=[...opts.children].filter(b=>b._sel).length;
+  opts._checkBtn.disabled=(sel!==q.c.length);
+}
+function answerMulti(q,opts,checkBtn){
+  if(state[q.n] && state[q.n].answered) return;
+  const picks=[...opts.children].filter(b=>b._sel).map(b=>+b.getAttribute("data-idx"));
+  const correct = picks.length===q.c.length && picks.every(i=>q.c.includes(i));
+  state[q.n]={answered:true, correct, picks};
+  lockMulti(q,opts,state[q.n]); showExplain(q,opts.parentNode._exp);
+  checkBtn.disabled=true; checkBtn.textContent="Answered"; updateScore();
+}
+function lockMulti(q,opts,st){
+  opts.classList.add("locked");
+  [...opts.children].forEach(btn=>{
+    const i=+btn.getAttribute("data-idx"); btn.classList.add("locked");
+    btn.style.borderColor=""; btn.style.background="";
+    if(q.c.includes(i)){ btn.classList.add("correct"); btn.querySelector(".mark").textContent="✓"; }
+    if(st.picks.includes(i)&&!q.c.includes(i)){ btn.classList.add("wrong"); btn.querySelector(".mark").textContent="✗"; }
+  });
+}
+function showExplain(q,exp){
+  const ans = q.c.map(i=>LETTERS[i]).join(" & ");
+  let html='<span class="et">Why:</span> <span class="ans">Correct: '+ans+'.</span> '+escapeHtml(q.e);
+  if(q.f) html+='<span class="fnote">⚠ This answer is inferred and not fully certain — verify against official Databricks material.</span>';
+  exp.innerHTML=html; exp.classList.add("show");
+}
+function escapeHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function render(){
+  elQuiz.innerHTML="";
+  const list = DATA.filter(q=>currentFilter==="all"||q.d===currentFilter);
+  if(currentFilter==="all"){
+    Object.keys(DOMAINS).forEach(dk=>{
+      const qs=DATA.filter(q=>q.d===dk); if(!qs.length) return;
+      elQuiz.appendChild(domainTitle(dk,qs.length));
+      qs.forEach(q=>elQuiz.appendChild(makeCard(q)));
+    });
+  } else {
+    elQuiz.appendChild(domainTitle(currentFilter,list.length));
+    list.forEach(q=>elQuiz.appendChild(makeCard(q)));
+  }
+  if(!list.length){ const d=document.createElement("div"); d.className="empty"; d.textContent="No questions in this topic."; elQuiz.appendChild(d); }
+  updateScore();
+}
+function domainTitle(dk,n){
+  const d=DOMAINS[dk];
+  const h=document.createElement("div"); h.className="domain-title "+d.cls;
+  h.innerHTML='<span class="dot '+d.bg+'"></span>'+escapeHtml(d.name)+' — '+n+' questions';
+  return h;
+}
+function updateScore(){
+  const total=DATA.length; let answered=0,correct=0;
+  DATA.forEach(q=>{const s=state[q.n]; if(s&&s.answered){answered++; if(s.correct)correct++;}});
+  document.getElementById("s-tot").textContent=total;
+  document.getElementById("s-ans").textContent=answered;
+  document.getElementById("s-cor").textContent=correct;
+  document.getElementById("s-pct").textContent=(answered?Math.round(correct/answered*100):0)+"%";
+  document.getElementById("s-bar").style.width=(answered/total*100)+"%";
+}
+
+/* ---------- weightage (recomputed from DATA every load) ---------- */
+function buildWeightage(){
+  const total=DATA.length, domCount={};
+  DATA.forEach(q=>domCount[q.d]=(domCount[q.d]||0)+1);
+  const keys=Object.keys(DOMAINS).filter(k=>domCount[k]);
+  Object.keys(domCount).forEach(k=>{ if(!keys.includes(k)) keys.push(k); });
+  let html="";
+  keys.slice().sort((a,b)=>domCount[b]-domCount[a]).forEach(dk=>{
+    const dom=DOMAINS[dk]||{name:dk,cls:"",bg:""}; const n=domCount[dk], pct=total?n/total*100:0;
+    html+='<div class="wrow"><span class="wlabel '+dom.cls+'">'+escapeHtml(dom.name)+'</span>'+
+      '<span class="wbar"><span class="'+dom.bg+'" style="width:'+pct.toFixed(1)+'%"></span></span>'+
+      '<span class="wval">'+n+' &middot; '+pct.toFixed(1)+'%</span></div>';
+  });
+  keys.forEach(dk=>{
+    const dom=DOMAINS[dk]||{name:dk,cls:""}; const subs={};
+    DATA.filter(q=>q.d===dk).forEach(q=>{const t=q.t||"(untagged)"; subs[t]=(subs[t]||0)+1;});
+    const entries=Object.entries(subs).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+    html+='<div class="wsubtitle '+dom.cls+'">'+escapeHtml(dom.name)+' &mdash; '+domCount[dk]+' Q ('+(total?(domCount[dk]/total*100).toFixed(1):0)+'%)</div>';
+    html+='<div class="wsubgrid">';
+    entries.forEach(([t,n])=>{ html+='<div class="wsub"><span>'+escapeHtml(t)+'</span><span class="ws-n">'+n+'</span></div>'; });
+    html+='</div>';
+  });
+  document.getElementById("wbody").innerHTML=html;
+  document.getElementById("wcount").textContent=total;
+}
+document.getElementById("whead").onclick=()=>{
+  const b=document.getElementById("wbody"), t=document.getElementById("wtoggle");
+  b.classList.toggle("collapsed");
+  t.textContent=b.classList.contains("collapsed")?"Show ▼":"Hide ▲";
+};
+
+document.getElementById("resetBtn").onclick=()=>{
+  if(!confirm("Reset all answers and start over?")) return;
+  for(const k in state) delete state[k];
+  render(); window.scrollTo({top:0,behavior:"smooth"});
+};
+document.getElementById("toTop").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
+
+elFooter.innerHTML="92 questions loaded (source numbered 1–92, complete — #29 added). Domains follow the 4 courses in Gen_ai_topics_flowchart.html. "+
+  "Answers marked <b style='color:#ffd27e'>⚠ verify</b> are best-effort inferences — confirm them against official Databricks material before relying on them.";
+
+buildTabs();
+buildWeightage();
+render();
+</script>
+</body>
+</html>

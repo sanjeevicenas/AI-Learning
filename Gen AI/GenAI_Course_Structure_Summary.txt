@@ -1,0 +1,156 @@
+
+================================================================================
+                    GEN AI COURSES - COMPREHENSIVE OUTLINE
+================================================================================
+
+COURSE 1: GENAI AGENT EVALUATION ON DATABRICKS
+================================================================================
+
+MODULE 1 - AI Agent Evaluation Fundamentals
+-------------------------------------------
+1.1 Lecture - The Challenge of Evaluating AI Agents
+    * Why Traditional Testing Falls Short
+      - The Deterministic Testing Paradigm  
+      - How AI Agents Break the Paradigm
+    * The Agent Evaluation Challenge
+      - Multi-Dimensional Complexity
+      - Safety and Real-World Variability
+    * Evaluation as a Continuous Process
+      - The Continuous Evaluation Cycle
+      - Why Continuous Evaluation Matters
+    * Preparing for Evaluation
+      - Why Preparation Matters
+      - Designing Your Evaluation Dataset
+      - Operational Setup Requirements
+
+1.2 Demo - Agent Setup
+    * Part 1 - Import The Agent and View MLflow Trace
+      - Import the Agent
+      - Sample Questions
+      - Inspect the Trace
+    * Part 2 - Inspect the Trace in Unity Catalog
+
+1.3 Lecture - MLflow's Evaluation Framework
+    * MLflow Overview and OpenTelemetry Integration
+      - MLflow Platform Overview
+      - OpenTelemetry Integration
+    * Core Architecture
+      - Three Fundamental Components
+      - Component 1: Evaluation Datasets
+      - Component 2: Scorers (Judges)
+      - Component 3: Predict Function
+    * The mlflow.genai.evaluate() Function
+      - Central Orchestration Point
+      - Key Parameters
+      - Evaluation Workflow
+      - Return Value and Results Access
+    * MLflow Tracing: The Foundation of Agent Observability
+      - Comprehensive Observability
+      - Span Types in Traces
+
+MODULE 2 - Built-In and Guideline Judges
+-----------------------------------------
+2.1 Lecture - Types of Evaluation Judges
+2.2 Demo - Using MLflow Built-In Judges
+2.3 Demo - Guideline Judges with MLflow
+2.4 Lab - Applying Agent Evaluation
+2.5 Demo - Custom Judges with MLflow
+
+MODULE 3 - Custom Judges and Human Feedback
+-------------------------------------------
+3.1 Lecture - Offline vs. Online Evaluation Strategies
+3.2 Lecture - Best Practices and Practical Application
+3.3 Lab - Developer and SME Feedback with MLflow
+
+
+================================================================================
+COURSE 2: BUILDING SINGLE-AGENT APPLICATIONS ON DATABRICKS
+================================================================================
+
+MODULE 1 (M01) - Foundations of Agents
+--------------------------------------
+1.0 Lecture - Foundations of AI Agents and Tools on Databricks
+1.1 Lecture - Unity Catalog Functions as Agent Tools
+1.2 Demo - Building UC Functions as Agent Tools with AI Playground
+1.3 Lab - Building AI Agent Tools with Unity Catalog Functions
+
+MODULE 2 (M02) - Building Single Agents
+---------------------------------------
+2.0 Lecture - Authoring Single AI Agents with Databricks Mosaic AI Agent Framework
+2.1 Demo - Building Single Agents with LangChain
+2.2 Lab - Building A LangChain Agent
+
+MODULE 3 (M03) - Reproducible Agents
+------------------------------------
+3.0 Lecture - Building Agents on Databricks with MLflow
+3.1 Demo - Tracing Single Agents with MLflow
+3.2 Demo - Tagging & Reproducible Agents
+3.3 Lab - Building Reproducible Agents
+
+MODULE 4 (M04) - Production-Ready Agents with Agent Bricks
+----------------------------------------------------------
+4.0 Lecture - Single Agents with Agent Bricks
+4.1 Lab - Building a Single Agent with Agent Bricks: Multi-Agent Supervisor
+
+
+================================================================================
+COURSE 3: GENERATIVE AI DEPLOYMENT AND MONITORING
+================================================================================
+
+MODULE 0 - Build Model
+----------------------
+00-Build-Model
+
+MODULE 1 - Batch Deployment
+---------------------------
+1.0 - Batch Inference using SLM
+1.LAB - Batch Inference using SLM
+
+MODULE 2 - Real-time Deployment
+-------------------------------
+2.1 - Deploying an LLM Chain to Databricks Model Serving
+2.2 - Serving Models with PT
+2.LAB - Custom Model Deployment and A-B Testing
+
+MODULE 3 - AI System Monitoring
+-------------------------------
+3.1 - Online Monitoring an LLM RAG Chain
+3.LAB - Online Monitoring
+
+
+================================================================================
+COURSE 4: BUILDING RETRIEVAL AGENTS ON DATABRICKS
+================================================================================
+
+MODULE 1 - Foundations of Retrieval Agents
+------------------------------------------
+1.1 Lecture - Beyond Prompts – Retrieval Agents and Context Engineering
+
+MODULE 2 - Document Parsing and Chunking
+----------------------------------------
+2.1 Lecture - Document Parsing and Chunking
+2.2 Demo - Parse Documents to Structured Data
+2.3 Demo - Clean, Transform, and Chunk Parsed Text
+2.4 Lab - Parse Transform and Chunk Documents
+
+MODULE 3 - Vector Search for Retrieval
+--------------------------------------
+3.1 Lecture - Embeddings and Vector Search
+3.2 Demo - Building Vector Search for Retrieval
+3.3 Lab - Building Vector Search for Retrieval
+
+MODULE 4 - Building and Logging Retrieval Agents
+------------------------------------------------
+4.1 Lecture - MLflow and Agent Development
+4.2 Demo - Building and Logging a Retrieval Agent
+4.3 Lab - Building and Registering Retrieval Agent
+
+MODULE 5 - Agent Bricks
+-----------------------
+5.1 Lecture - Knowledge Assistant with Agent Bricks
+5.2 Demo - Building KA Agent with Agent Bricks
+
+
+================================================================================
+                              END OF OUTLINE
+================================================================================

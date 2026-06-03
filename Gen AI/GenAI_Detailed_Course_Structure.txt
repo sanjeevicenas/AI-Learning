@@ -1,0 +1,595 @@
+
+================================================================================
+          GENERATIVE AI COURSES - COMPREHENSIVE DETAILED OUTLINE
+                         Databricks Platform
+================================================================================
+
+📚 COURSE 1: GENAI AGENT EVALUATION ON DATABRICKS
+================================================================================
+
+MODULE 1 - AI Agent Evaluation Fundamentals
+───────────────────────────────────────────────────────────────────────────────
+
+1.1 LECTURE - The Challenge of Evaluating AI Agents
+    
+    A. Why Traditional Testing Falls Short
+       • The Deterministic Testing Paradigm
+         - Same input always produces same output
+         - Behavior is explicitly programmed and predictable
+         - Success measured through exact string matching
+       • How AI Agents Break the Paradigm
+         - Non-determinism through temperature and sampling
+         - Emergent behavior and autonomous decisions
+         - Context dependency on retrieved documents
+         - Qualitative assessment requirements
+    
+    B. The Agent Evaluation Challenge
+       • Multi-Dimensional Complexity
+         - Multi-step reasoning evaluation
+         - Tool calling accuracy assessment
+         - Retrieved context relevance
+         - Conversation coherence tracking
+       • Safety and Real-World Variability
+         - Safety and alignment requirements
+         - Real-world variability handling
+         - Edge case management
+    
+    C. Evaluation as a Continuous Process
+       • The Continuous Evaluation Cycle
+         - Development phase evaluation
+         - Pre-deployment validation
+         - Production monitoring
+         - Continuous improvement loops
+       • Why Continuous Evaluation Matters
+         - Rapid feedback loops during development
+         - Comprehensive validation before deployment
+         - Ongoing monitoring in production
+    
+    D. Preparing for Evaluation
+       • Why Preparation Matters
+         - Purposeful and reproducible evaluation
+         - Addressing non-deterministic behavior
+       • Designing Your Evaluation Dataset
+         - Coverage of expected use cases
+         - Edge case identification
+         - Ground truth preparation
+       • Operational Setup Requirements
+         - MLflow experiments and runs configuration
+         - Tagging and versioning strategy
+         - Result tracking and comparison
+
+1.2 DEMO - Agent Setup
+    
+    • Classroom Setup and Configuration
+    • Part 1 - Import The Agent and View MLflow Trace
+      - Importing Unity Catalog-registered agent
+      - Creating agent payload helpers
+      - Sample question testing
+      - MLflow trace inspection
+    • Part 2 - Inspect the Trace in Unity Catalog
+      - Navigating Catalog Explorer
+      - Finding model versions and aliases
+      - Viewing traces in UC
+
+1.3 LECTURE - MLflow's Evaluation Framework
+    
+    A. MLflow Overview and OpenTelemetry Integration
+       • MLflow Platform Overview
+         - Experiment tracking capabilities
+         - Model Registry and versioning
+         - Model deployment options
+         - Generative AI evaluation features
+       • OpenTelemetry Integration
+         - OpenTelemetry standard overview
+         - Three trace export modes
+         - Benefits for observability platforms
+    
+    B. Core Architecture
+       • Three Fundamental Components
+       • Component 1: Evaluation Datasets
+         - Input queries definition
+         - Optional outputs and expectations
+         - Ground truth information
+         - Trace data inclusion
+       • Component 2: Scorers (Judges)
+         - Built-in research-validated judges
+         - Guideline judges for business rules
+         - Code-based custom scorers
+       • Component 3: Predict Function
+         - Agent prediction methods
+         - Input transformation lambdas
+         - Pre-generated output handling
+    
+    C. The mlflow.genai.evaluate() Function
+       • Central Orchestration Point
+       • Key Parameters
+         - data: evaluation dataset
+         - scorers: scoring functions list
+         - predict_fn: agent/app function
+         - model_id: optional model reference
+       • Evaluation Workflow
+         - Data loading and validation
+         - Output generation process
+         - Scorer application
+         - Results aggregation
+       • Return Value and Results Access
+         - run_id tracking
+         - metrics aggregation
+         - per-row scores and tables
+    
+    D. MLflow Tracing: The Foundation of Agent Observability
+       • Comprehensive Observability
+         - Execution flow capture
+         - Tool invocation tracking
+         - LLM interaction logging
+       • Span Types in Traces
+         - Root spans
+         - Child spans
+         - Attribute capture
+
+
+MODULE 2 - Built-In and Guideline Judges
+───────────────────────────────────────────────────────────────────────────────
+
+2.1 LECTURE - Types of Evaluation Judges
+    
+    A. Judge Types Overview
+       • Evaluation Judge Spectrum
+         - Built-in judges (minimal customization)
+         - Guidelines judges (moderate customization)
+         - Custom judges (full customization)
+    
+    B. Built-In Judges for Common Criteria
+       • Research-Validated Judges
+       • Core Built-in Judges
+         - Correctness (factual accuracy)
+         - RelevanceToQuery (query alignment)
+         - RetrievalSufficiency (document coverage)
+         - RetrievalGroundedness (hallucination prevention)
+         - Safety (harmful content detection)
+       • Additional Built-in Judges
+       • Example Usage Pattern
+    
+    C. Guideline Judges
+       • Two Types of Guideline Judges
+         1. Global Guidelines (Guidelines class)
+            - Uniform criteria application
+            - Tone and style enforcement
+            - Formatting requirements
+         2. Per-Row Guidelines (ExpectationsGuidelines class)
+            - Different criteria per example
+            - Scenario-specific standards
+       • Guideline Judge Advantages and Best Practices
+         - Domain expert accessibility
+         - Rapid iteration capabilities
+         - Version control integration
+    
+    D. Custom Judges and Code-Based Scorers
+       • Code-Based Scorers for Deterministic Evaluation
+       • Custom LLM Judges
+       • Integration patterns
+
+2.2 DEMO - Using MLflow Built-In Judges
+2.3 DEMO - Guideline Judges with MLflow
+2.4 LAB - Applying Agent Evaluation
+2.5 DEMO - Custom Judges with MLflow
+
+
+MODULE 3 - Custom Judges and Human Feedback
+───────────────────────────────────────────────────────────────────────────────
+
+3.1 LECTURE - Offline vs. Online Evaluation Strategies
+    
+    A. Evaluation Strategy Overview
+       • Two Complementary Approaches
+         - Offline validation with curated datasets
+         - Online monitoring of production performance
+    
+    B. Offline Evaluation: Pre-Deployment Validation
+       • Controlled Environment Testing
+         - Controlled inputs
+         - Reproducible results
+         - Ground truth availability
+         - Comprehensive coverage
+       • Offline Evaluation Workflow
+         1. Dataset creation
+         2. Ground truth labeling
+         3. Agent execution
+         4. Scorer application
+         5. Analysis and iteration
+       • Offline Evaluation Strengths and Limitations
+         - Strengths: rigorous validation, A/B testing
+         - Limitations: dataset staleness, limited scale
+    
+    C. Online Evaluation: Production Monitoring
+       • Real-World Performance Analysis
+         - Real-world data patterns
+         - Scale and diversity
+         - Continuous feedback
+       • Online Evaluation Workflow
+         - Inference logging
+         - Automatic tracing
+         - Scheduled evaluation
+         - Alert triggers
+       • MLflow's Production Monitoring Capabilities
+         - Automated scorer execution
+         - Quality dashboards
+         - Integration with inference tables
+       • Online Evaluation Strengths and Limitations
+         - Strengths: actual user experience
+         - Limitations: delayed detection, sampling bias
+    
+    D. Complementary Strategies
+       • When to Use Each Approach
+         - Offline: pre-deployment, A/B testing
+         - Online: production monitoring, feedback
+       • Creating a Feedback Loop
+         - Offline to production pipeline
+         - Production insights to datasets
+         - Continuous improvement cycle
+    
+    E. Building Comprehensive Evaluation Datasets
+       • Dataset Composition Principles
+       • Diversity and Ground Truth Approaches
+       • Coverage strategies
+
+3.2 LECTURE - Best Practices and Practical Application
+3.3 LAB - Developer and SME Feedback with MLflow
+
+
+================================================================================
+📚 COURSE 2: BUILDING SINGLE-AGENT APPLICATIONS ON DATABRICKS
+================================================================================
+
+MODULE 1 (M01) - Foundations of Agents
+───────────────────────────────────────────────────────────────────────────────
+
+1.0 LECTURE - Foundations of AI Agents and Tools on Databricks
+    
+    A. Understanding AI Agents
+       • What Are AI Agents?
+         - Intelligent software systems
+         - Autonomous decision-making
+         - Reasoning, planning, and adaptation
+         - External system interaction
+         - Learning from experience
+       • Evolution of AI Agents
+         - 1960s: Rule-Based Systems
+         - 1990s: Statistical Learning
+         - 2000s: Machine Learning Integration
+         - 2020s: LLM-powered agents
+       • Key Principles of AI Agents
+         - Perception (understanding context)
+         - Decision-Making (processing info)
+         - Action (executing tasks)
+       • Core Components of AI Agents
+         1. Large Language Model (LLM) Brain
+         2. Memory System
+         3. Planning Module
+         4. Tool Integration Layer
+       • Types of AI Agents by Complexity
+         1. Simple Reflex Agents
+         2. Model-Based Reflex Agents
+         3. Goal-Based Agents
+         4. Utility-Based Agents
+         5. Learning Agents
+       • Can All LLMs Use Tools?
+         - Tool-calling capability requirements
+         - Framework and integration needs
+    
+    B. Understanding Agent Tools
+       • What Are Agent Tools?
+         - Specialized functions for external interaction
+         - Extension of agent capabilities
+       • How Tools Differ from Traditional AI Components
+         - vs. Machine Learning models
+         - vs. Chatbots
+         - vs. Traditional APIs
+       • Tool Selection and Orchestration
+         - Request analysis
+         - Tool identification
+         - Execution and response
+    
+    C. Unity Catalog and Agent Tool Governance
+       • Why Unity Catalog for Agent Tools?
+         - Centralized governance
+         - Security and access control
+         - Versioning and lineage
+       • Tool Registration and Management
+         - SQL-based tool registration
+         - UC function patterns
+       • Other Tools and Common Patterns
+         - External API tools
+         - Python function tools
+
+1.1 LECTURE - Unity Catalog Functions as Agent Tools
+1.2 DEMO - Building UC Functions as Agent Tools with AI Playground
+1.3 LAB - Building AI Agent Tools with Unity Catalog Functions
+
+
+MODULE 2 (M02) - Building Single Agents
+───────────────────────────────────────────────────────────────────────────────
+
+2.0 LECTURE - Authoring Single AI Agents with Databricks Mosaic AI Agent Framework
+2.1 DEMO - Building Single Agents with LangChain
+2.2 LAB - Building A LangChain Agent
+
+
+MODULE 3 (M03) - Reproducible Agents
+───────────────────────────────────────────────────────────────────────────────
+
+3.0 LECTURE - Building Agents on Databricks with MLflow
+3.1 DEMO - Tracing Single Agents with MLflow
+3.2 DEMO - Tagging & Reproducible Agents
+3.3 LAB - Building Reproducible Agents
+
+
+MODULE 4 (M04) - Production-Ready Agents with Agent Bricks
+───────────────────────────────────────────────────────────────────────────────
+
+4.0 LECTURE - Single Agents with Agent Bricks
+4.1 LAB - Building a Single Agent with Agent Bricks: Multi-Agent Supervisor
+
+
+================================================================================
+📚 COURSE 3: GENERATIVE AI DEPLOYMENT AND MONITORING
+================================================================================
+
+MODULE 0 - Build Model
+───────────────────────────────────────────────────────────────────────────────
+00-Build-Model
+
+
+MODULE 1 - Batch Deployment
+───────────────────────────────────────────────────────────────────────────────
+1.0 - Batch Inference using SLM
+1.LAB - Batch Inference using SLM
+
+
+MODULE 2 - Real-time Deployment
+───────────────────────────────────────────────────────────────────────────────
+2.1 - Deploying an LLM Chain to Databricks Model Serving
+2.2 - Serving Models with PT (PyTorch)
+2.LAB - Custom Model Deployment and A-B Testing
+
+
+MODULE 3 - AI System Monitoring
+───────────────────────────────────────────────────────────────────────────────
+3.1 - Online Monitoring an LLM RAG Chain
+3.LAB - Online Monitoring
+
+
+================================================================================
+📚 COURSE 4: BUILDING RETRIEVAL AGENTS ON DATABRICKS
+================================================================================
+
+MODULE 1 - Foundations of Retrieval Agents
+───────────────────────────────────────────────────────────────────────────────
+
+1.1 LECTURE - Beyond Prompts – Retrieval Agents and Context Engineering
+    
+    A. Foundations of Prompt Engineering
+       • Defining Prompt Engineering
+         - Tactical discipline for optimizing LLM outputs
+         - Few-Shot Prompting techniques
+         - Persona Adoption strategies
+       • Reasoning vs. Non-Reasoning Models
+         - Non-Reasoning Models (Llama 3, GPT-4o)
+           * Require Chain of Thought prompting
+           * Statistical token prediction
+         - Reasoning Models (o1, o3)
+           * Built-in multi-step reasoning
+           * Less prompt engineering needed
+       • The Boundaries of Prompting
+         - Knowledge cutoff limitations
+         - Hallucination problems
+         - Proprietary data access
+         - Prompt injection risks
+    
+    B. Retrieval Augmented Generation (RAG)
+       • Defining RAG
+         - Context-based architecture
+         - External knowledge injection
+         - Real-time data access
+       • The Context Challenge
+         - Context Rot problem
+         - Context Poisoning
+         - Semantic dilution
+         - Latency issues
+    
+    C. Principles of Context Engineering
+       • Defining the Context Environment
+         - System Prompt design
+         - User Query handling
+         - Retrieved Context management
+         - Conversation State tracking
+       • Designing System Prompts
+         - Role definition
+         - Behavioral guidelines
+         - Output formatting
+         - Safety constraints
+       • Strict Grounding and Chunking
+         - Grounding instructions
+         - Document chunking strategies
+         - Citation requirements
+       • Managing Multi-Turn State
+         - Conversation history
+         - Token budget management
+         - State compression
+    
+    D. Context Constraints: Token Budgets and Window Limits
+       • Understanding Context Windows
+         - Context window limits (8k, 32k, 128k tokens)
+         - Token calculation methods
+         - Budget allocation strategies
+
+
+MODULE 2 - Document Parsing and Chunking
+───────────────────────────────────────────────────────────────────────────────
+
+2.1 LECTURE - Document Parsing and Chunking
+    
+    A. Data Storage and Processing Architecture
+       • Delta Lake as unified data layer
+       • Unity Catalog Volumes for file governance
+       • ACID transactions and versioning
+    
+    B. Document Processing with AI Functions
+       • Document Processing Challenges
+         - Hierarchical information extraction
+         - Multi-column layout handling
+         - Table and figure processing
+         - Header/footer management
+       • LLMs and OCR for Parsing
+         - Multimodal LLM capabilities
+         - OCR model integration
+         - Spatial layout understanding
+       • Using ai_parse_document
+         - Serverless execution
+         - Automatic scaling
+         - Direct data integration
+    
+    C. Data Cleaning and Transformation
+       • Noise Reduction
+         - Header/footer removal
+         - Page number elimination
+         - Artifact cleaning
+       • Metadata Injection
+         - Title extraction
+         - Author identification
+         - Creation date capture
+         - Category tagging
+    
+    D. Chunking Strategies
+       • Fixed-Size vs. Recursive Chunking
+         - Fixed-Size (baseline approach)
+         - Recursive (semantic boundaries)
+       • Advanced Chunking Strategies
+         - Sentence-aware chunking
+         - Paragraph-based splitting
+         - Header-based segmentation
+         - Overlapping windows
+       • Embedding Model Considerations
+         - Context window limits
+         - Token count constraints
+         - Model-specific requirements
+    
+    E. Tools and Frameworks for Chunking
+       • Native Databricks AI functions
+       • LangChain integration
+       • Custom Python implementations
+    
+    F. Summary
+       • End-to-end pipeline overview
+
+2.2 DEMO - Parse Documents to Structured Data
+2.3 DEMO - Clean, Transform, and Chunk Parsed Text
+2.4 LAB - Parse Transform and Chunk Documents
+
+
+MODULE 3 - Vector Search for Retrieval
+───────────────────────────────────────────────────────────────────────────────
+
+3.1 LECTURE - Embeddings and Vector Search
+    
+    A. Core Concepts of Embeddings
+       • Defining Embeddings
+         - Numerical representations of content
+         - Deep learning model generation
+         - Semantic meaning capture
+         - Similarity clustering
+       • Multimodal Context
+         - Text embeddings
+         - Image embeddings
+         - Audio embeddings
+         - Cross-modal retrieval
+       • Embedding Models
+         - Neural network architecture
+         - Training on similarity tasks
+         - Vector space mapping
+       • Embedding Alignment
+         - Query-document alignment
+         - Same vector space requirement
+         - Model selection criteria
+    
+    B. Vector Stores and Search Mechanics
+       • The Role of Vector Databases
+         - Purpose-built storage
+         - Efficient similarity search
+         - High-dimensional indexing
+       • Search Methods
+         - Similarity Search (semantic)
+         - Hybrid Search (keyword + semantic)
+         - Filtered Search (metadata constraints)
+       • Distance and Similarity Metrics
+         - Euclidean Distance
+         - Cosine Similarity
+         - Dot Product
+         - Manhattan Distance
+       • Search Strategies
+         - K-Nearest Neighbors (KNN) - exact
+         - Approximate Nearest Neighbor (ANN) - fast
+         - Trade-offs between accuracy and speed
+    
+    C. Precision, Quality, and Reranking
+       • Embedding Quality and Limitations
+         - Similarity ≠ relevance
+         - False positive management
+         - Domain adaptation needs
+       • The Reranking Process
+         1. Initial retrieval (broad)
+         2. Reranker application (precise)
+         3. Final result selection
+       • Benefits and Trade-offs
+         - Improved accuracy
+         - Computational cost
+         - Latency implications
+    
+    D. Mosaic AI Vector Search - Features and Architecture
+       • Databricks Vector Search capabilities
+       • Delta Sync integration
+       • Managed infrastructure
+       • Hybrid search support
+
+3.2 DEMO - Building Vector Search for Retrieval
+3.3 LAB - Building Vector Search for Retrieval
+
+
+MODULE 4 - Building and Logging Retrieval Agents
+───────────────────────────────────────────────────────────────────────────────
+
+4.1 LECTURE - MLflow and Agent Development
+4.2 DEMO - Building and Logging a Retrieval Agent
+4.3 LAB - Building and Registering Retrieval Agent
+
+
+MODULE 5 - Agent Bricks
+───────────────────────────────────────────────────────────────────────────────
+
+5.1 LECTURE - Knowledge Assistant with Agent Bricks
+5.2 DEMO - Building KA Agent with Agent Bricks
+
+
+================================================================================
+                              SUMMARY STATISTICS
+================================================================================
+
+Total Courses:        4
+Total Modules:        17
+Total Notebooks:      40+
+
+Course Breakdown:
+  • GenAI Agent Evaluation:          3 modules, 11 notebooks
+  • Building Single-Agent Apps:       4 modules, 12 notebooks
+  • Gen AI Deployment & Monitoring:  4 modules,  7 notebooks
+  • Building Retrieval Agents:       5 modules, 11 notebooks
+
+Learning Path:
+  1. Start with Retrieval Agents (foundations)
+  2. Progress to Single-Agent Applications (implementation)
+  3. Master Agent Evaluation (quality assurance)
+  4. Complete with Deployment & Monitoring (production)
+
+================================================================================
+                              END OF OUTLINE
+================================================================================
