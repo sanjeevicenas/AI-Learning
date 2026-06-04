@@ -3,3 +3,5 @@
 * [GEN_AI_Flowchart](https://sanjeevicenas.github.io/AI-Learning/Gen%20AI/flowchart/index.html)
 * [DBX_quiz](https://sanjeevicenas.github.io/AI-Learning/Gen%20AI/quiz/index.html)
 * [claude_notebook](https://sanjeevicenas.github.io/AI-Learning/claude/Architect/index.html)
+* [claude_architect_complete_guide](https://sanjeevicenas.github.io/AI-Learning/claude/Architect/complete_guide/index.html)
+* [claude_architect_practice_quiz](https://sanjeevicenas.github.io/AI-Learning/claude/Architect/quiz/index.html)
